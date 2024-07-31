@@ -1273,7 +1273,7 @@ if (!function_exists('static_asset')) {
     {
 
 
-        return app('url')->asset('' . $path, $secure);
+        return app('url')->asset($path, $secure);
 
     }
 }
