@@ -1,0 +1,4 @@
+[01-Jul-2024 20:58:03 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/ecommerceconscor/public_html/config/database.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/ecommerceconscor/public_html/config/database.php on line 16
