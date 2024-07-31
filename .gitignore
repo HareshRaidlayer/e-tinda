@@ -35,5 +35,3 @@ public/uploads.zip
 .env
 public/all
 app/Http/Helpers.php
-
-
