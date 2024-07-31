@@ -59,6 +59,12 @@ use App\Http\Controllers\SizeChartController;
   |
  */
 
+ Route::get('cache-clear', function () {
+    Artisan::call('optimize:clear');
+    request()->session()->flash('success', 'Successfully cache cleared.');
+    return redirect()->back();
+})->name('cache.clear');
+
 Route::controller(DemoController::class)->group(function () {
     Route::get('/demo/cron_1', 'cron_1');
     Route::get('/demo/cron_2', 'cron_2');
