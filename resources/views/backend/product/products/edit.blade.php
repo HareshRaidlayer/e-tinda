@@ -515,7 +515,7 @@
                                     </div>
                                 </div>
 
-                                @if(addon_is_activated('club_point'))
+                                {{-- @if(addon_is_activated('club_point')) --}}
                                     <!-- club point -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">
@@ -525,7 +525,7 @@
                                             <input type="number" lang="en" min="0" value="{{ $product->earn_point }}" step="0.01" placeholder="{{ translate('1') }}" name="earn_point" class="form-control">
                                         </div>
                                     </div>
-                                @endif
+                                {{-- @endif --}}
 
                                 <div id="show-hide-div">
                                     <!-- Quantity -->

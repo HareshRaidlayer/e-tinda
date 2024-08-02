@@ -34,10 +34,11 @@
         @endif
     </div>
     <div class="row align-items-center">
-        @if(get_setting('product_query_activation') == 1)
+        @if (get_setting('product_query_activation') == 1)
             <!-- Ask about this product -->
             <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mb-3">
-                <a href="javascript:void();" onclick="goToView('product_query')" class="text-primary fs-14 fw-600 d-flex">
+                <a href="javascript:void();" onclick="goToView('product_query')"
+                    class="text-primary fs-14 fw-600 d-flex">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
                         <g id="Group_25571" data-name="Group 25571" transform="translate(-975 -411)">
                             <g id="Path_32843" data-name="Path 32843" transform="translate(975 411)" fill="#fff">
@@ -50,7 +51,8 @@
                             </g>
                             <path id="Path_32842" data-name="Path 32842"
                                 d="M28.738,30.935a1.185,1.185,0,0,1-1.185-1.185,3.964,3.964,0,0,1,.942-2.613c.089-.095.213-.207.361-.344.735-.658,2.252-2.032,2.252-3.555a2.228,2.228,0,0,0-2.37-2.37,2.228,2.228,0,0,0-2.37,2.37,1.185,1.185,0,1,1-2.37,0,4.592,4.592,0,0,1,4.74-4.74,4.592,4.592,0,0,1,4.74,4.74c0,2.577-2.044,4.432-3.028,5.333l-.284.255a1.89,1.89,0,0,0-.243.948A1.185,1.185,0,0,1,28.738,30.935Zm0,3.561a1.185,1.185,0,0,1-.835-2.026,1.226,1.226,0,0,1,1.671,0,1.061,1.061,0,0,1,.148.184,1.345,1.345,0,0,1,.113.2,1.41,1.41,0,0,1,.065.225,1.138,1.138,0,0,1,0,.462,1.338,1.338,0,0,1-.065.219,1.185,1.185,0,0,1-.113.207,1.06,1.06,0,0,1-.148.184A1.185,1.185,0,0,1,28.738,34.5Z"
-                                transform="translate(962.004 400.504)" fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
+                                transform="translate(962.004 400.504)"
+                                fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
                         </g>
                     </svg>
                     <span class="ml-2 text-primary animate-underline-blue">{{ translate('Product Inquiry') }}</span>
@@ -87,6 +89,15 @@
         </div>
     @endif
 
+    <!-- Club Point -->
+    @if ($detailedProduct->earn_point != null)
+        <div class="d-flex flex-wrap align-items-center mb-3">
+            <span class="text-secondary fs-14 fw-400 mr-4 w-80px">{{ translate('Club Point') }}</span><br>
+            <div class="text-reset fs-14 fw-700">{{ $detailedProduct->earn_point }}</div>
+        </div>
+    @endif
+
+
     <!-- Seller Info -->
     <div class="d-flex flex-wrap align-items-center">
         <div class="d-flex align-items-center mr-4">
@@ -102,23 +113,28 @@
         <!-- Messase to seller -->
         @if (get_setting('conversation_system') == 1)
             <div class="">
-                <button class="btn btn-sm btn-soft-secondary-base btn-outline-secondary-base hov-svg-white hov-text-white rounded-4"
+                <button
+                    class="btn btn-sm btn-soft-secondary-base btn-outline-secondary-base hov-svg-white hov-text-white rounded-4"
                     onclick="show_chat_modal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
                         class="mr-2 has-transition">
                         <g id="Group_23918" data-name="Group 23918" transform="translate(1053.151 256.688)">
                             <path id="Path_3012" data-name="Path 3012"
                                 d="M134.849,88.312h-8a2,2,0,0,0-2,2v5a2,2,0,0,0,2,2v3l2.4-3h5.6a2,2,0,0,0,2-2v-5a2,2,0,0,0-2-2m1,7a1,1,0,0,1-1,1h-8a1,1,0,0,1-1-1v-5a1,1,0,0,1,1-1h8a1,1,0,0,1,1,1Z"
-                                transform="translate(-1178 -341)" fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
+                                transform="translate(-1178 -341)"
+                                fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
                             <path id="Path_3013" data-name="Path 3013"
                                 d="M134.849,81.312h8a1,1,0,0,1,1,1v5a1,1,0,0,1-1,1h-.5a.5.5,0,0,0,0,1h.5a2,2,0,0,0,2-2v-5a2,2,0,0,0-2-2h-8a2,2,0,0,0-2,2v.5a.5.5,0,0,0,1,0v-.5a1,1,0,0,1,1-1"
-                                transform="translate(-1182 -337)" fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
+                                transform="translate(-1182 -337)"
+                                fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
                             <path id="Path_3014" data-name="Path 3014"
                                 d="M131.349,93.312h5a.5.5,0,0,1,0,1h-5a.5.5,0,0,1,0-1"
-                                transform="translate(-1181 -343.5)" fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
+                                transform="translate(-1181 -343.5)"
+                                fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
                             <path id="Path_3015" data-name="Path 3015"
                                 d="M131.349,99.312h5a.5.5,0,1,1,0,1h-5a.5.5,0,1,1,0-1"
-                                transform="translate(-1181 -346.5)" fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
+                                transform="translate(-1181 -346.5)"
+                                fill="{{ get_setting('secondary_base_color', '#ffc519') }}" />
                         </g>
                     </svg>
 
@@ -128,12 +144,20 @@
         @endif
         <!-- Size guide -->
         @php
-            $sizeChartId = ($detailedProduct->main_category && $detailedProduct->main_category->sizeChart) ? $detailedProduct->main_category->sizeChart->id : 0;
-            $sizeChartName = ($detailedProduct->main_category && $detailedProduct->main_category->sizeChart) ? $detailedProduct->main_category->sizeChart->name : null;
+            $sizeChartId =
+                $detailedProduct->main_category && $detailedProduct->main_category->sizeChart
+                    ? $detailedProduct->main_category->sizeChart->id
+                    : 0;
+            $sizeChartName =
+                $detailedProduct->main_category && $detailedProduct->main_category->sizeChart
+                    ? $detailedProduct->main_category->sizeChart->name
+                    : null;
         @endphp
-        @if($sizeChartId != 0)
+        @if ($sizeChartId != 0)
             <div class=" ml-4">
-                <a href="javascript:void(1);" onclick='showSizeChartDetail({{ $sizeChartId }}, "{{ $sizeChartName }}")' class="animate-underline-primary">{{ translate('Show size guide') }}</a>
+                <a href="javascript:void(1);"
+                    onclick='showSizeChartDetail({{ $sizeChartId }}, "{{ $sizeChartName }}")'
+                    class="animate-underline-primary">{{ translate('Show size guide') }}</a>
             </div>
         @endif
     </div>
@@ -255,8 +279,7 @@
                                         viewBox="0 0 12 12">
                                         <g id="Group_23922" data-name="Group 23922" transform="translate(-973 -633)">
                                             <circle id="Ellipse_39" data-name="Ellipse 39" cx="6"
-                                                cy="6" r="6" transform="translate(973 633)"
-                                                fill="#fff" />
+                                                cy="6" r="6" transform="translate(973 633)" fill="#fff" />
                                             <g id="Group_23920" data-name="Group 23920"
                                                 transform="translate(973 633)">
                                                 <path id="Path_28698" data-name="Path 28698"
@@ -301,8 +324,7 @@
                                         viewBox="0 0 12 12">
                                         <g id="Group_23922" data-name="Group 23922" transform="translate(-973 -633)">
                                             <circle id="Ellipse_39" data-name="Ellipse 39" cx="6"
-                                                cy="6" r="6" transform="translate(973 633)"
-                                                fill="#fff" />
+                                                cy="6" r="6" transform="translate(973 633)" fill="#fff" />
                                             <g id="Group_23920" data-name="Group 23920"
                                                 transform="translate(973 633)">
                                                 <path id="Path_28698" data-name="Path 28698"
@@ -523,7 +545,11 @@
                                 Auth::user()->save();
                             }
                             $referral_code = Auth::user()->referral_code;
-                            $referral_code_url = URL::to('/product') . '/' . $detailedProduct->slug . "?product_referral_code=$referral_code";
+                            $referral_code_url =
+                                URL::to('/product') .
+                                '/' .
+                                $detailedProduct->slug .
+                                "?product_referral_code=$referral_code";
                         }
                     @endphp
                     <div>
