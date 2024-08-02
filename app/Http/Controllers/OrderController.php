@@ -35,7 +35,7 @@ class OrderController extends Controller
         // Staff Permission Check
         $this->middleware(['permission:view_all_orders|view_inhouse_orders|view_seller_orders|view_pickup_point_orders'])->only('all_orders');
         $this->middleware(['permission:view_order_details'])->only('show');
-        $this->middleware(['permission:delete_order'])->only('destroy','bulk_order_delete');
+        $this->middleware(['permission:delete_order'])->only('destroy', 'bulk_order_delete');
     }
 
     // All Orders
@@ -233,11 +233,24 @@ class OrderController extends Controller
 
                 $order_detail->quantity = $cartItem['quantity'];
 
-                if (addon_is_activated('club_point')) {
-                    $order_detail->earn_point = $product->earn_point;
-                }
+                // if (addon_is_activated('club_point')) {
+                $order_detail->earn_point = $product->earn_point;
+                // }
 
                 $order_detail->save();
+
+                if ($order_detail->save()) {
+                    $user = Auth::user();
+                    if ($user) {
+                        // Get the user's current earn points
+                        $currentEarnPoints = $user->earn_point;
+                        // Add the product's earn points to the user's current earn points
+                        $totalEarnPoints = $currentEarnPoints + $product->earn_point;
+                        // Update the user's earn points
+                        $user->earn_point = $totalEarnPoints;
+                        $user->save();
+                    }
+                }
 
                 $product->num_of_sale += $cartItem['quantity'];
                 $product->save();
@@ -385,9 +398,9 @@ class OrderController extends Controller
 
                 $order_detail->quantity = $cartItem['quantity'];
 
-                if (addon_is_activated('club_point')) {
-                    $order_detail->earn_point = $product->earn_point;
-                }
+                // if (addon_is_activated('club_point')) {
+                $order_detail->earn_point = $product->earn_point;
+                // }
 
                 $order_detail->save();
 
@@ -408,7 +421,6 @@ class OrderController extends Controller
                     $seller->num_of_sale += $cartItem['quantity'];
                     $seller->save();
                 }
-
             }
 
             $order->grand_total = $subtotal + $tax;
@@ -523,7 +535,7 @@ class OrderController extends Controller
         }
 
         // If the order is cancelled and the seller commission is calculated, deduct seller earning
-        if($request->status == 'cancelled' && $order->user->user_type == 'seller' && $order->payment_status == 'paid' && $order->commission_calculated == 1){
+        if ($request->status == 'cancelled' && $order->user->user_type == 'seller' && $order->payment_status == 'paid' && $order->commission_calculated == 1) {
             $sellerEarning = $order->commissionHistory->seller_earning;
             $shop = $order->shop;
             $shop->admin_to_pay -= $sellerEarning;
@@ -723,8 +735,8 @@ class OrderController extends Controller
 
     public function orderBulkExport(Request $request)
     {
-        if($request->id){
-          return Excel::download(new OrdersExport($request->id), 'orders.xlsx');
+        if ($request->id) {
+            return Excel::download(new OrdersExport($request->id), 'orders.xlsx');
         }
         return back();
     }

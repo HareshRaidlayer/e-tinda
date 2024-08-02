@@ -237,13 +237,13 @@ class ProductController extends Controller
         $this->frequentlyBoughtProductService->store($request->only([
             'product_id', 'frequently_bought_selection_type', 'fq_bought_product_ids', 'fq_bought_product_category_id'
         ]));
-       
+
         // Product Translations
         $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
         ProductTranslation::create($request->only([
             'lang', 'name', 'unit', 'description', 'product_id'
         ]));
-        
+
         flash(translate('Product has been inserted successfully'))->success();
 
         Artisan::call('view:clear');
@@ -439,7 +439,7 @@ class ProductController extends Controller
 
         //VAT & Tax
         $this->productTaxService->product_duplicate_store($product->taxes, $product_new);
-        
+
         // Product Categories
         foreach($product->product_categories as $product_category){
             ProductCategory::insert([
@@ -468,8 +468,10 @@ class ProductController extends Controller
 
     public function updateTodaysDeal(Request $request)
     {
+
         $product = Product::findOrFail($request->id);
         $product->todays_deal = $request->status;
+        $product->earn_point = $request->earn_point;
         $product->save();
         Cache::forget('todays_deal_products');
         return 1;
