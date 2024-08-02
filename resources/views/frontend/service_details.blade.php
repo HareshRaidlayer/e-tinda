@@ -136,11 +136,11 @@
                             <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleremail'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
-                            <span class="text-secondary fs-14 fw-400 mr-4 ">Chone</span><br>
+                            <span class="text-secondary fs-14 fw-400 mr-4 ">Phone</span><br>
                             <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellerphone'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
-                            <span class="text-secondary fs-14 fw-400 mr-4 ">Cddress</span><br>
+                            <span class="text-secondary fs-14 fw-400 mr-4 ">Address</span><br>
                             <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleraddress'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
@@ -236,9 +236,10 @@
                                 {{-- <a href="{{ route('checkoutService', ['id' => $detailedService['id'] ]) }}" class="btn btn-primary fw-600 min-w-150px rounded-0">
                                  {{ translate('Book Now') }}
                                 </a> --}}
-                                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0" onclick="addToCartService()">
+                                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0" @if (Auth::check() || get_Setting('guest_checkout_activation') == 1) onclick="addToCartService()" @else onclick="showLoginModal()" @endif >
                                     <i class="la la-shopping-cart"></i> Buy Now
                                 </button>
+
                             </div>
                             <!-- Share -->
                             <div class="row no-gutters mt-4">
