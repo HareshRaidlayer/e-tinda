@@ -1121,7 +1121,7 @@
                 @endif
 
                 <!-- Club Point Addon-->
-                @if (addon_is_activated('club_point'))
+                {{-- @if (addon_is_activated('club_point')) --}}
                     @canany(['club_point_configurations','set_club_points','view_users_club_points'])
                         <li class="aiz-side-nav-item">
                             <a href="#" class="aiz-side-nav-link">
@@ -1152,7 +1152,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                @can('set_club_points')
+                                {{-- @can('set_club_points')
                                     <li class="aiz-side-nav-item">
                                         <a href="{{route('set_product_points')}}" class="aiz-side-nav-link {{ areActiveRoutes(['set_product_points', 'product_club_point.edit'])}}">
                                             <span class="aiz-side-nav-text">{{translate('Set Product Point')}}</span>
@@ -1165,11 +1165,11 @@
                                             <span class="aiz-side-nav-text">{{translate('User Points')}}</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
                             </ul>
                         </li>
                     @endcanany
-                @endif
+                {{-- @endif --}}
 
                 <!--OTP addon -->
                 @if (addon_is_activated('otp_system'))
