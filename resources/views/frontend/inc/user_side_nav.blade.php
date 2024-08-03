@@ -265,7 +265,7 @@
                 @endif
 
                 <!-- Earning Points -->
-                @if (addon_is_activated('club_point'))
+                {{-- @if (addon_is_activated('club_point')) --}}
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('earnng_point_for_user') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['earnng_point_for_user']) }}">
@@ -278,7 +278,7 @@
                             <span class="aiz-side-nav-text ml-3">{{ translate('Earning Points') }}</span>
                         </a>
                     </li>
-                @endif
+                {{-- @endif --}}
 
                 <!-- Affiliate -->
                 @if (addon_is_activated('affiliate_system') &&
