@@ -49,8 +49,12 @@ class HomeController extends Controller
             return Category::with('bannerImage')->where('featured', 1)->get();
         });
         $categories = Category::with('childrenCategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get();
-        $services = Service::where('status', 1)->get();
-        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang','categories','services'));
+        // $services = Service::where('status', 1)->get();
+        $query = Service::query();
+        $query->where('status', 1);
+        $services = $query->get();
+
+        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'categories', 'services'));
     }
 
     public function load_todays_deal_section()
@@ -327,7 +331,7 @@ class HomeController extends Controller
                 $affiliateController->processAffiliateStats($referred_by_user->id, 1, 0, 0, 0);
             }
 
-            if(get_setting('last_viewed_product_activation') == 1 && Auth::check() && auth()->user()->user_type == 'customer'){
+            if (get_setting('last_viewed_product_activation') == 1 && Auth::check() && auth()->user()->user_type == 'customer') {
                 lastViewedProducts($detailedProduct->id, auth()->user()->id);
             }
 
@@ -351,10 +355,10 @@ class HomeController extends Controller
             DB::raw('users.state as sellerstate'),
             DB::raw('users.phone as sellerphone')
         )
-        ->join('users', 'services.user_id', '=', 'users.id')
-        ->where('services.slug', $slug)
-        ->where('services.status', 1)
-        ->first();
+            ->join('users', 'services.user_id', '=', 'users.id')
+            ->where('services.slug', $slug)
+            ->where('services.status', 1)
+            ->first();
 
         // echo "<pre>",print_r($detailedService);exit;
 
@@ -872,11 +876,11 @@ class HomeController extends Controller
         $sql_path = $request->file('sql_file')->store('uploads', 'local');
 
         $zip = new ZipArchive;
-        $zip->open(base_path('public/'.$upload_path));
+        $zip->open(base_path('public/' . $upload_path));
         $zip->extractTo('public/uploads/all');
 
         $zip1 = new ZipArchive;
-        $zip1->open(base_path('public/'.$sql_path));
+        $zip1->open(base_path('public/' . $sql_path));
         $zip1->extractTo('public/uploads');
 
         Artisan::call('cache:clear');
