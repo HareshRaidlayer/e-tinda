@@ -187,7 +187,7 @@
                                 <div class="carousel-box px-4 d-flex flex-column align-items-center py-2">
                                     <div class="size-80px overflow-hidden hov-scale-img">
                                         <a class="d-block" href="{{$service_url}}">
-                                            <img src="{{ isset($services['thumbnail_img']) ? my_asset($services['thumbnail_img']) : static_asset('assets/img/placeholder.jpg') }}"
+                                            <img src="{{ isset($service['thumbnail_img']) ? my_asset($service['thumbnail_img']) : static_asset('assets/img/placeholder.jpg') }}"
                                             class="lazyload img-fit h-100 mx-auto has-transition"
                                             alt="{{ $category->getTranslation('name') }}"
                                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
