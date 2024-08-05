@@ -59,6 +59,7 @@
                     <!-- Expenditure summary -->
                     <div class="col">
                         <div class="p-4 bg-primary @if (!addon_is_activated('club_point'))  @endif" style="margin-bottom: 2rem;">
+                        <div class="p-4 bg-primary " style="margin-bottom: 2rem;">
                             <div class="d-flex align-items-center pb-4 ">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
                                     <g id="Group_25000" data-name="Group 25000" transform="translate(-926 -614)">

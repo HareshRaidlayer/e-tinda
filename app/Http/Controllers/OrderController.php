@@ -247,6 +247,7 @@ class OrderController extends Controller
                         $currentEarnPoints = $user->earn_point;
                         // Add the product's earn points to the user's current earn points
                         $totalEarnPoints = $currentEarnPoints + $product->earn_point * $cartItem['quantity'];
+                       
                         // Update the user's earn points
                         $user->earn_point = $totalEarnPoints;
                         $user->save();
@@ -402,6 +403,7 @@ class OrderController extends Controller
                 // if (addon_is_activated('club_point')) {
                 $total_point = $product->earn_point * $cartItem['quantity'];
                 $order_detail->earn_point = $total_point;
+
                 // }
 
                 $order_detail->save();
