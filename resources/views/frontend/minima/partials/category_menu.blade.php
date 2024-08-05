@@ -3,7 +3,6 @@
         <li class="category-nav-element border border-top-0 position-relative">
             <a href="#" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
                 <?php $e_commerce_image = get_single_category(12);
-                // print_r(uploaded_asset($e_commerce_image['cover_image']));exit;
                 ?>
                 <img class="cat-image lazyload mr-2" src="{{ static_asset('assets/img/placeholder.jpg') }}"
                     data-src="{{ isset($e_commerce_image['cover_image']) ? uploaded_asset($e_commerce_image['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
