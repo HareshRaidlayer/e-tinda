@@ -15,10 +15,46 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Artisan;
 use Auth;
+use DB;
+use App\Models\Order;
 
 class ServiceController extends Controller
 {
 
+    public function serviceOrders(Request $request)
+    {
+        $payment_status = null;
+        $delivery_status = null;
+        $sort_search = null;
+        $orders = DB::table('orders')
+            ->orderBy('id', 'desc')
+            ->where('seller_id', Auth::user()->id)
+            ->where('is_service', 1)
+            ->select('orders.id')
+            ->distinct();
+
+        if ($request->payment_status != null) {
+            $orders = $orders->where('payment_status', $request->payment_status);
+            $payment_status = $request->payment_status;
+        }
+        if ($request->delivery_status != null) {
+            $orders = $orders->where('delivery_status', $request->delivery_status);
+            $delivery_status = $request->delivery_status;
+        }
+        if ($request->has('search')) {
+            $sort_search = $request->search;
+            $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
+        }
+
+        $orders = $orders->paginate(15);
+
+        foreach ($orders as $key => $value) {
+            $order = Order::find($value->id);
+            $order->viewed = 1;
+            $order->save();
+        }
+        return view('seller.service.services.orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search'));
+    }
 
     public function index(Request $request)
     {
@@ -34,7 +70,7 @@ class ServiceController extends Controller
 
     public function create(Request $request)
     {
-        $serviceCategory = ServiceCategory::where('status',1)->get();
+        $serviceCategory = ServiceCategory::where('status', 1)->get();
         return view('seller.service.services.create', compact('serviceCategory'));
     }
     public function store(Request $request)
@@ -77,7 +113,7 @@ class ServiceController extends Controller
         $same_slug_count = Service::where('slug', 'LIKE', $slug . '%')->count();
         $slug_suffix = $same_slug_count ? '-' . $same_slug_count + 1 : '';
         $slug .= $slug_suffix;
-        $service->slug =$slug;
+        $service->slug = $slug;
 
         $service->warranty = $request->warranty;
         $service->save();
@@ -90,7 +126,7 @@ class ServiceController extends Controller
     public function edit(Request $request, $id)
     {
         $product = Service::findOrFail($id);
-        $serviceCategory = ServiceCategory::where('status',1)->get();
+        $serviceCategory = ServiceCategory::where('status', 1)->get();
 
         $lang = $request->lang;
         $tags = json_decode($product->tags);
@@ -98,7 +134,7 @@ class ServiceController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('seller.service.services.edit', compact('product', 'categories', 'tags','serviceCategory', 'lang'));
+        return view('seller.service.services.edit', compact('product', 'categories', 'tags', 'serviceCategory', 'lang'));
     }
 
     public function update(Request $request)
@@ -139,7 +175,7 @@ class ServiceController extends Controller
         $same_slug_count = Service::where('slug', 'LIKE', $slug . '%')->count();
         $slug_suffix = $same_slug_count ? '-' . $same_slug_count + 1 : '';
         $slug .= $slug_suffix;
-        $service->slug =$slug;
+        $service->slug = $slug;
 
         $service->warranty = $request->warranty;
         $service->save();
@@ -180,5 +216,4 @@ class ServiceController extends Controller
             return back();
         }
     }
-
 }

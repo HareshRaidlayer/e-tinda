@@ -71,7 +71,7 @@ class OrderController extends Controller
 
     // Update Delivery Status
     public function update_delivery_status(Request $request)
-    {   
+    {
         $authUser = Auth::user();
         $order = Order::findOrFail($request->order_id);
         $order->delivery_viewed = '0';
@@ -85,7 +85,7 @@ class OrderController extends Controller
         }
 
         // If the order is cancelled and the seller commission is calculated, deduct seller earning
-        if($request->status == 'cancelled' && $order->payment_status == 'paid' && $order->commission_calculated == 1){
+        if ($request->status == 'cancelled' && $order->payment_status == 'paid' && $order->commission_calculated == 1) {
             $sellerEarning = $order->commissionHistory->seller_earning;
             $shop = $order->shop;
             $shop->admin_to_pay -= $sellerEarning;
@@ -105,7 +105,6 @@ class OrderController extends Controller
             try {
                 SmsUtility::delivery_status_change(json_decode($order->shipping_address)->phone, $order);
             } catch (\Exception $e) {
-
             }
         }
 
@@ -146,7 +145,7 @@ class OrderController extends Controller
             $orderDetail->payment_status = $request->status;
             $orderDetail->save();
         }
-        
+
         $status = 'paid';
         foreach ($order->orderDetails as $key => $orderDetail) {
             if ($orderDetail->payment_status != 'paid') {
@@ -181,7 +180,6 @@ class OrderController extends Controller
             try {
                 SmsUtility::payment_status_change(json_decode($order->shipping_address)->phone, $order);
             } catch (\Exception $e) {
-
             }
         }
         return 1;
@@ -189,10 +187,9 @@ class OrderController extends Controller
 
     public function orderBulkExport(Request $request)
     {
-        if($request->id){
-          return Excel::download(new OrdersExport($request->id), 'orders.xlsx');
+        if ($request->id) {
+            return Excel::download(new OrdersExport($request->id), 'orders.xlsx');
         }
         return back();
     }
-
 }

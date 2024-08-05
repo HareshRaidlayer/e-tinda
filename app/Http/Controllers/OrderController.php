@@ -247,7 +247,7 @@ class OrderController extends Controller
                         $currentEarnPoints = $user->earn_point;
                         // Add the product's earn points to the user's current earn points
                         $totalEarnPoints = $currentEarnPoints + $product->earn_point * $cartItem['quantity'];
-                       
+
                         // Update the user's earn points
                         $user->earn_point = $totalEarnPoints;
                         $user->save();
@@ -355,6 +355,7 @@ class OrderController extends Controller
             $order->payment_type = $request->payment_option;
             $order->delivery_viewed = '0';
             $order->payment_status_viewed = '0';
+            $order->is_service = $request->is_service;
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
             $order->save();
