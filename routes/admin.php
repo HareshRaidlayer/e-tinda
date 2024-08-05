@@ -52,7 +52,7 @@ use App\Http\Controllers\TaxController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ZoneController;
-
+use App\Http\Controllers\ServiceController;
 /*
   |--------------------------------------------------------------------------
   | Admin Routes
@@ -132,6 +132,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/product-search', 'product_search')->name('product.search');
         Route::post('/get-selected-products', 'get_selected_products')->name('get-selected-products');
         Route::post('/set-product-discount', 'setProductDiscount')->name('set_product_discount');
+    });
+
+    // Products
+    Route::controller(ServiceController::class)->group(function () {
+        Route::get('/service/all', 'admin_service')->name('service.admin');
+        Route::post('/service/featured', 'updateFeatured')->name('service.featured');
+        Route::get('/service/{id}/edit', 'edit')->name('service.edit');
+        Route::post('/service/update/{product}', 'update')->name('service.update');
     });
 
     // Digital Product
@@ -564,7 +572,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/custom-notifications.delete/{identifier}', 'customNotificationSingleDelete')->name('custom-notifications.delete');
         Route::post('/custom-notifications.bulk_delete', 'customNotificationBulkDelete')->name('custom-notifications.bulk_delete');
         Route::post('/custom-notified-customers-list', 'customNotifiedCustomersList')->name('custom_notified_customers_list');
-        
     });
 
     Route::resource('notification-type', NotificationTypeController::class);
@@ -580,4 +587,3 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     Route::get('/admin-permissions', [RoleController::class, 'create_admin_permissions']);
 });
-

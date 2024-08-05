@@ -74,6 +74,7 @@ class ClubPointController extends Controller
                 return redirect()->back();
             }
         }
+        flash(translate('Not enough points to convert!'))->error();
         return redirect()->back();
     }
 }

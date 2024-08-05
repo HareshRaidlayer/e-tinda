@@ -234,7 +234,8 @@ class OrderController extends Controller
                 $order_detail->quantity = $cartItem['quantity'];
 
                 // if (addon_is_activated('club_point')) {
-                $order_detail->earn_point = $product->earn_point;
+                $total_point = $product->earn_point * $cartItem['quantity'];
+                $order_detail->earn_point = $total_point;
                 // }
 
                 $order_detail->save();
@@ -245,7 +246,7 @@ class OrderController extends Controller
                         // Get the user's current earn points
                         $currentEarnPoints = $user->earn_point;
                         // Add the product's earn points to the user's current earn points
-                        $totalEarnPoints = $currentEarnPoints + $product->earn_point;
+                        $totalEarnPoints = $currentEarnPoints + $product->earn_point * $cartItem['quantity'];
                         // Update the user's earn points
                         $user->earn_point = $totalEarnPoints;
                         $user->save();
@@ -399,10 +400,24 @@ class OrderController extends Controller
                 $order_detail->quantity = $cartItem['quantity'];
 
                 // if (addon_is_activated('club_point')) {
-                $order_detail->earn_point = $product->earn_point;
+                $total_point = $product->earn_point * $cartItem['quantity'];
+                $order_detail->earn_point = $total_point;
                 // }
 
                 $order_detail->save();
+
+                if ($order_detail->save()) {
+                    $user = Auth::user();
+                    if ($user) {
+                        // Get the user's current earn points
+                        $currentEarnPoints = $user->earn_point;
+                        // Add the product's earn points to the user's current earn points
+                        $totalEarnPoints = $currentEarnPoints + $product->earn_point * $cartItem['quantity'];
+                        // Update the user's earn points
+                        $user->earn_point = $totalEarnPoints;
+                        $user->save();
+                    }
+                }
 
                 $product->save();
 

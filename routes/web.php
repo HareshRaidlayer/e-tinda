@@ -197,6 +197,7 @@ Route::controller(SearchController::class)->group(function () {
     Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
     Route::get('/eService/{category_slug}', 'listingByService')->name('service.category');
     Route::get('/brand/{brand_slug}', 'listingByBrand')->name('products.brand');
+    Route::get('/E-Pasabuy', 'listingByEPasabuy')->name('service.EPasabuy');
 });
 
 // Cart

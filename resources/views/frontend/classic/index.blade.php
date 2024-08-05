@@ -2,8 +2,8 @@
 
 @section('content')
     <style>
-        @media (max-width: 767px){
-            #flash_deal .flash-deals-baner{
+        @media (max-width: 767px) {
+            #flash_deal .flash-deals-baner {
                 height: 203px !important;
             }
         }
@@ -14,7 +14,7 @@
         <div class="container">
             <div class="d-flex flex-wrap position-relative">
                 <div class="position-static d-none d-xl-block">
-                    @include('frontend.'.get_setting("homepage_select").'.partials.category_menu')
+                    @include('frontend.' . get_setting('homepage_select') . '.partials.category_menu')
                 </div>
 
                 <!-- Sliders -->
@@ -22,13 +22,17 @@
                     @if (get_setting('home_slider_images', null, $lang) != null)
                         <div class="aiz-carousel dots-inside-bottom" data-autoplay="true" data-infinite="true">
                             @php
-                                $decoded_slider_images = json_decode(get_setting('home_slider_images', null, $lang), true);
+                                $decoded_slider_images = json_decode(
+                                    get_setting('home_slider_images', null, $lang),
+                                    true,
+                                );
                                 $sliders = get_slider_images($decoded_slider_images);
                                 $home_slider_links = get_setting('home_slider_links', null, $lang);
                             @endphp
                             @foreach ($sliders as $key => $slider)
                                 <div class="carousel-box">
-                                    <a href="{{ isset(json_decode($home_slider_links, true)[$key]) ? json_decode($home_slider_links, true)[$key] : '' }}">
+                                    <a
+                                        href="{{ isset(json_decode($home_slider_links, true)[$key]) ? json_decode($home_slider_links, true)[$key] : '' }}">
                                         <!-- Image -->
                                         <img class="d-block mw-100 img-fit overflow-hidden h-180px h-md-320px h-lg-460px overflow-hidden"
                                             src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
@@ -100,15 +104,18 @@
                             $flash_deal_products = get_flash_deal_products($flash_deal->id);
                         @endphp
                         <div class="aiz-carousel border-top @if (count($flash_deal_products) > 8) border-right @endif arrow-inactive-none arrow-x-0"
-                            data-rows="2" data-items="5" data-xxl-items="5" data-xl-items="3.5" data-lg-items="3" data-md-items="2"
-                            data-sm-items="2.5" data-xs-items="1.7" data-arrows="true" data-dots="false">
+                            data-rows="2" data-items="5" data-xxl-items="5" data-xl-items="3.5" data-lg-items="3"
+                            data-md-items="2" data-sm-items="2.5" data-xs-items="1.7" data-arrows="true" data-dots="false">
                             @foreach ($flash_deal_products as $key => $flash_deal_product)
                                 <div class="carousel-box border-left border-bottom">
                                     @if ($flash_deal_product->product != null && $flash_deal_product->product->published != 0)
                                         @php
                                             $product_url = route('product', $flash_deal_product->product->slug);
                                             if ($flash_deal_product->product->auction_product == 1) {
-                                                $product_url = route('auction-product', $flash_deal_product->product->slug);
+                                                $product_url = route(
+                                                    'auction-product',
+                                                    $flash_deal_product->product->slug,
+                                                );
                                             }
                                         @endphp
                                         <div
@@ -144,7 +151,7 @@
     @endif
 
     <!-- Today's deal -->
-    <div id="todays_deal"  class="mb-2 mb-md-3 mt-2 mt-md-3">
+    <div id="todays_deal" class="mb-2 mb-md-3 mt-2 mt-md-3">
 
     </div>
 
@@ -170,16 +177,15 @@
                 <div class="bg-white px-3">
                     <div class="row border-top border-right">
                         @foreach ($featured_categories->take(6) as $key => $category)
-                        @php
-                            $category_name = $category->getTranslation('name');
-                        @endphp
+                            @php
+                                $category_name = $category->getTranslation('name');
+                            @endphp
                             <div class="col-xl-4 col-md-6 border-left border-bottom py-3 py-md-2rem">
                                 <div class="d-sm-flex text-center text-sm-left">
                                     <div class="mb-3">
                                         <img src="{{ isset($category->bannerImage->file_name) ? my_asset($category->bannerImage->file_name) : asset('assets/img/placeholder.jpg') }}"
                                             class="lazyload w-150px h-auto mx-auto has-transition"
-                                            alt="{{ $category->getTranslation('name') }}"
-                                            >
+                                            alt="{{ $category->getTranslation('name') }}">
                                     </div>
                                     <div class="px-2 px-lg-4">
                                         <h6 class="text-dark mb-0 text-truncate-2">
@@ -191,7 +197,8 @@
                                         </h6>
                                         @foreach ($category->childrenCategories->take(5) as $key => $child_category)
                                             <p class="mb-0 mt-3">
-                                                <a href="{{ route('products.category', $child_category->slug) }}" class="fs-13 fw-300 text-reset hov-text-primary animate-underline-primary">
+                                                <a href="{{ route('products.category', $child_category->slug) }}"
+                                                    class="fs-13 fw-300 text-reset hov-text-primary animate-underline-primary">
                                                     {{ $child_category->getTranslation('name') }}
                                                 </a>
                                             </p>
@@ -205,7 +212,53 @@
             </div>
         </section>
     @endif
+    @if ($services)
+        <section class="mb-1 mb-md-2 pt-1 pt-md-0.5rem featured-categories">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
+                            <span class="">{{ translate('Services') }}</span>
+                        </h3>
+                    </div>
 
+                    <!-- Categories -->
+                    <div class="bg-white px-sm-3">
+                        <div class="aiz-carousel sm-gutters-17" data-items="8" data-xxl-items="8" data-xl-items="8"
+                            data-lg-items="6" data-md-items="5" data-sm-items="3" data-xs-items="2" data-arrows="true"
+                            data-dots="false" data-autoplay="false" data-infinite="true" data-center="false">
+                            @foreach ($services as $key => $service)
+                                @php
+                                    $service_name = $service->name;
+                                    $service_url = route('service', $service->slug);
+                                    $service_img = $service->thumbnail_img;
+                                    // print_r($service->name);exit;
+                                @endphp
+
+                                <div class="carousel-box px-4 d-flex flex-column align-items-center py-2">
+                                    <div class="size-80px overflow-hidden hov-scale-img">
+                                        <a class="d-block" href="{{ $service_url }}">
+                                            <img src="{{ isset($service_img) ? get_image($service->thumbnail) : static_asset('assets/img/placeholder.jpg') }}"
+                                                class="lazyload img-fit h-100 mx-auto has-transition"
+                                                alt="{{ $category->getTranslation('name') }}"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                        </a>
+                                    </div>
+
+                                    <div class="text-center h-35px text-truncate-2" style="margin-top: 12px;">
+                                        <a class="fs-13 fw-500 text-center text-reset hov-text-primary"
+                                            href="{{ $service_url }}" style="width: max-content;">
+                                            {{ $service_name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
     <!-- Banner section 1 -->
     @php $homeBanner1Images = get_setting('home_banner1_images', null, $lang);   @endphp
     @if ($homeBanner1Images != null)
@@ -501,101 +554,103 @@
             $best_selers = get_best_sellers(10);
         @endphp
         @if (count($best_selers) > 0)
-        <section class="mb-2 mb-md-3 mt-2 mt-md-3">
-            <div class="container">
-                <!-- Top Section -->
-                <div class="d-flex mb-2 mb-md-3 align-items-baseline justify-content-between">
-                    <!-- Title -->
-                    <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
-                        <span class="pb-3">{{ translate('Top Sellers') }}</span>
-                    </h3>
-                    <!-- Links -->
-                    <div class="d-flex">
-                        <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary"
-                            href="{{ route('sellers') }}">{{ translate('View All Sellers') }}</a>
+            <section class="mb-2 mb-md-3 mt-2 mt-md-3">
+                <div class="container">
+                    <!-- Top Section -->
+                    <div class="d-flex mb-2 mb-md-3 align-items-baseline justify-content-between">
+                        <!-- Title -->
+                        <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
+                            <span class="pb-3">{{ translate('Top Sellers') }}</span>
+                        </h3>
+                        <!-- Links -->
+                        <div class="d-flex">
+                            <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary"
+                                href="{{ route('sellers') }}">{{ translate('View All Sellers') }}</a>
+                        </div>
+                    </div>
+                    <!-- Sellers Section -->
+                    <div class="aiz-carousel arrow-x-0 arrow-inactive-none" data-items="5" data-xxl-items="5"
+                        data-xl-items="4" data-lg-items="3.4" data-md-items="2.5" data-sm-items="2" data-xs-items="1.4"
+                        data-arrows="true" data-dots="false">
+                        @foreach ($best_selers as $key => $seller)
+                            @if ($seller->user != null)
+                                <div
+                                    class="carousel-box h-100 position-relative text-center border-right border-top border-bottom @if ($key == 0) border-left @endif has-transition hov-animate-outline">
+                                    <div class="position-relative px-3" style="padding-top: 2rem; padding-bottom:2rem;">
+                                        <!-- Shop logo & Verification Status -->
+                                        <div class="position-relative mx-auto size-100px size-md-120px">
+                                            <a href="{{ route('shop.visit', $seller->slug) }}"
+                                                class="d-flex mx-auto justify-content-center align-item-center size-100px size-md-120px border overflow-hidden hov-scale-img"
+                                                tabindex="0"
+                                                style="border: 1px solid #e5e5e5; border-radius: 50%; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.06);">
+                                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                                    data-src="{{ uploaded_asset($seller->logo) }}"
+                                                    alt="{{ $seller->name }}" class="img-fit lazyload has-transition"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                            </a>
+                                            <div class="absolute-top-right z-1 mr-md-2 mt-1 rounded-content bg-white">
+                                                @if ($seller->verification_status == 1)
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24"
+                                                        viewBox="0 0 24.001 24">
+                                                        <g id="Group_25929" data-name="Group 25929"
+                                                            transform="translate(-480 -345)">
+                                                            <circle id="Ellipse_637" data-name="Ellipse 637"
+                                                                cx="12" cy="12" r="12"
+                                                                transform="translate(480 345)" fill="#fff" />
+                                                            <g id="Group_25927" data-name="Group 25927"
+                                                                transform="translate(480 345)">
+                                                                <path id="Union_5" data-name="Union 5"
+                                                                    d="M0,12A12,12,0,1,1,12,24,12,12,0,0,1,0,12Zm1.2,0A10.8,10.8,0,1,0,12,1.2,10.812,10.812,0,0,0,1.2,12Zm1.2,0A9.6,9.6,0,1,1,12,21.6,9.611,9.611,0,0,1,2.4,12Zm5.115-1.244a1.083,1.083,0,0,0,0,1.529l3.059,3.059a1.081,1.081,0,0,0,1.529,0l5.1-5.1a1.084,1.084,0,0,0,0-1.53,1.081,1.081,0,0,0-1.529,0L11.339,13.05,9.045,10.756a1.082,1.082,0,0,0-1.53,0Z"
+                                                                    transform="translate(0 0)" fill="#3490f3" />
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24"
+                                                        viewBox="0 0 24.001 24">
+                                                        <g id="Group_25929" data-name="Group 25929"
+                                                            transform="translate(-480 -345)">
+                                                            <circle id="Ellipse_637" data-name="Ellipse 637"
+                                                                cx="12" cy="12" r="12"
+                                                                transform="translate(480 345)" fill="#fff" />
+                                                            <g id="Group_25927" data-name="Group 25927"
+                                                                transform="translate(480 345)">
+                                                                <path id="Union_5" data-name="Union 5"
+                                                                    d="M0,12A12,12,0,1,1,12,24,12,12,0,0,1,0,12Zm1.2,0A10.8,10.8,0,1,0,12,1.2,10.812,10.812,0,0,0,1.2,12Zm1.2,0A9.6,9.6,0,1,1,12,21.6,9.611,9.611,0,0,1,2.4,12Zm5.115-1.244a1.083,1.083,0,0,0,0,1.529l3.059,3.059a1.081,1.081,0,0,0,1.529,0l5.1-5.1a1.084,1.084,0,0,0,0-1.53,1.081,1.081,0,0,0-1.529,0L11.339,13.05,9.045,10.756a1.082,1.082,0,0,0-1.53,0Z"
+                                                                    transform="translate(0 0)" fill="red" />
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- Shop name -->
+                                        <h2
+                                            class="fs-14 fw-700 text-dark text-truncate-2 h-40px mt-3 mt-md-4 mb-0 mb-md-3">
+                                            <a href="{{ route('shop.visit', $seller->slug) }}"
+                                                class="text-reset hov-text-primary"
+                                                tabindex="0">{{ $seller->name }}</a>
+                                        </h2>
+                                        <!-- Shop Rating -->
+                                        <div class="rating rating-mr-1 text-dark mb-3">
+                                            {{ renderStarRating($seller->rating) }}
+                                            <span class="opacity-60 fs-14">({{ $seller->num_of_reviews }}
+                                                {{ translate('Reviews') }})</span>
+                                        </div>
+                                        <!-- Visit Button -->
+                                        <a href="{{ route('shop.visit', $seller->slug) }}" class="btn-visit">
+                                            <span class="circle" aria-hidden="true">
+                                                <span class="icon arrow"></span>
+                                            </span>
+                                            <span class="button-text">{{ translate('Visit Store') }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
-                <!-- Sellers Section -->
-                <div class="aiz-carousel arrow-x-0 arrow-inactive-none" data-items="5" data-xxl-items="5"
-                    data-xl-items="4" data-lg-items="3.4" data-md-items="2.5" data-sm-items="2" data-xs-items="1.4"
-                    data-arrows="true" data-dots="false">
-                    @foreach ($best_selers as $key => $seller)
-                        @if ($seller->user != null)
-                            <div
-                                class="carousel-box h-100 position-relative text-center border-right border-top border-bottom @if ($key == 0) border-left @endif has-transition hov-animate-outline">
-                                <div class="position-relative px-3" style="padding-top: 2rem; padding-bottom:2rem;">
-                                    <!-- Shop logo & Verification Status -->
-                                    <div class="position-relative mx-auto size-100px size-md-120px">
-                                        <a href="{{ route('shop.visit', $seller->slug) }}"
-                                            class="d-flex mx-auto justify-content-center align-item-center size-100px size-md-120px border overflow-hidden hov-scale-img"
-                                            tabindex="0"
-                                            style="border: 1px solid #e5e5e5; border-radius: 50%; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.06);">
-                                            <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                                data-src="{{ uploaded_asset($seller->logo) }}" alt="{{ $seller->name }}"
-                                                class="img-fit lazyload has-transition"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                        </a>
-                                        <div class="absolute-top-right z-1 mr-md-2 mt-1 rounded-content bg-white">
-                                            @if ($seller->verification_status == 1)
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24"
-                                                    viewBox="0 0 24.001 24">
-                                                    <g id="Group_25929" data-name="Group 25929"
-                                                        transform="translate(-480 -345)">
-                                                        <circle id="Ellipse_637" data-name="Ellipse 637" cx="12"
-                                                            cy="12" r="12" transform="translate(480 345)"
-                                                            fill="#fff" />
-                                                        <g id="Group_25927" data-name="Group 25927"
-                                                            transform="translate(480 345)">
-                                                            <path id="Union_5" data-name="Union 5"
-                                                                d="M0,12A12,12,0,1,1,12,24,12,12,0,0,1,0,12Zm1.2,0A10.8,10.8,0,1,0,12,1.2,10.812,10.812,0,0,0,1.2,12Zm1.2,0A9.6,9.6,0,1,1,12,21.6,9.611,9.611,0,0,1,2.4,12Zm5.115-1.244a1.083,1.083,0,0,0,0,1.529l3.059,3.059a1.081,1.081,0,0,0,1.529,0l5.1-5.1a1.084,1.084,0,0,0,0-1.53,1.081,1.081,0,0,0-1.529,0L11.339,13.05,9.045,10.756a1.082,1.082,0,0,0-1.53,0Z"
-                                                                transform="translate(0 0)" fill="#3490f3" />
-                                                        </g>
-                                                    </g>
-                                                </svg>
-                                            @else
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24"
-                                                    viewBox="0 0 24.001 24">
-                                                    <g id="Group_25929" data-name="Group 25929"
-                                                        transform="translate(-480 -345)">
-                                                        <circle id="Ellipse_637" data-name="Ellipse 637" cx="12"
-                                                            cy="12" r="12" transform="translate(480 345)"
-                                                            fill="#fff" />
-                                                        <g id="Group_25927" data-name="Group 25927"
-                                                            transform="translate(480 345)">
-                                                            <path id="Union_5" data-name="Union 5"
-                                                                d="M0,12A12,12,0,1,1,12,24,12,12,0,0,1,0,12Zm1.2,0A10.8,10.8,0,1,0,12,1.2,10.812,10.812,0,0,0,1.2,12Zm1.2,0A9.6,9.6,0,1,1,12,21.6,9.611,9.611,0,0,1,2.4,12Zm5.115-1.244a1.083,1.083,0,0,0,0,1.529l3.059,3.059a1.081,1.081,0,0,0,1.529,0l5.1-5.1a1.084,1.084,0,0,0,0-1.53,1.081,1.081,0,0,0-1.529,0L11.339,13.05,9.045,10.756a1.082,1.082,0,0,0-1.53,0Z"
-                                                                transform="translate(0 0)" fill="red" />
-                                                        </g>
-                                                    </g>
-                                                </svg>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <!-- Shop name -->
-                                    <h2 class="fs-14 fw-700 text-dark text-truncate-2 h-40px mt-3 mt-md-4 mb-0 mb-md-3">
-                                        <a href="{{ route('shop.visit', $seller->slug) }}"
-                                            class="text-reset hov-text-primary" tabindex="0">{{ $seller->name }}</a>
-                                    </h2>
-                                    <!-- Shop Rating -->
-                                    <div class="rating rating-mr-1 text-dark mb-3">
-                                        {{ renderStarRating($seller->rating) }}
-                                        <span class="opacity-60 fs-14">({{ $seller->num_of_reviews }}
-                                            {{ translate('Reviews') }})</span>
-                                    </div>
-                                    <!-- Visit Button -->
-                                    <a href="{{ route('shop.visit', $seller->slug) }}" class="btn-visit">
-                                        <span class="circle" aria-hidden="true">
-                                            <span class="icon arrow"></span>
-                                        </span>
-                                        <span class="button-text">{{ translate('Visit Store') }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
-        </section>
+            </section>
         @endif
     @endif
 
@@ -642,4 +697,3 @@
     @endif
 
 @endsection
-

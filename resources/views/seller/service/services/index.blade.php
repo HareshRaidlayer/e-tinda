@@ -99,7 +99,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="{{ route('product', $product['slug']) }}" target="_blank" class="text-reset">
+                                    <a href="{{ route('service', $product['slug']) }}" target="_blank" class="text-reset">
                                         {{ $product['name'] }}
                                     </a>
                                 </td>

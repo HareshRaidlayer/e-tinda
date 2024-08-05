@@ -24,11 +24,11 @@
 @endsection
 
 @section('content')
-<style>
-    .aiz-refresh{
-        display:none;
-    }
-</style>
+    <style>
+        .aiz-refresh {
+            display: none;
+        }
+    </style>
     <section class="mb-4 pt-3">
         <div class="container">
             <div class="bg-white py-3">
@@ -47,24 +47,26 @@
                             <!-- Gallery Images -->
                             <div class="col-12">
                                 <div class="aiz-carousel product-gallery arrow-inactive-transparent arrow-lg-none"
-                                    data-nav-for='.service-gallery-thumb' data-fade='true' data-auto-height='true' data-arrows='true'>
+                                    data-nav-for='.service-gallery-thumb' data-fade='true' data-auto-height='true'
+                                    data-arrows='true'>
                                     @if ($detailedService)
                                         {{-- @foreach ($detailedService as $key => $stock)
                                             @if ($stock->image != null) --}}
-                                                <div class="carousel-box img-zoom rounded-0">
-                                                    <img class="img-fluid h-auto lazyload mx-auto"
-                                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($detailedService['thumbnail_img']) }}"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                </div>
-                                            {{-- @endif
+                                        <div class="carousel-box img-zoom rounded-0">
+                                            <img class="img-fluid h-auto lazyload mx-auto"
+                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                data-src="{{ uploaded_asset($detailedService['thumbnail_img']) }}"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                        </div>
+                                        {{-- @endif
                                         @endforeach --}}
                                     @endif
 
                                     @foreach ($photos as $key => $photo)
                                         <div class="carousel-box img-zoom rounded-0">
                                             <img class="img-fluid h-auto lazyload mx-auto"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($photo) }}"
+                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                data-src="{{ uploaded_asset($photo) }}"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </div>
                                     @endforeach
@@ -73,8 +75,9 @@
                             </div>
                             <!-- Thumbnail Images -->
                             <div class="col-12 mt-3 d-none d-lg-block">
-                                <div class="aiz-carousel half-outside-arrow product-gallery-thumb" data-items='7' data-nav-for='.product-gallery'
-                                    data-focus-select='true' data-arrows='true' data-vertical='false' data-auto-height='true'>
+                                <div class="aiz-carousel half-outside-arrow product-gallery-thumb" data-items='7'
+                                    data-nav-for='.product-gallery' data-focus-select='true' data-arrows='true'
+                                    data-vertical='false' data-auto-height='true'>
 
                                     {{-- @if ($detailedProduct->digital == 0)
                                         @foreach ($detailedProduct->stocks as $key => $stock)
@@ -92,7 +95,8 @@
                                     @foreach ($photos as $key => $photo)
                                         <div class="carousel-box c-pointer rounded-0">
                                             <img class="lazyload mw-100 size-60px mx-auto border p-1"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($photo) }}"
+                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                data-src="{{ uploaded_asset($photo) }}"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </div>
                                     @endforeach
@@ -116,12 +120,13 @@
                                 <!-- Review -->
                                 <div class="col-12">
                                     <span class="rating rating-mr-1">
-                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i><i class="las la-star"></i>
                                     </span>
                                     <span class="ml-1 opacity-50 fs-14">(0 reviews)</span>
                                 </div>
                             </div>
-                                        <!-- In stock -->
+                            <!-- In stock -->
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <a class="text-reset hov-text-primary fs-14 fw-700">Seller Details</a>
@@ -129,31 +134,45 @@
 
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 "> Name</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellername'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellername'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 "> Email</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleremail'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleremail'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">Phone</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellerphone'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellerphone'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">Address</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleraddress'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['selleraddress'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">City</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellercity'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellercity'] ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-3">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">State</span><br>
-                            <a  class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellerstate'] ?? '' }}</a>
+                            <a
+                                class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedService['sellerstate'] ?? '' }}</a>
                         </div>
+                        <!-- Club Point -->
+                        @if ($detailedService->earn_point != null)
+                            <div class="d-flex flex-wrap align-items-center mb-3">
+                                <span
+                                    class="text-secondary fs-14 fw-400 mr-4 w-80px">{{ translate('Club Point') }}</span><br>
+                                <div class="text-reset fs-14 fw-700">{{ $detailedService->earn_point }}</div>
+                            </div>
+                        @endif
 
-                            <!-- Seller Info -->
-                            {{-- <div class="d-flex flex-wrap align-items-center">
+                        <!-- Seller Info -->
+                        {{-- <div class="d-flex flex-wrap align-items-center">
                                 <div class="d-flex align-items-center mr-4">
                                     <!-- Shop Name -->
                                     <p class="mb-0 fs-14 fw-700">Inhouse Service</p>
@@ -173,87 +192,114 @@
                                         </button>
                                     </div>
                             </div> --}}
-                             <hr>
+                        <hr>
 
-                            <div class="row no-gutters mb-3">
-                                <div class="col-sm-2">
-                                    <div class="text-secondary fs-14 fw-400">{{ translate('Price') }}</div>
-                                </div>
-                                <div class="col-sm-10">
-                                    <div class="d-flex align-items-center">
-                                        <!-- Discount Price -->
-                                        <strong class="fs-16 fw-700 text-primary">
-                                            {{ home_price_service($detailedService) }}
-                                        </strong>
+                        <div class="row no-gutters mb-3">
+                            <div class="col-sm-2">
+                                <div class="text-secondary fs-14 fw-400">{{ translate('Price') }}</div>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="d-flex align-items-center">
+                                    <!-- Discount Price -->
+                                    <strong class="fs-16 fw-700 text-primary">
+                                        {{ home_price_service($detailedService) }}
+                                    </strong>
 
-                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <form id="option-choice-form">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $detailedService['id'] }}">
-                                <input type="hidden" name="quantity" value="1">
-                                <input type="hidden" name="price" value="{{home_discounted_priceService($detailedService)}}">
-                                <!-- Total Price -->
-                                <div class="row no-gutters pb-3" id="chosen_price_div">
-                                    <div class="col-sm-2">
-                                        <div class="text-secondary fs-14 fw-400 mt-1">Total Price</div>
-                                    </div>
-                                    {{-- <div class="col-sm-10">
+                        <form id="option-choice-form">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $detailedService['id'] }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="price"
+                                value="{{ home_discounted_priceService($detailedService) }}">
+                            <!-- Total Price -->
+                            <div class="row no-gutters pb-3" id="chosen_price_div">
+                                <div class="col-sm-2">
+                                    <div class="text-secondary fs-14 fw-400 mt-1">Total Price</div>
+                                </div>
+                                {{-- <div class="col-sm-10">
                                         <div class="product-price">
                                             <strong id="chosen_price" class="fs-20 fw-700 text-primary">{{ home_discounted_priceService($detailedService) }}</strong>
                                         </div>
                                     </div> --}}
 
-                                    <div class="col-sm-10">
-                                        <div class="d-flex align-items-center">
-                                            <!-- Discount Price -->
-                                            <strong class="fs-16 fw-700 text-primary">
-                                                {{ home_discounted_priceService($detailedService) }}
-                                            </strong>
-                                            <!-- Home Price -->
-                                            <del class="fs-14 opacity-60 ml-2">
-                                                {{ home_price_service($detailedService) }}
-                                            </del>
-                                            <!-- Unit -->
-                                            <!-- Discount percentage -->
-                                            @if ($detailedService['discount'] > 0)
-                                                <span class="bg-primary ml-2 fs-11 fw-700 text-white w-70px text-center p-1"
-                                                    style="padding-top:2px;padding-bottom:2px;">- {{ $detailedService['discount'] }}
-                                                    @if ($detailedService['discount_type'] == 'percent')
-                                                    <?php echo '%';?>
-                                                    @endif
-                                                </span>
-                                            @endif
-                                        </div>
+                                <div class="col-sm-10">
+                                    <div class="d-flex align-items-center">
+                                        <!-- Discount Price -->
+                                        <strong class="fs-16 fw-700 text-primary">
+                                            {{ home_discounted_priceService($detailedService) }}
+                                        </strong>
+                                        <!-- Home Price -->
+                                        <del class="fs-14 opacity-60 ml-2">
+                                            {{ home_price_service($detailedService) }}
+                                        </del>
+                                        <!-- Unit -->
+                                        <!-- Discount percentage -->
+                                        @if ($detailedService['discount'] > 0)
+                                            <span class="bg-primary ml-2 fs-11 fw-700 text-white w-70px text-center p-1"
+                                                style="padding-top:2px;padding-bottom:2px;">-
+                                                {{ $detailedService['discount'] }}
+                                                @if ($detailedService['discount_type'] == 'percent')
+                                                    <?php echo '%'; ?>
+                                                @endif
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
-                            </form>
-                            <!-- Add to cart & Buy now Buttons -->
-                            <div class="mt-3">
+                            </div>
+                        </form>
+                        <!-- Add to cart & Buy now Buttons -->
+                        <div class="mt-3">
 
-                                {{-- <a href="{{ route('checkoutService', ['id' => $detailedService['id'] ]) }}" class="btn btn-primary fw-600 min-w-150px rounded-0">
+                            {{-- <a href="{{ route('checkoutService', ['id' => $detailedService['id'] ]) }}" class="btn btn-primary fw-600 min-w-150px rounded-0">
                                  {{ translate('Book Now') }}
                                 </a> --}}
-                                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0" @if (Auth::check() || get_Setting('guest_checkout_activation') == 1) onclick="addToCartService()" @else onclick="showLoginModal()" @endif >
-                                    <i class="la la-shopping-cart"></i> Buy Now
-                                </button>
+                            <button type="button"
+                                class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0"
+                                @if (Auth::check() || get_Setting('guest_checkout_activation') == 1) onclick="addToCartService()" @else onclick="showLoginModal()" @endif>
+                                <i class="la la-shopping-cart"></i> Buy Now
+                            </button>
 
+                        </div>
+                        <!-- Share -->
+                        <div class="row no-gutters mt-4">
+                            <div class="col-sm-2">
+                                <div class="text-secondary fs-14 fw-400 mt-2">Share</div>
                             </div>
-                            <!-- Share -->
-                            <div class="row no-gutters mt-4">
-                                <div class="col-sm-2">
-                                    <div class="text-secondary fs-14 fw-400 mt-2">Share</div>
-                                </div>
-                                <div class="col-sm-10">
-                                    <div class="aiz-share jssocials"><div class="jssocials-shares"><div class="jssocials-share jssocials-share-email"><a target="_self" href="mailto:?subject=Sample%20product%20description&amp;body=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt" class="jssocials-share-link"><i class="lar la-envelope jssocials-share-logo"></i></a></div><div class="jssocials-share jssocials-share-twitter"><a target="_blank" href="https://twitter.com/share?url=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt&amp;text=Sample%20product%20description" class="jssocials-share-link"><i class="lab la-twitter jssocials-share-logo"></i></a></div><div class="jssocials-share jssocials-share-facebook"><a target="_blank" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt" class="jssocials-share-link"><i class="lab la-facebook-f jssocials-share-logo"></i></a></div><div class="jssocials-share jssocials-share-linkedin"><a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt" class="jssocials-share-link"><i class="lab la-linkedin-in jssocials-share-logo"></i></a></div><div class="jssocials-share jssocials-share-whatsapp"><a target="_self" href="whatsapp://send?text=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt Sample%20product%20description" class="jssocials-share-link"><i class="lab la-whatsapp jssocials-share-logo"></i></a></div></div></div>
+                            <div class="col-sm-10">
+                                <div class="aiz-share jssocials">
+                                    <div class="jssocials-shares">
+                                        <div class="jssocials-share jssocials-share-email"><a target="_self"
+                                                href="mailto:?subject=Sample%20product%20description&amp;body=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt"
+                                                class="jssocials-share-link"><i
+                                                    class="lar la-envelope jssocials-share-logo"></i></a></div>
+                                        <div class="jssocials-share jssocials-share-twitter"><a target="_blank"
+                                                href="https://twitter.com/share?url=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt&amp;text=Sample%20product%20description"
+                                                class="jssocials-share-link"><i
+                                                    class="lab la-twitter jssocials-share-logo"></i></a></div>
+                                        <div class="jssocials-share jssocials-share-facebook"><a target="_blank"
+                                                href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt"
+                                                class="jssocials-share-link"><i
+                                                    class="lab la-facebook-f jssocials-share-logo"></i></a></div>
+                                        <div class="jssocials-share jssocials-share-linkedin"><a target="_blank"
+                                                href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt"
+                                                class="jssocials-share-link"><i
+                                                    class="lab la-linkedin-in jssocials-share-logo"></i></a></div>
+                                        <div class="jssocials-share jssocials-share-whatsapp"><a target="_self"
+                                                href="whatsapp://send?text=http%3A%2F%2F127.0.0.1%3A8000%2Fproduct%2Fpuma-boys-cotton-hooded-neck-sweatshirt Sample%20product%20description"
+                                                class="jssocials-share-link"><i
+                                                    class="lab la-whatsapp jssocials-share-logo"></i></a></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -263,7 +309,9 @@
                 <div class="bg-white mb-4 border p-3 p-sm-4">
                     <!-- Tabs -->
                     <div class="nav aiz-nav-tabs">
-                        <a href="#tab_default_1" data-toggle="tab" class="mr-5 pb-2 fs-16 fw-700 text-reset active show">Description</a></div>
+                        <a href="#tab_default_1" data-toggle="tab"
+                            class="mr-5 pb-2 fs-16 fw-700 text-reset active show">Description</a>
+                    </div>
                     <!-- Description -->
                     <div class="tab-content pt-0">
                         <!-- Description -->
@@ -280,7 +328,9 @@
                 <div class="bg-white mb-4 border p-3 p-sm-4">
                     <!-- Tabs -->
                     <div class="nav aiz-nav-tabs">
-                        <a href="#tab_default_1" data-toggle="tab" class="mr-5 pb-2 fs-16 fw-700 text-reset active show">Videos</a></div>
+                        <a href="#tab_default_1" data-toggle="tab"
+                            class="mr-5 pb-2 fs-16 fw-700 text-reset active show">Videos</a>
+                    </div>
                     <!-- Description -->
                     <div class="tab-content pt-0">
                         <!-- Description -->
@@ -377,8 +427,7 @@
                 </div>
                 <div class="p-4">
                     <div class="size-300px size-lg-450px">
-                        <img class="img-fit h-100 lazyload"
-                            src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                        <img class="img-fit h-100 lazyload" src="{{ static_asset('assets/img/placeholder.jpg') }}"
                             data-src=""
                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                     </div>
@@ -401,7 +450,7 @@
                 <form class="" action="{{ route('conversations.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="product_id" value="{{$detailedService['id'] }}">
+                    <input type="hidden" name="product_id" value="{{ $detailedService['id'] }}">
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="form-group">
                             <input type="text" class="form-control mb-3 rounded-0" name="title"
@@ -416,7 +465,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary fw-600 rounded-0"
                             data-dismiss="modal">{{ translate('Cancel') }}</button>
-                        <button type="submit" class="btn btn-primary fw-600 rounded-0 w-100px">{{ translate('Send') }}</button>
+                        <button type="submit"
+                            class="btn btn-primary fw-600 rounded-0 w-100px">{{ translate('Send') }}</button>
                     </div>
                 </form>
             </div>
@@ -424,7 +474,7 @@
     </div>
 
     <!-- Bid Modal -->
-    {{-- @if($detailedProduct->auction_product == 1)
+    {{-- @if ($detailedProduct->auction_product == 1)
         @php
             $highest_bid = $detailedProduct->bids->max('amount');
             $min_bid_amount = $highest_bid != null ? $highest_bid+1 : $detailedProduct->starting_bid;
@@ -519,7 +569,7 @@
 
         // Pagination using ajax
         $(window).on('hashchange', function() {
-            if(window.history.pushState) {
+            if (window.history.pushState) {
                 window.history.pushState('', '/', window.location.pathname);
             } else {
                 window.location.hash = '';
@@ -544,9 +594,11 @@
             $.ajax({
                 url: '?page=' + page,
                 dataType: 'json',
-                data: {type: type},
+                data: {
+                    type: type
+                },
             }).done(function(data) {
-                $('.'+section).html(data);
+                $('.' + section).html(data);
                 location.hash = page;
             }).fail(function() {
                 alert('Something went worng! Data could not be loaded.');
@@ -560,17 +612,14 @@
             $('#image_modal').modal('show');
         }
 
-        function bid_modal(){
+        function bid_modal() {
             @if (isCustomer() || isSeller())
                 $('#bid_for_detail_product').modal('show');
-          	@elseif (isAdmin())
-                AIZ.plugins.notify('warning', '{{ translate("Sorry, Only customers & Sellers can Bid.") }}');
+            @elseif (isAdmin())
+                AIZ.plugins.notify('warning', '{{ translate('Sorry, Only customers & Sellers can Bid.') }}');
             @else
                 $('#login_modal').modal('show');
             @endif
         }
-
-
-
     </script>
 @endsection
