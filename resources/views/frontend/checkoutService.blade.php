@@ -9,7 +9,7 @@
                 <div class="col-xxl-8 col-xl-10 mx-auto">
                     <form class="form-default" data-toggle="validator" action="{{ route('payment.checkoutService') }}" role="form" method="POST" id="checkout-form">
                         @csrf
-
+                        <input type="hidden" name="is_service" value="1">
                         <div class="accordion" id="accordioncCheckoutInfo">
 
                             <!-- Shipping Info -->

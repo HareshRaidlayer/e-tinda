@@ -84,7 +84,12 @@
                                 <span class="aiz-side-nav-text">{{ translate('Services') }}</span>
                             </a>
                         </li>
-
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.service.orders') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.products', 'seller.products.create', 'seller.products.edit']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Service Orders') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="aiz-side-nav-item">

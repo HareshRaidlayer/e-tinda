@@ -44,6 +44,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     // Service
     Route::controller(ServiceController::class)->group(function () {
         Route::get('/service', 'index')->name('service');
+        Route::get('/service/orders', 'serviceOrders')->name('service.orders');
+
         Route::get('/service/create', 'create')->name('service.create');
         Route::post('/service/store/', 'store')->name('products.store');
 
