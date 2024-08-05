@@ -3,9 +3,10 @@
         <li class="category-nav-element border border-top-0 position-relative">
             <a href="#" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
                 <?php $e_commerce_image = get_single_category(12);
+                // print_r(uploaded_asset($e_commerce_image['cover_image']));exit;
                 ?>
-                <img class="cat-image lazyload mr-2 opacity-60" src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                        data-src="{{ isset($e_commerce_image['cover_image']) ? my_asset($e_commerce_image['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $e_commerce_image['name'] ?? '' }}"
+                <img class="cat-image lazyload mr-2" src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                        data-src="{{ isset($e_commerce_image['cover_image']) ? uploaded_asset($e_commerce_image['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $e_commerce_image['name'] ?? '' }}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                 <span class="cat-name has-transition">E-commerce</span>
             </a>
@@ -30,7 +31,7 @@
                 ?>
             <a href="#" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
                 <img class="cat-image lazyload mr-2 opacity-60" src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                        data-src="{{ isset($eSerbisyoimg['cover_image']) ? my_asset($eSerbisyoimg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $eSerbisyoimg['name'] ?? '' }}"
+                        data-src="{{ isset($eSerbisyoimg['cover_image']) ? uploaded_asset($eSerbisyoimg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $eSerbisyoimg['name'] ?? '' }}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                 <span class="cat-name has-transition">eSerbisyo</span>
             </a>
@@ -57,7 +58,7 @@
         <li class="category-nav-element border border-top-0 position-relative">
             <a href="#" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
                 <img class="cat-image lazyload mr-2 opacity-60" src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                        data-src="{{ isset($PasabuyImg['cover_image']) ? my_asset($PasabuyImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $PasabuyImg['name'] ?? '' }}"
+                        data-src="{{ isset($PasabuyImg['cover_image']) ? uploaded_asset($PasabuyImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $PasabuyImg['name'] ?? '' }}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                 <span class="cat-name has-transition">E Pasabuy</span>
             </a>
@@ -76,7 +77,7 @@
         <li class="category-nav-element border border-top-0 position-relative">
             <a href="#" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
                 <img class="cat-image lazyload mr-2 opacity-60" src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                        data-src="{{ isset($FarmerImg['cover_image']) ? my_asset($FarmerImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $FarmerImg['name'] ?? '' }}"
+                        data-src="{{ isset($FarmerImg['cover_image']) ? uploaded_asset($FarmerImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}" width="16" alt="{{ $FarmerImg['name'] ?? '' }}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                 <span class="cat-name has-transition">Farmer</span>
             </a>
