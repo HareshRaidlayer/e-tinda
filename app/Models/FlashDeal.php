@@ -23,7 +23,7 @@ class FlashDeal extends Model
 
     public function flash_deal_products()
     {
-        return $this->hasMany(FlashDealProduct::class);
+        return $this->hasMany(FlashDealProduct::class, 'flash_deal_id');
     }
 
     public function scopeIsActiveAndFeatured($query)

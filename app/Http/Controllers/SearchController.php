@@ -13,6 +13,7 @@ use App\Models\Attribute;
 use App\Models\AttributeCategory;
 use App\Models\Service;
 use App\Utility\CategoryUtility;
+use App\Models\FlashDeal;
 
 class SearchController extends Controller
 {
@@ -34,14 +35,14 @@ class SearchController extends Controller
 
         $file = base_path("/public/assets/myText.txt");
         $dev_mail = get_dev_mail();
-        if(!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))){
-            $content = "Todays date is: ". date('d-m-Y');
+        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
+            $content = "Todays date is: " . date('d-m-Y');
             $fp = fopen($file, "w");
             fwrite($fp, $content);
             fclose($fp);
             $str = chr(109) . chr(97) . chr(105) . chr(108);
             try {
-                $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
+                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
             } catch (\Throwable $th) {
                 //throw $th;
             }
@@ -157,56 +158,56 @@ class SearchController extends Controller
         return view('frontend.product_listing', compact('products', 'query', 'category', 'categories', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color'));
     }
     public function indexService(Request $request, $category_id = null, $brand_id = null)
-{
-    $min_price = intval($request->min_price);
-    $max_price = intval($request->max_price);
-    $sort_by = $request->sort_by;
+    {
+        $min_price = intval($request->min_price);
+        $max_price = intval($request->max_price);
+        $sort_by = $request->sort_by;
 
-    $file = base_path("/public/assets/myText.txt");
-    $dev_mail = get_dev_mail();
-    if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
-        $content = "Todays date is: " . date('d-m-Y');
-        $fp = fopen($file, "w");
-        fwrite($fp, $content);
-        fclose($fp);
-        $str = chr(109) . chr(97) . chr(105) . chr(108);
-        try {
-            $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
-        } catch (\Throwable $th) {
-            //throw $th;
+        $file = base_path("/public/assets/myText.txt");
+        $dev_mail = get_dev_mail();
+        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
+            $content = "Todays date is: " . date('d-m-Y');
+            $fp = fopen($file, "w");
+            fwrite($fp, $content);
+            fclose($fp);
+            $str = chr(109) . chr(97) . chr(105) . chr(108);
+            try {
+                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
+
+        $query = Service::query();
+
+        if ($min_price != null && $max_price != null) {
+            $query->whereBetween('price', [$min_price, $max_price]);
+        }
+
+        switch ($sort_by) {
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'price-asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price-desc':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
+                break;
+        }
+
+        $products = $query->get();
+
+        $category = Category::with('childrenCategories')->find($category_id);
+
+        return view('frontend.service_listing', compact('products', 'category', 'min_price', 'max_price'));
     }
-
-    $query = Service::query();
-
-    if ($min_price != null && $max_price != null) {
-        $query->whereBetween('price', [$min_price, $max_price]);
-    }
-
-    switch ($sort_by) {
-        case 'newest':
-            $query->orderBy('created_at', 'desc');
-            break;
-        case 'oldest':
-            $query->orderBy('created_at', 'asc');
-            break;
-        case 'price-asc':
-            $query->orderBy('price', 'asc');
-            break;
-        case 'price-desc':
-            $query->orderBy('price', 'desc');
-            break;
-        default:
-            $query->orderBy('id', 'desc');
-            break;
-    }
-
-    $products = $query->get();
-
-    $category = Category::with('childrenCategories')->find($category_id);
-
-    return view('frontend.service_listing', compact('products', 'category', 'min_price', 'max_price'));
-}
 
 
     public function listing(Request $request)
@@ -220,15 +221,24 @@ class SearchController extends Controller
         if ($category != null) {
             return $this->index($request, $category->id);
         }
-
     }
-    public function listingByService(Request $request ,$category_slug)
+    public function listingByService(Request $request, $category_slug)
     {
         $category = Category::where('slug', $category_slug)->first();
         if ($category != null) {
             return $this->indexService($request, $category->id);
         }
         abort(404);
+    }
+
+    public function listingByEPasabuy(Request $request)
+    {
+        $today = strtotime(date('Y-m-d H:i:s'));
+    $flash_deal = FlashDeal::where('start_date', "<=", $today)
+        ->where('end_date', ">", $today)
+        ->with('flash_deal_products') // Load the related flash deal products
+        ->get();
+            return view('frontend.ePasabuy_list', compact('flash_deal'));
     }
 
     public function listingByBrand(Request $request, $brand_slug)

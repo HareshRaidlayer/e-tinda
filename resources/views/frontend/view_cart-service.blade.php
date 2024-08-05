@@ -145,7 +145,7 @@
                                             $coupon_discount = $carts->sum('discount');
                                         }
                                         // if (addon_is_activated('club_point')) {
-                                        //     $total_point += $product->earn_point * $cartItem['quantity'];
+                                            $total_point += $product->earn_point * $cartItem['quantity'];
                                         // }
                                     @endphp
                                 @endforeach
@@ -166,13 +166,13 @@
 
                                     <div class="row gutters-5">
                                         <!-- Total Products -->
-                                        <div class="@if (addon_is_activated('club_point')) col-6 @else col-12 @endif">
+                                        <div class="col-6">
                                             <div class="d-flex align-items-center justify-content-between bg-primary p-2">
                                                 <span class="fs-13 text-white">{{ translate('Total Products') }}</span>
                                                 <span class="fs-13 fw-700 text-white">{{ sprintf("%02d", count($carts)) }}</span>
                                             </div>
                                         </div>
-                                        @if (addon_is_activated('club_point'))
+                                        {{-- @if (addon_is_activated('club_point')) --}}
                                             <!-- Total Clubpoint -->
                                             <div class="col-6">
                                                 <div class="d-flex align-items-center justify-content-between bg-secondary-base p-2">
@@ -180,7 +180,7 @@
                                                     <span class="fs-13 fw-700 text-white">{{ sprintf("%02d", $total_point) }}</span>
                                                 </div>
                                             </div>
-                                        @endif
+                                        {{-- @endif --}}
                                     </div>
 
                                     <input type="hidden" id="sub_total" value="{{ $subtotal }}">
