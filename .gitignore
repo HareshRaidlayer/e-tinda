@@ -30,4 +30,4 @@ install.zip
 /public/app-translations
 .env
 public/all
-app/Http/Helpers.php
+/app/Http/Helpers.php
