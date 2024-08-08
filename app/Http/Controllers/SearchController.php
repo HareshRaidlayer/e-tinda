@@ -234,11 +234,11 @@ class SearchController extends Controller
     public function listingByEPasabuy(Request $request)
     {
         $today = strtotime(date('Y-m-d H:i:s'));
-    $flash_deal = FlashDeal::where('start_date', "<=", $today)
-        ->where('end_date', ">", $today)
-        ->with('flash_deal_products') // Load the related flash deal products
-        ->get();
-            return view('frontend.ePasabuy_list', compact('flash_deal'));
+        $flash_deal = FlashDeal::where('start_date', "<=", $today)
+            ->where('end_date', ">", $today)
+            ->with('flash_deal_products') // Load the related flash deal products
+            ->get();
+        return view('frontend.ePasabuy_list', compact('flash_deal'));
     }
 
     public function listingByBrand(Request $request, $brand_slug)
