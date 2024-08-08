@@ -66,7 +66,28 @@
                 <span class="cat-name has-transition">E Pasabuy</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
-
+                <ul class="list-unstyled">
+                    @foreach (get_level_zero_ePasabuy() as $key => $ePasabuy)
+                        @php
+                            $ePasabuy_name = $ePasabuy['name'];
+                            $ePasabuy_url = route('service.EPasabuy');
+                        @endphp
+                        @if ($ePasabuy->status == 1 && strtotime(date('Y-m-d H:i:s')) <= $ePasabuy->end_date)
+                            @foreach ($ePasabuy->flash_deal_products as $key => $flash_deal_product)
+                                @php
+                                    $product = get_single_product($flash_deal_product->product_id);
+                                    $product_url = route('product', $product->slug);
+                                    if ($product->auction_product == 1) {
+                                        $product_url = route('auction-product', $product->slug);
+                                    }
+                                @endphp
+                                <li class="p-2 sub-mrnu-custom"><a
+                                        href="{{ $product_url }}">{{ $product['name'] }}</a>
+                                </li>
+                            @endforeach
+                        @endif
+                    @endforeach
+                </ul>
             </div>
         </li>
 
