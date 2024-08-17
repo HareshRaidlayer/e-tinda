@@ -7,7 +7,7 @@
                 <div class="row gutters-5 flex-wrap align-items-center">
                     <div class="col-lg col-10">
                         <h1 class="fs-20 fs-md-24 fw-700 text-dark">
-                            {{ translate('All Churchs') }}
+                            {{ translate('All Church') }}
                         </h1>
                     </div>
                 </div>
