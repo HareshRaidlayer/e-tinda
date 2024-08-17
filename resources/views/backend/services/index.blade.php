@@ -62,6 +62,14 @@
                                         title="{{ translate('Edit') }}">
                                         <i class="las la-edit"></i>
                                     </a>
+                                    @php
+                                        $service_url = route('service', $product->slug);
+                                    @endphp
+                                    <a href="javascript:void(0);" class="btn btn-soft-warning btn-icon btn-circle btn-sm"
+                                        title="{{ translate('Copy Link') }}"
+                                        onclick="copyProductUrl('{{ $service_url }}')">
+                                        <i class="las la-copy"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -72,6 +80,22 @@
     </div>
 @endsection
 @section('script')
+    <script>
+        function copyProductUrl(url) {
+            // Copy the URL to the clipboard
+            var tempInput = document.createElement('textarea');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Display the success notification using AIZ.plugins.notify
+            AIZ.plugins.notify('success', '{{ translate('Product Link Copied successfully') }}');
+        }
+    </script>
+
     <script type="text/javascript">
         function update_featured(el) {
             if (el.checked) {
