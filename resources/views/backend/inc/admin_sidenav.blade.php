@@ -1413,6 +1413,42 @@
                 @endcanany
                 {{-- @endif --}}
 
+
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <div class="aiz-side-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <path d="M8 0.5L6.5 2H5V3.5H3.5V5H5V10H2V14H14V10H11V5H12.5V3.5H11V2H9.5L8 0.5ZM8 4.5V7H10.5V4.5H8ZM3.5 12.5H4.5V11H3.5V12.5ZM5.5 12.5H6.5V11H5.5V12.5ZM7.5 12.5H8.5V11H7.5V12.5ZM9.5 12.5H10.5V11H9.5V12.5Z"
+                                transform="translate(0)" fill="#575b6a"/>
+                              </svg>
+                        </div>
+                        <span class="aiz-side-nav-text">{{ translate('Church') }}</span>
+                        @if (env('DEMO_MODE') == 'On')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
+                                viewBox="0 0 16 14.001" class="mx-2">
+                                <path id="Union_49" data-name="Union 49"
+                                    d="M-19322,3342.5v-5a2.007,2.007,0,0,0-2-2v1.5a3,3,0,0,1-3,3h-4v-10h4a3,3,0,0,1,3,3v1.5a3,3,0,0,1,3,3v5a.506.506,0,0,1-.5.5A.5.5,0,0,1-19322,3342.5Zm-11-2V3339h-3a1,1,0,0,1-1-1,1,1,0,0,1,1-1h3v-7.5a.5.5,0,0,1,.5-.5.5.5,0,0,1,.5.5v11a.5.5,0,0,1-.5.5A.506.506,0,0,1-19333,3340.5Zm-3-7.5a1,1,0,0,1-1-1,1,1,0,0,1,1-1h3v2Z"
+                                    transform="translate(19337 -3329)" fill="#f51350" />
+                            </svg>
+                        @endif
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="#" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Add New Church') }}</span>
+                            </a>
+                        </li>
+
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('All Church') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
                 <!--OTP addon -->
                 @if (addon_is_activated('otp_system'))
                     @canany(['otp_configurations', 'sms_templates', 'sms_providers_configurations', 'send_bulk_sms'])

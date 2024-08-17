@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Wallet;
 use Auth;
 use Session;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
@@ -55,6 +57,47 @@ class WalletController extends Controller
         return redirect()->route('wallet.index');
     }
 
+    public function transfer_wallet(Request $request)
+    {
+        $request->validate([
+            'userEmail' => 'required|email',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        $recipient = User::where('email', $request->userEmail)->first();
+
+        if (!$recipient) {
+            flash(translate('User does not exist in the database.'))->error();
+            return redirect()->back()->withInput();
+        }
+
+        $sender = Auth::user();
+
+        if ($sender->balance < $request->amount) {
+            flash(translate('You do not have enough balance to complete this transfer. Your current balance is ₱') . number_format($sender->balance, 2))->error();
+            return redirect()->back()->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $sender->balance -= $request->amount;
+            $sender->save();
+
+            $recipient->balance += $request->amount;
+            $recipient->save();
+
+            DB::commit();
+
+            flash(translate('Money transferred successfully to  ') .  $recipient->email . '. Your new balance is ₱' . number_format($sender->balance, 2))->success();
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash(translate('Failed to transfer money. Please try again.'))->error();
+            return redirect()->back()->withInput();
+        }
+    }
+
     public function offline_recharge(Request $request)
     {
         $wallet = new Wallet;
@@ -78,7 +121,7 @@ class WalletController extends Controller
             $wallets = $wallets->where('approval', $request->type);
             $type = $request->type;
         }
-        $wallets = $wallets->orderBy('id','desc')->paginate(10);
+        $wallets = $wallets->orderBy('id', 'desc')->paginate(10);
         return view('manual_payment_methods.wallet_request', compact('wallets', 'type'));
     }
 
