@@ -1422,7 +1422,7 @@
                                 transform="translate(0)" fill="#575b6a"/>
                               </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('Church') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('Donation Church') }}</span>
                         @if (env('DEMO_MODE') == 'On')
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                 viewBox="0 0 16 14.001" class="mx-2">
@@ -1436,13 +1436,13 @@
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
                             <a href="#" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Church') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('Add New Donation Church') }}</span>
                             </a>
                         </li>
 
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('All Church') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('All Donation Church') }}</span>
                             </a>
                         </li>
                     </ul>

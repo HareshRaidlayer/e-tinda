@@ -137,4 +137,14 @@ class ChurchController extends Controller
         $churches = Church::where('added_by', 'admin')->get();
         return view('frontend.church_list', compact('churches'));
     }
+
+    public function single_page(Request $request)
+    {
+        $church_id = $request->id;
+        $singleChurche = Church::where('id', $church_id)->get();
+        $churches = Church::where('added_by', 'admin')
+            ->where('id', '!=', $church_id) // Exclude the single church
+            ->get();
+        return view('frontend.church_single', compact('singleChurche', 'churches'));
+    }
 }
