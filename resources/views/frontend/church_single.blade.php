@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                                 <!-- Thumbnail Images -->
-                                <div class="col-12 mt-3 d-none d-lg-block">
+                                {{-- <div class="col-12 mt-3 d-none d-lg-block">
                                     <div class="aiz-carousel product-gallery-thumb" data-items='5'
                                         data-nav-for='.product-gallery' data-focus-select='true' data-arrows='true'
                                         data-vertical='false' data-auto-height='true'>
@@ -42,7 +42,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+                                </div> --}}
                             @endif
                         </div>
                     </div>
@@ -50,12 +50,20 @@
                     <div class="col-xl-7 col-lg-6">
                         <div class="text-left">
                             <!-- church Name -->
-                            <h1 class="mb-4 fs-16 fw-700 text-dark">
+                            <h1 class="mb-3 fs-16 fw-700 text-dark">
                                 {{ $church->name }}
                             </h1>
+                            <div class="d-flex justify-content-end">
+                                <button
+                                    class="btn btn-block border border-soft-light bg-dark text-white mt-2 mt-md-2 mt-lg-2 mt-xl-4 mt-xxl-4 py-3"
+                                    onclick="show_donate_money_modal()"
+                                    style="border-radius: 30px; background: rgba(255, 255, 255, 0.1);">
+                                    {{ translate('Donate Money') }}
+                                </button>
+                            </div>
 
                             {{-- church description --}}
-                            <div class="nav aiz-nav-tabs">
+                            <div class="nav aiz-nav-tabs mt-4">
                                 <a href="#tab_default_1" data-toggle="tab"
                                     class="mr-5 pb-2 fs-16 fw-700 text-reset  show">{{ translate('Description') }}</a>
                             </div>
@@ -64,21 +72,10 @@
                                 <!-- Description -->
                                 <div class="tab-pane active show" id="tab_default_1">
                                     <div class="p-2">
-                                        <h3 class="fw-400 fs-18 text-truncate-2 lh-1-4 mb-0 h-35px text-start">
+                                        <h3 class="fw-400 fs-18  text-start">
                                             {{ strip_tags(html_entity_decode($church->description)) }}
                                         </h3>
                                     </div>
-                                </div>
-                            </div>
-
-
-                            <!-- Share -->
-                            <div class="row no-gutters mt-5">
-                                <div class="col-sm-2">
-                                    <div class="text-secondary fs-14 fw-400 mt-2">{{ translate('Share') }}:</div>
-                                </div>
-                                <div class="col-sm-10">
-                                    <div class="aiz-share"></div>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +86,7 @@
     </section>
 
     <!-- Other products -->
-    <section class="mb-4">
+    {{-- <section class="mb-4">
         <div class="container">
             <div class="text-left mt-3">
                 <div class="row gutters-5 flex-wrap align-items-center">
@@ -142,8 +139,18 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection
+@section('modal')
+    <!-- Transfer Wallet Modal -->
+    @include('frontend.partials.show_donate_money')
+    <script type="text/javascript">
+        function show_donate_money_modal() {
+            $('#show_donate_money').modal('show');
+        }
+    </script>
+@endsection
+
 
 @section('script')
     <script type="text/javascript">
