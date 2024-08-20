@@ -30,4 +30,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 //FrontEnd
 Route::controller(ChurchController::class)->group(function () {
     Route::get('/donate/to/church', 'home')->name('church.home');
+    Route::get('/donate/to/church/{id}', 'single_page')->name('church.single');
 });
