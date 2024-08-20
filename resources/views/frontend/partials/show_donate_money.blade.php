@@ -7,7 +7,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body gry-bg px-3 pt-3" style="overflow-y: inherit;">
-                <form class="" action="{{ route('wallet.transfer') }}" method="post">
+                <form class="" action="#" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-md-4">
