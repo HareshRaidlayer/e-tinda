@@ -258,16 +258,16 @@
                                         $product_url = route('product', $product->slug);
                                     @endphp
                                     @can('product_duplicate')
-                                        <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);"
+                                        {{-- <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);"
                                             title="{{ translate('Copy Link') }}"
                                             onclick="copyProductUrl('{{ $product_url }}')">
                                             <i class="las la-copy"></i>
-                                        </a>
-                                        {{-- <a class="btn btn-soft-warning btn-icon btn-circle btn-sm"
+                                        </a> --}}
+                                        <a class="btn btn-soft-warning btn-icon btn-circle btn-sm"
                                         href="{{ route('facebook.add-product', ['id' => $product->id]) }}"
                                         title="{{ translate('Copy Link') }}">
                                             <i class="las la-copy"></i>
-                                        </a> --}}
+                                        </a>
                                     @endcan
                                     @can('product_delete')
                                         <a href="#"
