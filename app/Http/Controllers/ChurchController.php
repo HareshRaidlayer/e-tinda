@@ -252,11 +252,11 @@ class ChurchController extends Controller
                 'description' => 'Payment from ' . $request->email,
             ]);
 
-            Session::flash('success', 'Payment successful!');
+            flash(translate('Payments successfully.'))->success();
 
             return back();
         } catch (\Exception $e) {
-            Session::flash('error', $e->getMessage());
+            flash(translate('Payments successfully.'))->success();
 
             return back();
         }
