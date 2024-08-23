@@ -7,10 +7,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body gry-bg px-3 pt-3" style="overflow-y: inherit;">
-                <form class="" action="{{ route('payment.checkout') }}" method="post">
+                <form class="" action="{{ route('stripe.post') }}" method="post" id="payment-form">
                     @csrf
                     <div class="row">
-                        <script src="https://js.stripe.com/v3/"></script>
                         <input type="hidden" name="church_id" value="{{$church->id}}">
                         <div class="col-md-4">
                             <label>{{ translate('Payment Method') }} <span class="text-danger">*</span></label>
@@ -34,6 +33,17 @@
                                 placeholder="{{ translate('Enter Amount') }}" required>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="cardDetails" class="form-label required">Card Details</label>
+                            <div id="card-element" class="form-control">
+                                <!-- A Stripe Element will be inserted here -->
+                            </div>
+                            <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                        </div>
+                    </div>
+
                     <div class="form-group text-right">
                         <button type="submit"
                             class="btn btn-sm btn-primary rounded-0 transition-3d-hover mr-1">{{ translate('Confirm') }}</button>

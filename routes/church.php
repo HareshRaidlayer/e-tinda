@@ -32,7 +32,13 @@ Route::controller(ChurchController::class)->group(function () {
     Route::get('/donate/to/church', 'home')->name('church.home');
     Route::get('/donate/to/church/{id}', 'single_page')->name('church.single');
 });
-Route::post('church/{donation}/process', [ChurchController::class, 'processPayment'])->name('donation.process');
-Route::get('donation/success', function() {
-    return 'Donation successful!';
-})->name('donation.success');
+
+
+
+// Route::post('church/{donation}/process', [ChurchController::class, 'processPayment'])->name('donation.process');
+// Route::get('donation/success', function() {
+//     return 'Donation successful!';
+// })->name('donation.success');
+
+Route::get('donation/process', [ChurchController::class, 'handleGet'])->name('stripe.get');
+Route::post('donation/process', [ChurchController::class, 'handlePost'])->name('stripe.post');

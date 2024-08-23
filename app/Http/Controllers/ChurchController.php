@@ -13,6 +13,7 @@ use Stripe\Account;
 use Stripe\Charge;
 use Stripe\Transfer;
 use App\Models\Donation;
+use Session;
 
 
 
@@ -207,35 +208,57 @@ class ChurchController extends Controller
     }
 
 
-    public function processPayment(Request $request)
-    {
-        $church = Church::findOrFail($request->church_id);
+    // public function processPayment(Request $request)
+    // {
+    //     $church = Church::findOrFail($request->church_id);
 
+    //     Stripe::setApiKey('pk_test_51PqrYGDPvIfzbOLbjkA2tM9y83AXcdAw0JOwNebUPRcdYTF6tZh48SENfGsmcZoobSLh8H3xBURV58C1aWqMMkEh00WRY5noDE');
+
+    //     try {
+    //         // Charge the user's card
+    //         $charge = Charge::create([
+    //             'amount' => $request->amount * 100, // amount in cents
+    //             'currency' => 'usd',
+    //             'source' => $request->stripeToken,
+    //             'description' => 'Donation to Church ' . $church->id,
+    //         ]);
+
+    //         // Transfer funds to the church's Stripe connected account
+    //         Transfer::create([
+    //             'amount' => $request->amount * 100, // amount in cents
+    //             'currency' => 'usd',
+    //             'destination' => $request->church->stripe_account_id,
+    //             'transfer_group' => 'Donation_' . $request->id,
+    //         ]);
+
+    //         // Update donation status
+    //         // $request->update(['status' => 'completed']);
+
+    //         return redirect()->route('donation.success');
+    //     } catch (\Exception $e) {
+    //         return back()->withErrors(['error' => $e->getMessage()]);
+    //     }
+    // }
+
+    public function handlePost(Request $request)
+    {
         Stripe::setApiKey('pk_test_51PqrYGDPvIfzbOLbjkA2tM9y83AXcdAw0JOwNebUPRcdYTF6tZh48SENfGsmcZoobSLh8H3xBURV58C1aWqMMkEh00WRY5noDE');
 
         try {
-            // Charge the user's card
             $charge = Charge::create([
-                'amount' => $request->amount * 100, // amount in cents
+                'amount' => $request->amount * 100, // Amount in cents
                 'currency' => 'usd',
                 'source' => $request->stripeToken,
-                'description' => 'Donation to Church ' . $church->id,
+                'description' => 'Payment from ' . $request->email,
             ]);
 
-            // Transfer funds to the church's Stripe connected account
-            Transfer::create([
-                'amount' => $request->amount * 100, // amount in cents
-                'currency' => 'usd',
-                'destination' => $request->church->stripe_account_id,
-                'transfer_group' => 'Donation_' . $request->id,
-            ]);
+            Session::flash('success', 'Payment successful!');
 
-            // Update donation status
-            // $request->update(['status' => 'completed']);
-
-            return redirect()->route('donation.success');
+            return back();
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            Session::flash('error', $e->getMessage());
+
+            return back();
         }
     }
 }
