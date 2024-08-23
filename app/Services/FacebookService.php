@@ -12,8 +12,8 @@ class FacebookService
     public function __construct()
     {
         $this->fb = new Facebook([
-            'app_id' => '1651679405677029',
-            'app_secret' => 'a693c8f3331bf0c52e53c0d4a2fa5fc4',
+            'app_id' => '2027730694323423',
+            'app_secret' => '2d159a33db20b57dff7c712d70d12373',
             'default_graph_version' => 'v12.0',
         ]);
     }
@@ -22,8 +22,7 @@ class FacebookService
     {
         try {
             $response = $this->fb->post(
-                "/{$catalogId}/products",
-                $productData, 'EAAXeMZARCGeUBOy9mk2IbxBs2DVDNnlAqdKXW1qwshiyoQSscZBokZC4nb8Lwqqcp5QjHwJNPMrhpQrQS0BEpA9AH86PTEoXZAzHehk9Y85llrQrYvVkPFH4je8R2P0YI4D5dZAM0kxMTJIAvP2vE0qqoiJE391hxulJbDkzrRKELcZC092hsg69X3');
+                "/{$catalogId}/products",$productData, 'EAAc0Nde8PN8BO4EyV5Ss6tZA7ic3iAiJ1NeWG7ZCvUHloxyxZCoqZCyTLELvtgMFvJ1vpbZCUZCueCnwDy1Oelt0GnDZC1aFcaUoJ26Auom1mJpebf7MdJOOF7nkvIYbFeW1UprnPbTP8KLgMjTi2AVM6qNaJwyZAuTcQZAPiCPmeo1WVW0LNNvvCd8aXZBhlj8ZCmhZAZCzdZAZA46FZAmr3dWWJHXuLyTFjZASOrl7mfHklYwkAKrrHtkB2YUoq');
 
             return $response->getGraphNode()->asArray();
         } catch (Facebook\Exceptions\FacebookResponseException $e) {
