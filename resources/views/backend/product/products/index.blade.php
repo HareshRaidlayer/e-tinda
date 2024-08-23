@@ -265,8 +265,8 @@
                                         </a> --}}
                                         <a class="btn btn-soft-warning btn-icon btn-circle btn-sm"
                                         href="{{ route('facebook.add-product', ['id' => $product->id]) }}"
-                                        title="{{ translate('Copy Link') }}">
-                                            <i class="las la-copy"></i>
+                                        title="{{ translate('Share to live sell') }}">
+                                            <i class="las la-share"></i>
                                         </a>
                                     @endcan
                                     @can('product_delete')
