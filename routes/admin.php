@@ -53,6 +53,10 @@ use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\FacebookController;
+
+
+
 /*
   |--------------------------------------------------------------------------
   | Admin Routes
@@ -587,3 +591,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     Route::get('/admin-permissions', [RoleController::class, 'create_admin_permissions']);
 });
+Route::get('/facebook/add-product/{id}', [FacebookController::class, 'addProductToFacebookCatalog'])->name('facebook.add-product');
+

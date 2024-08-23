@@ -32,7 +32,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label">{{ translate('Church Name') }} <i
                                     class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
-                            <div class="col-lg-9">
+                            <div class="col-lg-9 mb-2">
                                 <input type="text" class="form-control" name="name"
                                     placeholder="{{ translate('Church Name') }}" value="{{ old('name') }}">
                                 @error('name')
@@ -41,6 +41,52 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Email') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="email"
+                                    placeholder="{{ translate('Email') }}" value="{{ old('email') }}">
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Bank Account Number') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="bank_account_number"
+                                    placeholder="{{ translate('Bank Account Number') }}" value="{{ old('bank_account_number') }}">
+                                @error('bank_account_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Bank Routing Number') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="bank_routing_number"
+                                    placeholder="{{ translate('Bank Routing Number') }}" value="{{ old('bank_routing_number') }}">
+                                @error('bank_routing_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Bank Name') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="bank_name"
+                                    placeholder="{{ translate('Bank Name') }}" value="{{ old('bank_name') }}">
+                                @error('bank_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{ translate('Publish') }}</label>
                             <div class="col-md-9">
                                 <select name="status" class="form-control">
@@ -48,6 +94,16 @@
                                     <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>No</option>
                                 </select>
                                 @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Address') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                               <textarea class="form-control" name="address">{{ old('address') }}</textarea>
+                                @error('address')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

@@ -263,6 +263,11 @@
                                             onclick="copyProductUrl('{{ $product_url }}')">
                                             <i class="las la-copy"></i>
                                         </a>
+                                        {{-- <a class="btn btn-soft-warning btn-icon btn-circle btn-sm"
+                                        href="{{ route('facebook.add-product', ['id' => $product->id]) }}"
+                                        title="{{ translate('Copy Link') }}">
+                                            <i class="las la-copy"></i>
+                                        </a> --}}
                                     @endcan
                                     @can('product_delete')
                                         <a href="#"

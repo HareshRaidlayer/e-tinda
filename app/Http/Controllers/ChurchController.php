@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Artisan;
 use Carbon\Carbon;
 use App\Models\Category;
+use Stripe\Stripe;
+use Stripe\Account;
 
 
 class ChurchController extends Controller
@@ -39,6 +41,7 @@ class ChurchController extends Controller
             'description' => 'required|string',
             'status' => 'required|boolean',
         ]);
+        Stripe::setApiKey('sk_test_51GwS1SEmGOuJLTMs2vhSliTwAGkOt4fKJMBrxzTXeCJoLrRu8HFf4I0C5QuyE3l3bQHBJm3c0qFmeVjd0V9nFb6Z00VrWDJ9Uw');
 
         $church = new Church;
         $church->name = $request->name;
@@ -46,6 +49,30 @@ class ChurchController extends Controller
         $church->description = $request->description;
         $church->status = $request->status;
         $church->thumbnail_img = $request->thumbnail_img;
+        $church->address = $request->address;
+        $church->email = $request->email;
+
+        $church->bank_account_number= $request->bank_account_number;
+        $church->bank_routing_number= $request->bank_routing_number;
+
+
+        $account = Account::create([
+            'type' => 'custom',
+            'country' => 'PH',
+            'email' => $church->email,
+            'business_type' => 'non_profit',
+            'external_account' => [
+                'object' => 'bank_account',
+                'country' => 'PH',
+                'currency' => 'PHP',
+                'routing_number' => $request->bank_routing_number,
+                'account_number' => $request->bank_account_number,
+                'account_holder_name' => $request->name,
+                'account_holder_type' => 'company',
+            ],
+        ]);
+
+        $church->stripe_account_id = $account->id;
         $church->save();
 
         flash(translate('Church has been inserted successfully'))->success();
@@ -99,12 +126,39 @@ class ChurchController extends Controller
             'status' => 'required',
         ]);
 
+        Stripe::setApiKey(env('STRIPE_SECRET'));
         $church = Church::findOrFail($id);
         $church->name = $request->name;
         $church->added_by = 'admin';
         $church->description = $request->description;
         $church->status = $request->status;
         $church->thumbnail_img = $request->thumbnail_img;
+        $church->address = $request->address;
+        $church->email = $request->email;
+
+        $church->bank_account_number= $request->bank_account_number;
+        $church->bank_routing_number= $request->bank_routing_number;
+
+
+        $account = Account::create([
+            'type' => 'custom',
+            'country' => 'PH',
+            'email' => $church->email,
+            'business_type' => 'non_profit',
+            'external_account' => [
+                'object' => 'bank_account',
+                'country' => 'PH',
+                'currency' => 'PHP',
+                'routing_number' => $request->bank_routing_number,
+                'account_number' => $request->bank_account_number,
+                'account_holder_name' => $request->name,
+                'account_holder_type' => 'company',
+            ],
+        ]);
+
+        $church->stripe_account_id = $account->id;
+
+
         $church->save();
 
         flash(translate('Church has been updated successfully'))->success();

@@ -12,11 +12,7 @@ class Church extends Model
     protected $table = 'churches';
 
     protected $fillable = [
-        'name',
-        'added_by',
-        'thumbnail_img',
-        'description',
-        'status',
+        'name','thumbnail_img' ,'address', 'email', 'stripe_account_id', 'bank_account_number', 'bank_routing_number', 'bank_name'
     ];
 
 }
