@@ -10,6 +10,10 @@ use Carbon\Carbon;
 use App\Models\Category;
 use Stripe\Stripe;
 use Stripe\Account;
+use Stripe\Charge;
+use Stripe\Transfer;
+use App\Models\Donation;
+
 
 
 class ChurchController extends Controller
@@ -41,7 +45,7 @@ class ChurchController extends Controller
             'description' => 'required|string',
             'status' => 'required|boolean',
         ]);
-        Stripe::setApiKey('sk_test_51GwS1SEmGOuJLTMs2vhSliTwAGkOt4fKJMBrxzTXeCJoLrRu8HFf4I0C5QuyE3l3bQHBJm3c0qFmeVjd0V9nFb6Z00VrWDJ9Uw');
+        Stripe::setApiKey('pk_test_51PqrYGDPvIfzbOLbjkA2tM9y83AXcdAw0JOwNebUPRcdYTF6tZh48SENfGsmcZoobSLh8H3xBURV58C1aWqMMkEh00WRY5noDE');
 
         $church = new Church;
         $church->name = $request->name;
@@ -56,23 +60,23 @@ class ChurchController extends Controller
         $church->bank_routing_number= $request->bank_routing_number;
 
 
-        $account = Account::create([
-            'type' => 'custom',
-            'country' => 'PH',
-            'email' => $church->email,
-            'business_type' => 'non_profit',
-            'external_account' => [
-                'object' => 'bank_account',
-                'country' => 'PH',
-                'currency' => 'PHP',
-                'routing_number' => $request->bank_routing_number,
-                'account_number' => $request->bank_account_number,
-                'account_holder_name' => $request->name,
-                'account_holder_type' => 'company',
-            ],
-        ]);
+        // $account = Account::create([
+        //     'type' => 'custom',
+        //     'country' => 'PH',
+        //     'email' => $church->email,
+        //     'business_type' => 'non_profit',
+        //     'external_account' => [
+        //         'object' => 'bank_account',
+        //         'country' => 'PH',
+        //         'currency' => 'PHP',
+        //         'routing_number' => $request->bank_routing_number,
+        //         'account_number' => $request->bank_account_number,
+        //         'account_holder_name' => $request->name,
+        //         'account_holder_type' => 'company',
+        //     ],
+        // ]);
 
-        $church->stripe_account_id = $account->id;
+        $church->stripe_account_id ='acct_1234567890abcdef';
         $church->save();
 
         flash(translate('Church has been inserted successfully'))->success();
@@ -126,7 +130,7 @@ class ChurchController extends Controller
             'status' => 'required',
         ]);
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey('pk_test_51PqrYGDPvIfzbOLbjkA2tM9y83AXcdAw0JOwNebUPRcdYTF6tZh48SENfGsmcZoobSLh8H3xBURV58C1aWqMMkEh00WRY5noDE');
         $church = Church::findOrFail($id);
         $church->name = $request->name;
         $church->added_by = 'admin';
@@ -140,23 +144,23 @@ class ChurchController extends Controller
         $church->bank_routing_number= $request->bank_routing_number;
 
 
-        $account = Account::create([
-            'type' => 'custom',
-            'country' => 'PH',
-            'email' => $church->email,
-            'business_type' => 'non_profit',
-            'external_account' => [
-                'object' => 'bank_account',
-                'country' => 'PH',
-                'currency' => 'PHP',
-                'routing_number' => $request->bank_routing_number,
-                'account_number' => $request->bank_account_number,
-                'account_holder_name' => $request->name,
-                'account_holder_type' => 'company',
-            ],
-        ]);
+        // $account = Account::create([
+        //     'type' => 'custom',
+        //     'country' => 'PH',
+        //     'email' =>  $request->email,
+        //     'business_type' => 'non_profit',
+        //     'external_account' => [
+        //         'object' => 'bank_account',
+        //         'country' => 'PH',
+        //         'currency' => 'PHP',
+        //         'routing_number' => $request->bank_routing_number,
+        //         'account_number' => $request->bank_account_number,
+        //         'account_holder_name' => $request->name,
+        //         'account_holder_type' => 'company',
+        //     ],
+        // ]);
 
-        $church->stripe_account_id = $account->id;
+        $church->stripe_account_id = 'acct_1234567890abcdef';
 
 
         $church->save();
@@ -200,5 +204,38 @@ class ChurchController extends Controller
             ->where('id', '!=', $church_id) // Exclude the single church
             ->get();
         return view('frontend.church_single', compact('singleChurche', 'churches'));
+    }
+
+
+    public function processPayment(Request $request)
+    {
+        $church = Church::findOrFail($request->church_id);
+
+        Stripe::setApiKey('pk_test_51PqrYGDPvIfzbOLbjkA2tM9y83AXcdAw0JOwNebUPRcdYTF6tZh48SENfGsmcZoobSLh8H3xBURV58C1aWqMMkEh00WRY5noDE');
+
+        try {
+            // Charge the user's card
+            $charge = Charge::create([
+                'amount' => $request->amount * 100, // amount in cents
+                'currency' => 'usd',
+                'source' => $request->stripeToken,
+                'description' => 'Donation to Church ' . $church->id,
+            ]);
+
+            // Transfer funds to the church's Stripe connected account
+            Transfer::create([
+                'amount' => $request->amount * 100, // amount in cents
+                'currency' => 'usd',
+                'destination' => $request->church->stripe_account_id,
+                'transfer_group' => 'Donation_' . $request->id,
+            ]);
+
+            // Update donation status
+            // $request->update(['status' => 'completed']);
+
+            return redirect()->route('donation.success');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

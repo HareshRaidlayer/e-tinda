@@ -7,9 +7,11 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body gry-bg px-3 pt-3" style="overflow-y: inherit;">
-                <form class="" action="#" method="post">
+                <form class="" action="{{ route('payment.checkout') }}" method="post">
                     @csrf
                     <div class="row">
+                        <script src="https://js.stripe.com/v3/"></script>
+                        <input type="hidden" name="church_id" value="{{$church->id}}">
                         <div class="col-md-4">
                             <label>{{ translate('Payment Method') }} <span class="text-danger">*</span></label>
                         </div>
