@@ -218,9 +218,9 @@ class CheckoutController extends Controller
             flash(translate('There is no payment option is selected.'))->warning();
             return redirect()->route('checkout');
         }
-        if ($request->payment_option == 'biller') {
+        if ($request->payment_option == 'multisys') {
             $amount = $request->amount;
-            $church = "helo";
+            $church = "test";
             return $this->handleBillerPayment($amount, $church, $request);
         }
         $user = auth()->user();
