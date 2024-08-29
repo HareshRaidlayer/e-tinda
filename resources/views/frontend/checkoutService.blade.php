@@ -69,7 +69,7 @@
                                                                     <img src="{{uploaded_asset($pruduct->thumbnail_img)}}" class="img-fit size-60px" alt="Puma Boy's Cotton Hooded Neck Sweatshirt" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/assets/img/placeholder.jpg';">
                                                                 </span>
                                                                 <span class="fs-14 fw-400 text-dark">
-                                                                    <span class="text-truncate-2">{{$pruduct->name}}</span>
+                                                                    <span class="text-truncate-2">{{$pruduct->price}}</span>
                                                                                             </span>
                                                             </div>
                                                         </li>
@@ -85,7 +85,7 @@
                                                                 <span class="d-block fw-400 fs-14">{{ ucfirst(translate($payment_method->name)) }}</span>
                                                                 <span class="rounded-1 h-40px overflow-hidden">
                                                                     <img src="{{ static_asset('assets/img/cards/'.$payment_method->name.'.png') }}"
-                                                                    class="img-fit h-100">
+                                                                    class="img-fit h-70">
                                                                 </span>
                                                             </span>
                                                         </label>
@@ -234,6 +234,9 @@
                                             <a href="{{ route('privacypolicy') }}"
                                                 class="fw-700">{{ translate('privacy policy') }}</a>
                                         </div>
+                                        @php
+                                            $total = $pruduct->price;
+                                        @endphp
                                         <input type="hidden" name="amount" value="{{ $total }}">
                                         <div class="row align-items-center pt-3 mb-4">
                                             <!-- Return to shop -->
