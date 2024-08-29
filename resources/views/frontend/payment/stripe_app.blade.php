@@ -41,7 +41,7 @@
 <br>
 <br>
 <p style="width: 250px; margin: auto;">Don't close the tab. The payment is being processed . . .</p>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     // Create an instance of the Stripe object with your publishable API key
     var stripe = Stripe('{{ env("STRIPE_KEY") }}');
     var checkoutButton = document.getElementById('checkout-button');
@@ -85,6 +85,7 @@
     });
 
     document.getElementById("checkout-button").click();
-</script>
+</script> --}}
+
 </body>
 </html>

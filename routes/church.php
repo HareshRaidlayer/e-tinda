@@ -35,10 +35,21 @@ Route::controller(ChurchController::class)->group(function () {
 
 
 
-// Route::post('church/{donation}/process', [ChurchController::class, 'processPayment'])->name('donation.process');
+// Route::post('church/process', [ChurchController::class, 'processPayment'])->name('donation.process');
 // Route::get('donation/success', function() {
 //     return 'Donation successful!';
 // })->name('donation.success');
 
-Route::get('donation/process', [ChurchController::class, 'handleGet'])->name('stripe.get');
-Route::post('donation/process', [ChurchController::class, 'handlePost'])->name('stripe.post');
+// Route::get('donation/process', [ChurchController::class, 'handleGet'])->name('stripe.get');
+// Route::post('donation/process', [ChurchController::class, 'handlePost'])->name('stripe.post');
+
+Route::post('/church/{church}/donate', [ChurchController::class, 'donationCreate'])->name('church.donate');
+
+Route::get('/church/{churchId}/dashboard', [ChurchController::class, 'dashboard'])->name('church.dashboard');
+Route::get('/church/{churchId}/stripe/refresh', function ($churchId) {
+    return redirect()->route('church.stripe.onboard', ['churchId' => $churchId])->with('error', 'Please complete your Stripe onboarding process.');
+})->name('church.stripe.refresh');
+
+Route::post('/stripe/webhook', [ChurchController::class, 'handleStripeWebhook']);
+
+Route::post('/webhook/razorpay', [ChurchController::class, 'handleRazorpayWebhook']);

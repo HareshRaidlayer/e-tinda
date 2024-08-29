@@ -51,12 +51,34 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Phone Number') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="phone_number"
+                                    placeholder="{{ translate('Bank IFSC code') }}" value=" {{ $church['phone_number'] }}">
+                                @error('Phone Number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-lg-3 col-form-label">{{ translate('Bank Account Number') }} <i
                                 class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
                             <div class="col-lg-9  mb-2">
                                 <input type="text" class="form-control" name="bank_account_number"
                                     placeholder="{{ translate('Bank Account Number') }}" value="{{ $church['bank_account_number'] }}">
                                 @error('bank_account_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">{{ translate('Bank IFSC code') }} <i
+                                class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
+                            <div class="col-lg-9  mb-2">
+                                <input type="text" class="form-control" name="bank_ifsc"
+                                    placeholder="{{ translate('Bank IFSC code') }}" value="{{$church['bank_ifsc'] }}">
+                                @error('bank_ifsc')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -98,10 +120,23 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{ translate('Country') }}</label>
+                            <div class="col-md-9">
+                                <select name="country" class="form-control">
+                                    @foreach ($countrys as $country)
+                                    <option value="{{$country->code}} " <?php echo $country->code == $church['country'] ? 'selected' : ''; ?>>{{$country->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-lg-3 col-form-label">{{ translate('Address') }} <i
                                 class="las la-language text-danger" title="{{ translate('Translatable') }}"></i></label>
                             <div class="col-lg-9  mb-2">
-                               <textarea class="form-control" name="address">{{ old('address') }}</textarea>
+                               <textarea class="form-control" name="address">{{ $church['address'] }}</textarea>
                                 @error('address')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
