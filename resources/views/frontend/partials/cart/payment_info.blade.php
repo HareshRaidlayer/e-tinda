@@ -14,7 +14,7 @@
             <div class="col-xl-4 col-md-6">
                 <label class="aiz-megabox d-block mb-3">
                     <input value="{{ $payment_method->name }}" class="online_payment" type="radio"
-                        name="payment_option" checked>
+                        name="payment_option">
                     <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
                         <span class="d-block fw-400 fs-14">{{ ucfirst(translate($payment_method->name)) }}</span>
                         <span class="rounded-1 h-40px overflow-hidden">
@@ -25,7 +25,19 @@
                 </label>
             </div>
         @endforeach
-
+        <div class="col-xl-4 col-md-6">
+            <label class="aiz-megabox d-block mb-3">
+                <input value="biller" class="online_payment" type="radio"
+                    name="payment_option" checked>
+                <span class="d-flex align-items-center justify-content-between aiz-megabox-elem rounded-0 p-3">
+                    <span class="d-block fw-400 fs-14">{{ ucfirst(translate('Biller')) }}</span>
+                    <span class="rounded-1 h-40px overflow-hidden">
+                        <img src="{{ static_asset('assets/img/cards/billerCard.jpg') }}"
+                        class="img-fit h-10">
+                    </span>
+                </span>
+            </label>
+        </div>
         <!-- Cash Payment -->
         @if (get_setting('cash_payment') == 1)
             @php
