@@ -234,7 +234,7 @@
                                             <a href="{{ route('privacypolicy') }}"
                                                 class="fw-700">{{ translate('privacy policy') }}</a>
                                         </div>
-
+                                        <input type="hidden" name="amount" value="{{ $total }}">
                                         <div class="row align-items-center pt-3 mb-4">
                                             <!-- Return to shop -->
                                             <div class="col-6">

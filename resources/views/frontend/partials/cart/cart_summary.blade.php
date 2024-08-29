@@ -122,6 +122,7 @@
                     <tr class="cart-total">
                         <th class="pl-0 fs-14 text-dark fw-700 border-top-0 pt-3 text-uppercase">
                             {{ translate('Total') }}</th>
+                            
                         <td class="text-right pr-0 fs-16 fw-700 text-primary border-top-0 pt-3">
                             {{ single_price($total) }}</td>
                     </tr>
