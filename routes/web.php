@@ -47,7 +47,7 @@ use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\SizeChartController;
-
+use App\Http\Controllers\MultipayController;
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -486,3 +486,9 @@ Route::controller(PageController::class)->group(function () {
     //Custom page
     Route::get('/{slug}', 'show_custom_page')->name('custom-pages.show_custom_page');
 });
+
+
+
+
+Route::post('/payment/initialize', [MultipayController::class, 'initializePayment'])->name('payment.initialize');
+Route::post('/payment/callback', [MultipayController::class, 'handleCallback'])->name('payment.callback');

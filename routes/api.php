@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Middleware\EnsureSystemKey;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransactionController;
 
 Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -188,7 +189,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
             Route::post('notifications/bulk-delete', 'bulkDelete')->middleware('auth:sanctum');
             Route::get('notifications/mark-as-read', 'notificationMarkAsRead')->middleware('auth:sanctum');
         });
-        
+
         Route::get('products/last-viewed',[ProductController::class, 'lastViewedProducts'])->middleware('auth:sanctum');
     });
 
@@ -425,3 +426,5 @@ Route::fallback(function () {
         'message' => 'Invalid Route'
     ]);
 });
+Route::post('/initialize-transaction', [TransactionController::class, 'initializeTransaction']);
+Route::get('/search-transaction/1', [TransactionController::class, 'searchTransaction']);
