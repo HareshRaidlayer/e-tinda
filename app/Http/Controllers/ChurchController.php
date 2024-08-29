@@ -22,6 +22,7 @@ use App\Models\Currency;
 use App\Models\Country;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -47,10 +48,10 @@ class ChurchController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-            $countrys = Country::all();
+        $countrys = Country::all();
 
 
-        return view('backend.church.create', compact('categories','countrys'));
+        return view('backend.church.create', compact('categories', 'countrys'));
     }
 
     public function store(Request $request)
@@ -70,7 +71,7 @@ class ChurchController extends Controller
 
         ]);
 
-        $curencyCode= Currency::findOrFail(get_setting('system_default_currency'))->code;
+        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
         $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
@@ -86,10 +87,10 @@ class ChurchController extends Controller
         $church->email = $request->email;
         $church->phone_number = $request->phone_number;
 
-        $church->bank_name= $request->bank_name;
-        $church->bank_account_number= $request->bank_account_number;
-        $church->bank_routing_number= $request->bank_routing_number;
-        $church->bank_ifsc= $request->bank_ifsc;
+        $church->bank_name = $request->bank_name;
+        $church->bank_account_number = $request->bank_account_number;
+        $church->bank_routing_number = $request->bank_routing_number;
+        $church->bank_ifsc = $request->bank_ifsc;
 
         $stripe = new StripeClient(env('STRIPE_SECRET'));
 
@@ -102,20 +103,20 @@ class ChurchController extends Controller
                 'contact' => $request->phone_number,
                 'type' => 'customer',
             ]);
-             // Save Razorpay contact ID
-             $church->razorpay_contact_id = $contactRazer->id;
+            // Save Razorpay contact ID
+            $church->razorpay_contact_id = $contactRazer->id;
 
-             // Create Razorpay fund account (bank account)
-             $fundAccount = $api->fundAccount->create([
-                 'contact_id' => $contactRazer->id,
-                 'account_type' => 'bank_account',
-                 'bank_account' => [
-                     'name' => $church->name,
-                     'ifsc' => $request->bank_ifsc,
-                     'account_number' => $request->bank_account_number,
-                 ],
-             ]);
-             $church->razorpay_fund_account_id = $fundAccount->id;
+            // Create Razorpay fund account (bank account)
+            $fundAccount = $api->fundAccount->create([
+                'contact_id' => $contactRazer->id,
+                'account_type' => 'bank_account',
+                'bank_account' => [
+                    'name' => $church->name,
+                    'ifsc' => $request->bank_ifsc,
+                    'account_number' => $request->bank_account_number,
+                ],
+            ]);
+            $church->razorpay_fund_account_id = $fundAccount->id;
 
 
             // Create a Stripe Express account for the church
@@ -160,12 +161,10 @@ class ChurchController extends Controller
 
             // Redirect to the onboarding URL
             return redirect($accountLink->url);
-
         } catch (\Exception $e) {
             flash($e->getMessage())->error();
             return redirect()->back();
         }
-
     }
 
     public function updatePublished(Request $request)
@@ -199,7 +198,7 @@ class ChurchController extends Controller
     {
         $church = Church::findOrFail($id);
         $countrys = Country::all();
-        return view('backend.church.edit', compact('church','countrys'));
+        return view('backend.church.edit', compact('church', 'countrys'));
     }
 
     public function update(Request $request, $id)
@@ -223,8 +222,8 @@ class ChurchController extends Controller
         $church->address = $request->address;
         $church->email = $request->email;
 
-        $church->bank_account_number= $request->bank_account_number;
-        $church->bank_routing_number= $request->bank_routing_number;
+        $church->bank_account_number = $request->bank_account_number;
+        $church->bank_routing_number = $request->bank_routing_number;
 
 
         // $account = Account::create([
@@ -270,53 +269,52 @@ class ChurchController extends Controller
     }
 
     public function onboard($churchId)
-{
-    // Fetch the specific church by ID
-    $church = Church::find($churchId);
+    {
+        // Fetch the specific church by ID
+        $church = Church::find($churchId);
 
-    // Check if the church exists
-    if (!$church) {
-        return redirect()->route('church.dashboard')->with('error', 'Church not found.');
+        // Check if the church exists
+        if (!$church) {
+            return redirect()->route('church.dashboard')->with('error', 'Church not found.');
+        }
+
+        // Check if the Stripe account exists
+        if (!$church->stripe_account_id) {
+            return redirect()->route('church.dashboard')->with('error', 'Stripe account not found. Please contact support.');
+        }
+
+        // Initialize Stripe
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        try {
+            // Create an account link for onboarding
+            $accountLink = AccountLink::create([
+                'account' => $church->stripe_account_id,
+                'refresh_url' => route('church.stripe.refresh', ['churchId' => $churchId]), // Redirect here if onboarding needs to be refreshed
+                'return_url' => route('church.dashboard', ['churchId' => $churchId]), // Redirect here after onboarding is complete
+                'type' => 'account_onboarding',
+            ]);
+
+            // Redirect to the onboarding URL
+            return redirect($accountLink->url);
+        } catch (\Exception $e) {
+            // Handle errors, like if the account already completed onboarding
+            return redirect()->route('church.dashboard', ['churchId' => $churchId])->with('error', 'There was an error with the onboarding process: ' . $e->getMessage());
+        }
     }
 
-    // Check if the Stripe account exists
-    if (!$church->stripe_account_id) {
-        return redirect()->route('church.dashboard')->with('error', 'Stripe account not found. Please contact support.');
+    public function dashboard($churchId)
+    {
+        // Load church details
+        $church = Church::find($churchId);
+
+        if (!$church) {
+            return redirect()->route('church.index')->with('error', 'Church not found.');
+        }
+
+        // Load the dashboard view with church data
+        return redirect()->route('church.index')->with('success', 'Church created.');
     }
-
-    // Initialize Stripe
-    Stripe::setApiKey(env('STRIPE_SECRET'));
-
-    try {
-        // Create an account link for onboarding
-        $accountLink = AccountLink::create([
-            'account' => $church->stripe_account_id,
-            'refresh_url' => route('church.stripe.refresh', ['churchId' => $churchId]), // Redirect here if onboarding needs to be refreshed
-            'return_url' => route('church.dashboard', ['churchId' => $churchId]), // Redirect here after onboarding is complete
-            'type' => 'account_onboarding',
-        ]);
-
-        // Redirect to the onboarding URL
-        return redirect($accountLink->url);
-
-    } catch (\Exception $e) {
-        // Handle errors, like if the account already completed onboarding
-        return redirect()->route('church.dashboard', ['churchId' => $churchId])->with('error', 'There was an error with the onboarding process: ' . $e->getMessage());
-    }
-}
-
-public function dashboard($churchId)
-{
-    // Load church details
-    $church = Church::find($churchId);
-
-    if (!$church) {
-        return redirect()->route('church.index')->with('error', 'Church not found.');
-    }
-
-    // Load the dashboard view with church data
-    return redirect()->route('church.index')->with('success', 'Church created.');
-}
 
 
     // frontend
@@ -337,72 +335,75 @@ public function dashboard($churchId)
         return view('frontend.church_single', compact('singleChurche', 'churches'));
     }
 
-//     public function donationCreate(Request $request, Church $church)
-// {
-//     // Validate the donation amount
-//     $request->validate([
-//         'amount' => 'required|numeric|min:1',
-//     ]);
+    //     public function donationCreate(Request $request, Church $church)
+    // {
+    //     // Validate the donation amount
+    //     $request->validate([
+    //         'amount' => 'required|numeric|min:1',
+    //     ]);
 
-//     $amount = $request->amount * 100; // Stripe handles amounts in cents
+    //     $amount = $request->amount * 100; // Stripe handles amounts in cents
 
-//     // Initialize the Stripe client
-//     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
+    //     // Initialize the Stripe client
+    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
 
-//     try {
-//         // Create a PaymentIntent with transfer_data to the church's Stripe account
-//         $paymentIntent = $stripe->paymentIntents->create([
-//             'amount' => $amount,
-//             'currency' => 'usd',
-//             'payment_method_types' => ['card'],
-//             'transfer_data' => [
-//                 'destination' => $church->stripe_account_id,
-//             ],
-//         ]);
+    //     try {
+    //         // Create a PaymentIntent with transfer_data to the church's Stripe account
+    //         $paymentIntent = $stripe->paymentIntents->create([
+    //             'amount' => $amount,
+    //             'currency' => 'usd',
+    //             'payment_method_types' => ['card'],
+    //             'transfer_data' => [
+    //                 'destination' => $church->stripe_account_id,
+    //             ],
+    //         ]);
 
-//         // Provide the client_secret to the front-end to complete the payment
-//         return view('frontend.payment.stripe_donation', [
-//             'clientSecret' => $paymentIntent->client_secret,
-//             'amount' => $amount / 100,
-//             'church' => $church,
-//         ]);
+    //         // Provide the client_secret to the front-end to complete the payment
+    //         return view('frontend.payment.stripe_donation', [
+    //             'clientSecret' => $paymentIntent->client_secret,
+    //             'amount' => $amount / 100,
+    //             'church' => $church,
+    //         ]);
 
-//     } catch (\Exception $e) {
-//         // Handle errors (e.g., Stripe API errors)
-//         return back()->withErrors(['error' => 'There was an error processing your donation: ' . $e->getMessage()]);
-//     }
-
-
-// }
+    //     } catch (\Exception $e) {
+    //         // Handle errors (e.g., Stripe API errors)
+    //         return back()->withErrors(['error' => 'There was an error processing your donation: ' . $e->getMessage()]);
+    //     }
 
 
-public function donationCreate(Request $request, $churchId)
-{
+    // }
 
-    $request->validate([
-        'payment_option' => 'required',
-        'amount' => 'required|numeric|min:1',
-    ]);
 
-    $church = Church::findOrFail($churchId);
-    $amount = $request->input('amount') * 100; // Convert amount to cents for Stripe
+    public function donationCreate(Request $request, $churchId)
+    {
 
-    if ($request->input('payment_option') === 'stripe') {
-        return $this->handleStripePayment($church, $amount, $request);
-    } else if ($request->input('payment_option') === 'razorpay') {
-        return $this->handleRazorpayPayment($church, $amount, $request);
+        $request->validate([
+            'payment_option' => 'required',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        $church = Church::findOrFail($churchId);
+        $amount = $request->input('amount'); // Convert amount to cents for Stripe
+        $paymentOption = $request->payment_option;
+
+        if ($request->input('payment_option') === 'stripe') {
+            return $this->handleStripePayment($church, $amount, $request);
+        } else if ($request->input('payment_option') === 'razorpay') {
+            return $this->handleRazorpayPayment($church, $amount, $request);
+        } else if ($request->input('payment_option') === 'biller') {
+            return $this->handleBillerPayment($amount, $church, $request);
+        }
+
+
+        return redirect()->back()->with('error', 'Invalid payment method');
     }
 
 
-    return redirect()->back()->with('error', 'Invalid payment method');
-}
 
-
-
-private function handleStripePayment(Church $church, $amount, Request $request)
+    private function handleStripePayment(Church $church, $amount, Request $request)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
-        $curencyCode= Currency::findOrFail(get_setting('system_default_currency'))->code;
+        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
         // Create PaymentIntent
         $paymentIntent = PaymentIntent::create([
             'amount' => $amount,
@@ -421,6 +422,59 @@ private function handleStripePayment(Church $church, $amount, Request $request)
         ]);
     }
 
+
+    private function handleBillerPayment($amount, $churchId, $request)
+    {
+        $txnid = uniqid(); // Generate a unique transaction ID
+        $token = "2c1816316e65dbfcb0c34a25f3d6fe5589aef65d"; // Token for the API
+        $data = $amount . $txnid . $token;
+        $digest = sha1($data); // Generate the digest
+        $callbackUrl = "http://ecommerce.conscor.com/"; // Callback URL
+
+        try {
+            // Send POST request to the API
+            $response = Http::withHeaders([
+                'X-MultiPay-Token' => $token,
+                'X-MultiPay-Code' => 'MSYS_TEST_BILLER',
+            ])->post('https://pgi-ws-staging.multipay.ph/api/v1/transactions/generate', [
+                'amount' => $amount,
+                'txnid' => $txnid,
+                'callback_url' => $callbackUrl,
+                'digest' => $digest,
+                'church_id' => $churchId,
+            ]);
+            $data = $response->json();
+            $paymentUrl = $data['data']['url'];
+            $this->saveDonation($request, 'biller', $churchId, $paymentUrl);
+            // return redirect($paymentUrl);
+            return response()->json([
+                'status' => 1,
+                'redirectUrl' => $paymentUrl,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+    public function handleCallback(Request $request)
+    {
+        // Extract information from the callback request
+        $transactionId = $request->input('txnid');
+        $status = $request->input('status');
+        $amount = $request->input('amount');
+        // Handle the response (e.g., update the transaction status in the database)
+        if ($status === 'S') {
+            // Payment successful
+        } elseif ($status === 'F') {
+            // Payment failed
+        } else {
+            // Handle other statuses
+        }
+        // Respond with an acknowledgment
+        return response()->json(['message' => 'Callback received'], 200);
+    }
 
 
     // private function handleRazorpayPayment(Church $church, $amount, Request $request)
@@ -444,47 +498,46 @@ private function handleStripePayment(Church $church, $amount, Request $request)
     // }
 
     private function handleRazorpayPayment(Church $church, $amount, Request $request)
-{
-    $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
-    $curencyCode= Currency::findOrFail(get_setting('system_default_currency'))->code;
+    {
+        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
+        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
 
-    try {
-        // Create a payout to the church's bank account
-        $payout = $api->payout->create([
-            'fund_account_id' => $church->razorpay_fund_account_id,
-            'amount' => $amount * 100,
-            'currency' => "$curencyCode",
-            'mode' => 'IMPS',
-            'purpose' => 'payout',
-            'queue_if_low_balance' => true,
-            'reference_id' => 'txn_' . uniqid(),
-            'narration' => 'Donation to Church',
-        ]);
+        try {
+            // Create a payout to the church's bank account
+            $payout = $api->payout->create([
+                'fund_account_id' => $church->razorpay_fund_account_id,
+                'amount' => $amount,
+                'currency' => "$curencyCode",
+                'mode' => 'IMPS',
+                'purpose' => 'payout',
+                'queue_if_low_balance' => true,
+                'reference_id' => 'txn_' . uniqid(),
+                'narration' => 'Donation to Church',
+            ]);
 
-        // Save donation details
-        \Log::info('Payout created: ', ['payoutId' => $payout->id]);
-        $this->saveDonation($request, 'razorpay', $payout->id);
+            // Save donation details
+            \Log::info('Payout created: ', ['payoutId' => $payout->id]);
+            $this->saveDonation($request, 'razorpay', $payout->id);
 
-        $status = $this->pollPayoutStatus($payout->id);
+            $status = $this->pollPayoutStatus($payout->id);
 
-        return response()->json([
-            'status' => $status == 'processed' ? 'success' : 'pending',
-            'message' => $status == 'processed' ? 'Payout successful' : 'Payout is being processed',
-            'payoutId' => $payout->id,
-            'amount' => $amount,
-            'currency' => "$curencyCode",
-        ]);
-
-    } catch (\Exception $e) {
-        \Log::error('Error processing payout: ', ['error' => $e->getMessage()]);
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-        ], 500);
+            return response()->json([
+                'status' => $status == 'processed' ? 'success' : 'pending',
+                'message' => $status == 'processed' ? 'Payout successful' : 'Payout is being processed',
+                'payoutId' => $payout->id,
+                'amount' => $amount,
+                'currency' => "$curencyCode",
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error processing payout: ', ['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 
-private function pollPayoutStatus($payoutId)
+    private function pollPayoutStatus($payoutId)
     {
         // Poll the status of the payout after a brief delay
         sleep(5); // Wait for 5 seconds (adjust as necessary)
@@ -512,51 +565,51 @@ private function pollPayoutStatus($payoutId)
 
 
 
-// public function handleStripeWebhook(Request $request)
-// {
-//     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
+    // public function handleStripeWebhook(Request $request)
+    // {
+    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
 
-//     $event = $request->input('type');
-//     $data = $request->input('data');
+    //     $event = $request->input('type');
+    //     $data = $request->input('data');
 
-//     if ($event === 'payment_intent.succeeded') {
-//         $paymentIntentId = $data['object']['id'];
-//         $churchId = $data['object']['metadata']['church_id'];
+    //     if ($event === 'payment_intent.succeeded') {
+    //         $paymentIntentId = $data['object']['id'];
+    //         $churchId = $data['object']['metadata']['church_id'];
 
-//         $church = Church::find($churchId);
+    //         $church = Church::find($churchId);
 
-//         if ($church) {
-//             try {
-//                 $this->transferFunds($paymentIntentId, $church);
-//             } catch (\Exception $e) {
-//                 return response()->json(['error' => $e->getMessage()], 500);
-//             }
-//         }
-//     }
+    //         if ($church) {
+    //             try {
+    //                 $this->transferFunds($paymentIntentId, $church);
+    //             } catch (\Exception $e) {
+    //                 return response()->json(['error' => $e->getMessage()], 500);
+    //             }
+    //         }
+    //     }
 
-//     return response()->json(['status' => 'success']);
-// }
+    //     return response()->json(['status' => 'success']);
+    // }
 
-// private function transferFunds($paymentIntentId, Church $church)
-// {
-//     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
+    // private function transferFunds($paymentIntentId, Church $church)
+    // {
+    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
 
-//     try {
-//         $paymentIntent = $stripe->paymentIntents->retrieve($paymentIntentId);
+    //     try {
+    //         $paymentIntent = $stripe->paymentIntents->retrieve($paymentIntentId);
 
-//         $stripe->transfers->create([
-//             'amount' => $paymentIntent->amount,
-//             'currency' => 'usd',
-//             'destination' => $church->stripe_account_id,
-//             'transfer_group' => $paymentIntent->id,
-//         ]);
-//     } catch (\Exception $e) {
-//         throw new \Exception('Error creating transfer: ' . $e->getMessage());
-//     }
-// }
+    //         $stripe->transfers->create([
+    //             'amount' => $paymentIntent->amount,
+    //             'currency' => 'usd',
+    //             'destination' => $church->stripe_account_id,
+    //             'transfer_group' => $paymentIntent->id,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         throw new \Exception('Error creating transfer: ' . $e->getMessage());
+    //     }
+    // }
 
 
-public function handleRazorpayWebhook(Request $request)
+    public function handleRazorpayWebhook(Request $request)
     {
         $payload = $request->all();
 
@@ -582,6 +635,4 @@ public function handleRazorpayWebhook(Request $request)
 
         return response()->json(['status' => 'unhandled event'], 200);
     }
-
-
 }

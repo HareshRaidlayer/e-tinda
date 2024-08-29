@@ -2,85 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Facebook\Facebook;
+use App\Services\FacebookService;
+use App\Models\Product; // Ensure you have this model
 use Illuminate\Http\Request;
 
 class FacebookController extends Controller
 {
-    protected $fb;
+    protected $facebookService;
 
-    public function __construct()
+    public function __construct(FacebookService $facebookService)
     {
-        $this->fb = new Facebook([
-            'app_id' => env('FACEBOOK_APP_ID'),
-            'app_secret' => env('FACEBOOK_APP_SECRET'),
-            'default_graph_version' => 'v12.0',
-        ]);
+        $this->facebookService = $facebookService;
     }
 
-    public function postProduct(Request $request)
+    public function addProductToFacebookCatalog(Request $request, $id)
     {
-        $data = [
-            'message' => $request->input('message'),
-            'link' => $request->input('link'),
-        ];
+        $product = Product::find($id);
 
-        try {
-            $response = $this->fb->post('/me/feed', $data, env('FACEBOOK_ACCESS_TOKEN'));
-            return response()->json($response->getDecodedBody());
-        } catch (Facebook\Exceptions\FacebookResponseException $e) {
-            return response()->json(['error' => 'Graph returned an error: ' . $e->getMessage()], 500);
-        } catch (Facebook\Exceptions\FacebookSDKException $e) {
-            return response()->json(['error' => 'Facebook SDK returned an error: ' . $e->getMessage()], 500);
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
         }
-    }
 
-    public function addProductToFacebookCatalog(Request $request)
-{
-    // Sample product data
-    $data = [
-        'retailer_id' => 12,
-        'name' => "Nike Men Running Shoe Revolution",
-        'description' => "Nike Men Running Shoe Revolution df dflkgnj mfg",
-        'availability' => 'in stock',
-        'condition' => 'new',
-        'price' => 434,
-        'link' => 'https://ecommerce.conscor.com/product/nike-men-running-shoe-revolution-7-lt-iron-oretotal-orange-thunder-blue-fb2207-009-6uk',
-        'image_url' => 'https://ecommerce.conscor.com/public/uploads/all/sFUbKlYjoB6pskTYgZb2hBDfucclz8KanGDypKEd.png',
-        'brand' => "puma",
-        'visibility' => 'published',
-    ];
+        $message = $product->name . ' is now available!';
+        $link = url('/products/' . $product->id);
 
-    // Debugging: Log the data being sent
-    \Log::info('Data being sent to Facebook:', $data);
+        $imageUrl = 'http://127.0.0.1:8000/uploads/all/25wZYKOd2h6wHGg8Jd5OiAi478jktEHqx06n9HM6.jpg'; // Ensure this URL is publicly accessible
 
-    // Define the endpoint URL
-    $url = '/catalogs/1441381003081396/products'; // Ensure this is correct
+        $result = $this->facebookService->postProduct($message, $link, $imageUrl);
 
-    // Access token from environment variables
-    $accessToken = env('FACEBOOK_ACCESS_TOKEN');
-
-    try {
-        // Make the POST request
-        $response = $this->fb->post($url, $data, $accessToken);
-        $decodedBody = $response->getDecodedBody();
-
-        // Debugging: Log the response body
-        \Log::info('Response from Facebook:', $decodedBody);
-
-        // Check if expected keys exist
-        if (isset($decodedBody['id'])) {
-            return response()->json($decodedBody);
-        } else {
-            \Log::warning('Expected key "id" does not exist in the response.');
-            return response()->json(['error' => 'Unexpected response format.'], 500);
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', 'Failed to post product to Facebook: ' . $result['error']['message']);
         }
-    } catch (Facebook\Exceptions\FacebookResponseException $e) {
-        \Log::error('Graph returned an error: ' . $e->getMessage());
-        return response()->json(['error' => 'Graph returned an error: ' . $e->getMessage()], 500);
-    } catch (Facebook\Exceptions\FacebookSDKException $e) {
-        \Log::error('Facebook SDK returned an error: ' . $e->getMessage());
-        return response()->json(['error' => 'Facebook SDK returned an error: ' . $e->getMessage()], 500);
+
+        return redirect()->back()->with('success', 'Product posted to Facebook successfully.');
     }
-}
 }
