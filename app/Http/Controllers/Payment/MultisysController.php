@@ -22,6 +22,7 @@ class MultisysController extends Controller
 {
     public function pay(Request $request)
     {
+
         if (Session::has('payment_type')) {
             $paymentType = Session::get('payment_type');
             $paymentData = Session::get('payment_data');
@@ -47,8 +48,9 @@ class MultisysController extends Controller
                     'callback_url' => $callbackUrl,
                     'digest' => $digest,
                 ]);
-                $data = $response->json();
-                $paymentUrl = $data['data']['url'];
+                $data1 = $response->json();
+                $paymentUrl = $data1['data']['url'];
+
                 return redirect($paymentUrl);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
