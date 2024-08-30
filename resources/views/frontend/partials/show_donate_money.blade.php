@@ -42,7 +42,7 @@
                                         <option selected>select payment option</option>
                                         <option value="stripe">Stripe</option>
                                         <option value="razorpay">Razorpay</option>
-                                        <option value="biller">Biller API</option>
+                                        {{-- <option value="biller">Biller API</option> --}}
                                     </select>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
     <script>
         const stripe = Stripe(
             'pk_test_51GwS1SEmGOuJLTMsIeYKFtfAT3o3Fc6IOC7wyFmmxA2FIFQ3ZigJ2z1s4ZOweKQKlhaQr1blTH9y6HR2PMjtq1Rx00vqE8LO0x'
-            );
+        );
 
         let card; // Define card element globally
 
@@ -181,21 +181,25 @@
         }
 
         function handleRazorpayPayment(orderId, amount) {
+            // Convert amount from rupees to paise
+            var amountInPaise = amount * 100;
+
             var options = {
-                "key": '{{ env('RAZOR_KEY') }}',
-                "amount": amount, // Amount in paise
-                "currency": "INR",
-                "name": "Your Company Name",
-                "order_id": orderId,
+                "key": '{{ env('RAZOR_KEY') }}', // Your Razorpay API key
+                "amount": amountInPaise, // Amount in paise (Razorpay requires paise)
+                "currency": "INR", // Set the currency to INR
+                "name": "Etinda", // Your company's name
+                "order_id": orderId, // Razorpay order ID
                 "handler": function(response) {
-                    // Payment success
-                    window.location.href = '/dashboard'; // Redirect or handle success
+                    // Handle successful payment
+                    window.location.href = '/dashboard'; // Redirect to dashboard or handle success
                 },
                 "prefill": {
-                    "name": "Your Name",
-                    "email": "your_email@example.com"
+                    "name": "Your Name", // Prefill customer name
+                    "email": "your_email@example.com" // Prefill customer email
                 }
             };
+
             var rzp = new Razorpay(options);
             rzp.open();
         }

@@ -499,15 +499,16 @@ class ChurchController extends Controller
 
     private function handleRazorpayPayment(Church $church, $amount, Request $request)
     {
+        // Initialize Razorpay API client
         $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
-        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
+        $currencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
 
         try {
             // Create a payout to the church's bank account
             $payout = $api->payout->create([
                 'fund_account_id' => $church->razorpay_fund_account_id,
-                'amount' => $amount,
-                'currency' => "$curencyCode",
+                'amount' => $amount * 100, // Amount in paise (Razorpay requires paise)
+                'currency' => $currencyCode,
                 'mode' => 'IMPS',
                 'purpose' => 'payout',
                 'queue_if_low_balance' => true,
@@ -519,6 +520,7 @@ class ChurchController extends Controller
             \Log::info('Payout created: ', ['payoutId' => $payout->id]);
             $this->saveDonation($request, 'razorpay', $payout->id);
 
+            // Poll for payout status
             $status = $this->pollPayoutStatus($payout->id);
 
             return response()->json([
@@ -526,7 +528,7 @@ class ChurchController extends Controller
                 'message' => $status == 'processed' ? 'Payout successful' : 'Payout is being processed',
                 'payoutId' => $payout->id,
                 'amount' => $amount,
-                'currency' => "$curencyCode",
+                'currency' => $currencyCode,
             ]);
         } catch (\Exception $e) {
             \Log::error('Error processing payout: ', ['error' => $e->getMessage()]);
