@@ -218,11 +218,7 @@ class CheckoutController extends Controller
             flash(translate('There is no payment option is selected.'))->warning();
             return redirect()->route('checkout');
         }
-        if ($request->payment_option == 'multisys') {
-            $amount = $request->amount;
-            $church = "test";
-            return $this->handleBillerPayment($amount, $church, $request);
-        }
+
         $user = auth()->user();
         // dd($user->id);
         $carts = Cart::where('user_id', $user->id)->active()->get();
@@ -378,38 +374,6 @@ class CheckoutController extends Controller
                 flash(translate('Your order has been placed successfully.'))->success();
                 return redirect()->route('order_confirmed');
             }
-        }
-    }
-
-    public function handleBillerPayment($amount, $churchId, $request)
-    {
-        $txnid = uniqid(); // Generate a unique transaction ID
-        $token = "2c1816316e65dbfcb0c34a25f3d6fe5589aef65d"; // Token for the API
-        $data = $amount . $txnid . $token;
-        $digest = sha1($data); // Generate the digest
-        $callbackUrl = "http://ecommerce.conscor.com/"; // Callback URL
-
-        try {
-            // Send POST request to the API
-            $response = Http::withHeaders([
-                'X-MultiPay-Token' => $token,
-                'X-MultiPay-Code' => 'MSYS_TEST_BILLER',
-            ])->post('https://pgi-ws-staging.multipay.ph/api/v1/transactions/generate', [
-                'amount' => $amount,
-                'txnid' => $txnid,
-                'callback_url' => $callbackUrl,
-                'digest' => $digest,
-                'church_id' => $churchId,
-            ]);
-            $data = $response->json();
-            $paymentUrl = $data['data']['url'];
-            return redirect($paymentUrl);
-            // return response()->json([
-            //     'status' => 1,
-            //     'redirectUrl' => $paymentUrl,
-            // ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

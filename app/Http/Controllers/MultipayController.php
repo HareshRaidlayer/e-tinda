@@ -17,11 +17,12 @@ class MultipayController extends Controller
 
     public function initializePayment(Request $request)
     {
+        $token = env('MULTIPAY_TOKEN');
         $data = [
             'amount' => $request->amount,
             'txnid' => $request->txnid,
             'callback_url' => $request->callback_url,
-            'digest' => sha1($request->amount . $request->txnid . '8c5d9f8a3b2f1c4e5a6d7b8f9c0e1f2a3b4c5d6e7f8g9h0i'),
+            'digest' => sha1($request->amount . $request->txnid . $token),
         ];
 
         $response = $this->multiPayService->initializeTransaction($data);

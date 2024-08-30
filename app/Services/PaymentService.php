@@ -12,8 +12,8 @@ class PaymentService
 
     public function __construct()
     {
-        $this->token = '2c1816316e65dbfcb0c34a25f3d6fe5589aef65d';
-        $this->code = 'MSYS_TEST_BILLER';
+        $this->token = env('MULTIPAY_TOKEN');
+        $this->code = env('MULTIPAY_CODE');
     }
 
     // Initialize a new transaction
