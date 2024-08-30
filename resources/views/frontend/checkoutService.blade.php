@@ -69,7 +69,7 @@
                                                                     <img src="{{uploaded_asset($pruduct->thumbnail_img)}}" class="img-fit size-60px" alt="Puma Boy's Cotton Hooded Neck Sweatshirt" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/assets/img/placeholder.jpg';">
                                                                 </span>
                                                                 <span class="fs-14 fw-400 text-dark">
-                                                                    <span class="text-truncate-2">{{$pruduct->price}}</span>
+                                                                    <span class="text-truncate-2">{{$pruduct->name}}</span>
                                                                                             </span>
                                                             </div>
                                                         </li>
