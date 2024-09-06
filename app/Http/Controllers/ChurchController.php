@@ -85,7 +85,7 @@ class ChurchController extends Controller
         // $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
 
         // Stripe::setApiKey(env('STRIPE_SECRET'));
-        // $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
+        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
 
 
         $church = new Church;
@@ -108,24 +108,24 @@ class ChurchController extends Controller
 
         try {
 
-            // $contactRazer = $api->contact->create([
-            //     'name' => $request->name,
-            //     'email' => $request->email,
-            //     'contact' => $request->phone_number,
-            //     'type' => 'customer',
-            // ]);
-            // $church->razorpay_contact_id = $contactRazer->id;
+            $contactRazer = $api->contact->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'contact' => $request->phone_number,
+                'type' => 'customer',
+            ]);
+            $church->razorpay_contact_id = $contactRazer->id;
 
-            // $fundAccount = $api->fundAccount->create([
-            //     'contact_id' => $contactRazer->id,
-            //     'account_type' => 'bank_account',
-            //     'bank_account' => [
-            //         'name' => $church->name,
-            //         'ifsc' => $request->bank_ifsc,
-            //         'account_number' => $request->bank_account_number,
-            //     ],
-            // ]);
-            // $church->razorpay_fund_account_id = $fundAccount->id;
+            $fundAccount = $api->fundAccount->create([
+                'contact_id' => $contactRazer->id,
+                'account_type' => 'bank_account',
+                'bank_account' => [
+                    'name' => $church->name,
+                    'ifsc' => $request->bank_ifsc,
+                    'account_number' => $request->bank_account_number,
+                ],
+            ]);
+            $church->razorpay_fund_account_id = $fundAccount->id;
 
 
             // $account = $stripe->accounts->create([
