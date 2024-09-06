@@ -187,7 +187,7 @@
             var options = {
                 "key": '{{ env('RAZOR_KEY') }}', // Your Razorpay API key
                 "amount": amountInPaise, // Amount in paise (Razorpay requires paise)
-                "currency": "INR", // Set the currency to INR
+                "currency": "PHP", // Set the currency to INR
                 "name": "Etinda", // Your company's name
                 "order_id": orderId, // Razorpay order ID
                 "handler": function(response) {
