@@ -40,7 +40,7 @@
                                     <select id="payment_option" class="form-control rounded-0" name="payment_option"
                                         required>
                                         <option selected>select payment option</option>
-                                        <option value="stripe">Stripe</option>
+                                        {{-- <option value="stripe">Stripe</option> --}}
                                         <option value="razorpay">Razorpay</option>
                                         {{-- <option value="biller">Biller API</option> --}}
                                     </select>
