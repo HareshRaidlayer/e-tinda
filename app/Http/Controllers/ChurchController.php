@@ -185,8 +185,8 @@ class ChurchController extends Controller
             // ]);
 
             // return redirect($accountLink->url);
-
-            return view('backend.church.index');
+            flash(translate('Church has been Saved successfully'))->success();
+            return redirect()->back();
         } catch (\Exception $e) {
             flash($e->getMessage())->error();
             return redirect()->back();
