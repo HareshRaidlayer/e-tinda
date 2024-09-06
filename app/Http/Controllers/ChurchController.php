@@ -19,6 +19,7 @@ use Stripe\StripeClient;
 use Stripe\AccountLink;
 use Razorpay\Api\Api;
 use App\Models\Currency;
+use App\Models\CharchBranch;
 use App\Models\Country;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
@@ -56,7 +57,7 @@ class ChurchController extends Controller
 
     public function store(Request $request)
     {
-
+        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:255',
             'thumbnail_img' => 'required',
@@ -69,12 +70,22 @@ class ChurchController extends Controller
             'phone_number' => 'required',
             'country' => 'required',
 
+            'branch_name.*' => 'nullable|string|max:255',
+            'branch_email.*' => 'nullable|email|max:255',
+            'branch_phone_number.*' => 'nullable|string|max:255',
+            'branch_bank_account_number.*' => 'nullable|string|max:255',
+            'branch_bank_ifsc.*' => 'nullable|string|max:255',
+            'branch_bank_routing_number.*' => 'nullable|string|max:255',
+            'branch_bank_name.*' => 'nullable|string|max:255',
+            'branch_status.*' => 'nullable|boolean',
+            'branch_country.*' => 'nullable|string|max:5',
+            'branch_address.*' => 'nullable|string',
         ]);
 
-        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
+        // $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
+        // Stripe::setApiKey(env('STRIPE_SECRET'));
+        // $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
 
 
         $church = new Church;
@@ -92,75 +103,90 @@ class ChurchController extends Controller
         $church->bank_routing_number = $request->bank_routing_number;
         $church->bank_ifsc = $request->bank_ifsc;
 
-        $stripe = new StripeClient(env('STRIPE_SECRET'));
+        // $stripe = new StripeClient(env('STRIPE_SECRET'));
 
 
         try {
 
-            $contactRazer = $api->contact->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'contact' => $request->phone_number,
-                'type' => 'customer',
-            ]);
-            // Save Razorpay contact ID
-            $church->razorpay_contact_id = $contactRazer->id;
+            // $contactRazer = $api->contact->create([
+            //     'name' => $request->name,
+            //     'email' => $request->email,
+            //     'contact' => $request->phone_number,
+            //     'type' => 'customer',
+            // ]);
+            // $church->razorpay_contact_id = $contactRazer->id;
 
-            // Create Razorpay fund account (bank account)
-            $fundAccount = $api->fundAccount->create([
-                'contact_id' => $contactRazer->id,
-                'account_type' => 'bank_account',
-                'bank_account' => [
-                    'name' => $church->name,
-                    'ifsc' => $request->bank_ifsc,
-                    'account_number' => $request->bank_account_number,
-                ],
-            ]);
-            $church->razorpay_fund_account_id = $fundAccount->id;
+            // $fundAccount = $api->fundAccount->create([
+            //     'contact_id' => $contactRazer->id,
+            //     'account_type' => 'bank_account',
+            //     'bank_account' => [
+            //         'name' => $church->name,
+            //         'ifsc' => $request->bank_ifsc,
+            //         'account_number' => $request->bank_account_number,
+            //     ],
+            // ]);
+            // $church->razorpay_fund_account_id = $fundAccount->id;
 
 
-            // Create a Stripe Express account for the church
-            $account = $stripe->accounts->create([
-                'type' => 'express',
-                'country' => $request->country,
-                'email' => $request->email,
-            ]);
+            // $account = $stripe->accounts->create([
+            //     'type' => 'express',
+            //     'country' => $request->country,
+            //     'email' => $request->email,
+            // ]);
 
-            // Save the Stripe account ID to the Church model
-            $church->stripe_account_id = $account->id;
+            // $church->stripe_account_id = $account->id;
 
-            // Create and link the bank account to the Stripe account
-            $bankAccount = $stripe->accounts->createExternalAccount(
-                $church->stripe_account_id,
-                [
-                    'external_account' => [
-                        'object' => 'bank_account',
-                        'country' => $request->country,
-                        'currency' => "$curencyCode",
-                        'account_holder_name' => $church->name,
-                        'account_holder_type' => 'company',
-                        'routing_number' => $request->bank_routing_number,
-                        'account_number' => $request->bank_account_number,
-                    ],
-                ]
-            );
 
-            // Save the bank account ID if needed
-            $church->stripe_bank_account_id = $bankAccount->id;
+            // $bankAccount = $stripe->accounts->createExternalAccount(
+            //     $church->stripe_account_id,
+            //     [
+            //         'external_account' => [
+            //             'object' => 'bank_account',
+            //             'country' => $request->country,
+            //             'currency' => "$curencyCode",
+            //             'account_holder_name' => $church->name,
+            //             'account_holder_type' => 'company',
+            //             'routing_number' => $request->bank_routing_number,
+            //             'account_number' => $request->bank_account_number,
+            //         ],
+            //     ]
+            // );
 
-            // Save the church data to the database
+            // $church->stripe_bank_account_id = $bankAccount->id;
+
             $church->save();
 
-            // Create the account link for onboarding
-            $accountLink = $stripe->accountLinks->create([
-                'account' => $church->stripe_account_id,
-                'refresh_url' => route('church.stripe.refresh', ['churchId' => $church->id]),
-                'return_url' => route('church.dashboard', ['churchId' => $church->id]),
-                'type' => 'account_onboarding',
-            ]);
+            $branches = [];
+            $churchId = $church->id;
+            $brancheName = $request->branch_name;
+            foreach ($brancheName as $key => $value) {
+                $churchBranches = new CharchBranch();
+                $churchBranches->churche_id = $churchId;
+                $churchBranches->name = $brancheName[$key];
+                $churchBranches->added_by = 'admin';
+                $churchBranches->status =  $request->branch_status[$key];
+                $churchBranches->address = $request->branch_address[$key];
+                $churchBranches->email =  $request->branch_email[$key];
+                $churchBranches->phone_number = $request->branch_phone_number[$key];
+                $churchBranches->country = $request->branch_country[$key];
 
-            // Redirect to the onboarding URL
-            return redirect($accountLink->url);
+                $churchBranches->bank_name = $request->bank_name;
+                $churchBranches->bank_account_number = $request->branch_bank_account_number[$key];
+                $churchBranches->bank_routing_number = $request->bank_routing_number;
+                $churchBranches->bank_ifsc = $request->branch_bank_ifsc[$key];
+                $churchBranches->save();
+            }
+
+            // $accountLink = $stripe->accountLinks->create([
+            //     'account' => $church->stripe_account_id,
+            //     'refresh_url' => route('church.stripe.refresh', ['churchId' => $church->id]),
+            //     'return_url' => route('church.dashboard', ['churchId' => $church->id]),
+            //     'type' => 'account_onboarding',
+            // ]);
+
+            // return redirect($accountLink->url);
+
+            return view('backend.church.index');
         } catch (\Exception $e) {
             flash($e->getMessage())->error();
             return redirect()->back();
@@ -198,7 +224,8 @@ class ChurchController extends Controller
     {
         $church = Church::findOrFail($id);
         $countrys = Country::all();
-        return view('backend.church.edit', compact('church', 'countrys'));
+        $churchBranch = CharchBranch::findOrFail($id);
+        return view('backend.church.edit', compact('church', 'countrys', 'churchBranch'));
     }
 
     public function update(Request $request, $id)
@@ -330,9 +357,10 @@ class ChurchController extends Controller
         $church_id = $request->id;
         $singleChurche = Church::where('id', $church_id)->get();
         $churches = Church::where('added_by', 'admin')
-            ->where('id', '!=', $church_id) // Exclude the single church
+            ->where('id', '!=', $church_id)
             ->get();
-        return view('frontend.church_single', compact('singleChurche', 'churches'));
+        $churchBranches = CharchBranch::where('churche_id', $church_id)->get();
+        return view('frontend.church_single', compact('singleChurche', 'churches', 'churchBranches'));
     }
 
     //     public function donationCreate(Request $request, Church $church)
