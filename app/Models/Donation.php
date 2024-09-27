@@ -13,7 +13,17 @@ class Donation extends Model
         'church_id',
         'amount',
         'payment_option',
-        'payment_id',
+        'user_id',
         'status',
     ];
+
+    public function church()
+    {
+        return $this->belongsTo(Church::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

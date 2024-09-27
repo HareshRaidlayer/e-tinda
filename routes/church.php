@@ -21,9 +21,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         Route::get('/church/create', 'create')->name('church.create');
         Route::post('/church', 'store')->name('church.store');
         Route::post('/church/published', 'updatePublished')->name('church.published');
-        Route::get('/church/{id}/edit', 'edit')->name('church.edit');
+        Route::get('/church/edit/{id}', 'edit')->name('church.edit');
         Route::post('/church/{id}', 'update')->name('church.update');
         Route::get('/church/destroy/{id}', 'destroy')->name('church.destroy');
+
+        Route::get('/donation/list', 'donationList')->name('church.donationList');
     });
 });
 
@@ -43,7 +45,7 @@ Route::controller(ChurchController::class)->group(function () {
 // Route::get('donation/process', [ChurchController::class, 'handleGet'])->name('stripe.get');
 // Route::post('donation/process', [ChurchController::class, 'handlePost'])->name('stripe.post');
 
-Route::post('/church/{church}/donate', [ChurchController::class, 'donationCreate'])->name('church.donate');
+Route::post('/church/donate/{church}', [ChurchController::class, 'donationCreate'])->name('church.donate');
 
 Route::get('/church/{churchId}/dashboard', [ChurchController::class, 'dashboard'])->name('church.dashboard');
 Route::get('/church/{churchId}/stripe/refresh', function ($churchId) {

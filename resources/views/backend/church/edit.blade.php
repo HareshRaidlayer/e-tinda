@@ -66,58 +66,6 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">{{ translate('Bank Account Number') }} <i
-                                        class="las la-language text-danger"
-                                        title="{{ translate('Translatable') }}"></i></label>
-                                <div class="col-lg-9  mb-2">
-                                    <input type="text" class="form-control" name="bank_account_number"
-                                        placeholder="{{ translate('Bank Account Number') }}"
-                                        value="{{ $church['bank_account_number'] }}">
-                                    @error('bank_account_number')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">{{ translate('Bank IFSC code') }} <i
-                                        class="las la-language text-danger"
-                                        title="{{ translate('Translatable') }}"></i></label>
-                                <div class="col-lg-9  mb-2">
-                                    <input type="text" class="form-control" name="bank_ifsc"
-                                        placeholder="{{ translate('Bank IFSC code') }}"
-                                        value="{{ $church['bank_ifsc'] }}">
-                                    @error('bank_ifsc')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">{{ translate('Bank Routing Number') }} <i
-                                        class="las la-language text-danger"
-                                        title="{{ translate('Translatable') }}"></i></label>
-                                <div class="col-lg-9  mb-2">
-                                    <input type="text" class="form-control" name="bank_routing_number"
-                                        placeholder="{{ translate('Bank Routing Number') }}"
-                                        value="{{ $church['bank_routing_number'] }}">
-                                    @error('bank_routing_number')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">{{ translate('Bank Name') }} <i
-                                        class="las la-language text-danger"
-                                        title="{{ translate('Translatable') }}"></i></label>
-                                <div class="col-lg-9  mb-2">
-                                    <input type="text" class="form-control" name="bank_name"
-                                        placeholder="{{ translate('Bank Name') }}" value="{{ $church['bank_name'] }}">
-                                    @error('bank_name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
 
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label">{{ translate('Publish') }}</label>
@@ -206,7 +154,114 @@
                 </div>
 
             </div>
-            <div id="branchFormContainer"></div>
+            <div id="branchFormContainer">
+
+                @if (!empty($churchBranch))
+                @foreach ($churchBranch as $key)
+                <div class="branch-container">
+                    <div class=" removeRow-data">
+                        <div class="aiz-titlebar mt-2 mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h1 class="h3">{{ translate('Add Church Branch') }}</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gutters-5">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <input type="hidden" name="added_by" value="admin">
+                                        <input type="hidden" name="branches" value="branches">
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label">{{ translate('Church Name') }} <i
+                                                    class="las la-language text-danger"
+                                                    title="{{ translate('Translatable') }}"></i></label>
+                                            <div class="col-lg-9 mb-2">
+                                                <input type="hidden" name="branch_id[]" value="{{$key['id']}}">
+                                                <input type="text" class="form-control" name="branch_name[]"value="{{$key['name'] ?? ''}}"
+                                                    placeholder="{{ translate('Church Name') }}">
+                                                @error('name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label">{{ translate('Email') }} <i
+                                                    class="las la-language text-danger"
+                                                    title="{{ translate('Translatable') }}"></i></label>
+                                            <div class="col-lg-9  mb-2">
+                                                <input type="text" class="form-control" name="branch_email[]"
+                                                value="{{$key['email'] ?? ''}}">
+                                                @error('email')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label">{{ translate('Phone Number') }} <i
+                                                    class="las la-language text-danger"
+                                                    title="{{ translate('Translatable') }}"></i></label>
+                                            <div class="col-lg-9  mb-2">
+                                                <input type="text" class="form-control" name="branch_phone_number[]"
+                                                value="{{$key['phone_number'] ?? ''}}">
+                                                @error('Phone Number')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label">{{ translate('Publish') }}</label>
+                                            <div class="col-md-9">
+                                                <select name="branch_status[]" class="form-control">
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                @error('status')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 col-form-label">{{ translate('Country') }}</label>
+                                            <div class="col-md-9">
+                                                <select name="branch_country[]" class="form-control">
+                                                    @foreach ($countrys as $country)
+                                                        <option value="{{ $country->code }}"<?php echo ($country->code == $key['country'] ? 'selected' : '' );?> >{{ $country->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('status')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label">{{ translate('Address') }} <i
+                                                    class="las la-language text-danger"
+                                                    title="{{ translate('Translatable') }}"></i></label>
+                                            <div class="col-lg-9  mb-2">
+                                                <textarea class="form-control" name="branch_address[]">{{$key['address'] ?? ''}}</textarea>
+                                                @error('address')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="mar-all text-right mb-2">
+                                                <button type="button"
+                                                    class="btn btn-danger remove_form">{{ translate('Remove Church Branch') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                @endif
+            </div>
         </div>
         <div class="card mt-4">
             <div class="card-header">
@@ -221,6 +276,11 @@
             </div>
         </div>
     </form>
+
+
+
+
+
     <div class="d-none removeRow-data" id="moreFieldTemplate">
         <div class="aiz-titlebar mt-2 mb-4">
             <div class="row align-items-center">
@@ -234,7 +294,7 @@
                 <div class="card">
                     <div class="card-body">
                         <input type="hidden" name="added_by" value="admin">
-                        <input type="hidden" name="branches" value="branches">
+                        <input type="hidden" name="branch_id[]" value="">
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label">{{ translate('Church Name') }} <i
                                     class="las la-language text-danger"
@@ -271,54 +331,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{ translate('Bank Account Number') }} <i
-                                    class="las la-language text-danger"
-                                    title="{{ translate('Translatable') }}"></i></label>
-                            <div class="col-lg-9  mb-2">
-                                <input type="text" class="form-control" name="branch_bank_account_number[]"
-                                    placeholder="{{ translate('Bank Account Number') }}">
-                                @error('bank_account_number')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{ translate('Bank IFSC code') }} <i
-                                    class="las la-language text-danger"
-                                    title="{{ translate('Translatable') }}"></i></label>
-                            <div class="col-lg-9  mb-2">
-                                <input type="text" class="form-control" name="branch_bank_ifsc[]"
-                                    placeholder="{{ translate('Bank IFSC code') }}">
-                                @error('bank_ifsc')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{ translate('Bank Routing Number') }} <i
-                                    class="las la-language text-danger"
-                                    title="{{ translate('Translatable') }}"></i></label>
-                            <div class="col-lg-9  mb-2">
-                                <input type="text" class="form-control" name="branch_bank_routing_number[]"
-                                    placeholder="{{ translate('Bank Routing Number') }}">
-                                @error('bank_routing_number')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{ translate('Bank Name') }} <i
-                                    class="las la-language text-danger"
-                                    title="{{ translate('Translatable') }}"></i></label>
-                            <div class="col-lg-9  mb-2">
-                                <input type="text" class="form-control" name="branch_bank_name[]"
-                                    placeholder="{{ translate('Bank Name') }}">
-                                @error('bank_name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{ translate('Publish') }}</label>
                             <div class="col-md-9">
@@ -371,38 +384,39 @@
 @section('script')
     <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addBranchBtn = document.getElementById('add_form');
-            const branchFormContainer = document.getElementById('branchFormContainer');
-            const branchTemplate = document.getElementById('moreFieldTemplate').innerHTML;
-            let branchCount = 0;
+          document.addEventListener('DOMContentLoaded', function() {
+    const addBranchBtn = document.getElementById('add_form');
+    const branchFormContainer = document.getElementById('branchFormContainer');
+    const branchTemplate = document.getElementById('moreFieldTemplate').innerHTML;
+    let branchCount = 0;
 
-            addBranchBtn.addEventListener('click', function() {
-                branchCount++;
-                // Create a new branch form
-                const newBranchForm = document.createElement('div');
-                newBranchForm.innerHTML = branchTemplate;
+    addBranchBtn.addEventListener('click', function() {
+        branchCount++;
 
-                // Update the name attributes to include an index
-                newBranchForm.querySelectorAll('input, textarea, select').forEach(element => {
-                    if (element.name) {
-                        element.name = element.name.replace('[]', `[${branchCount}]`);
-                    }
-                });
+        // Create a new branch form
+        const newBranchForm = document.createElement('div');
+        newBranchForm.classList.add('branch-container'); // Adding a class to easily identify the container
+        newBranchForm.innerHTML = branchTemplate;
 
-                // Add the new form to the container
-                branchFormContainer.appendChild(newBranchForm);
+        // Update the name attributes to include an index
+        newBranchForm.querySelectorAll('input, textarea, select').forEach(element => {
 
-                // Optionally, if you need to keep track of added forms, you can set unique IDs or classes
-            });
-
-            // Event delegation for removing forms (if needed)
-            branchFormContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('remove_form')) {
-                    event.target.closest('.branch-container').remove();
-                }
-            });
         });
+
+        // Add the new form to the container
+        branchFormContainer.appendChild(newBranchForm);
+    });
+
+    // Event delegation for removing forms
+    branchFormContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove_form')) {
+            const branchContainer = event.target.closest('.branch-container');
+            if (branchContainer) {
+                branchContainer.remove(); // Ensure the correct container is removed
+            }
+        }
+    });
+});
 
 
         // $(document).ready(function() {

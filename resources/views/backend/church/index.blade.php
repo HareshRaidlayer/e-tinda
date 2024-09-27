@@ -148,13 +148,13 @@
                                     @can('product_edit')
                                         @if ($type == 'Seller')
                                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                                href="{{ route('church.edit', ['id' => $product->id, 'lang' => env('DEFAULT_LANGUAGE')]) }}"
+                                                href="{{ route('church.edit', ['id' => $product->id]) }}"
                                                 title="{{ translate('Edit') }}">
                                                 <i class="las la-edit"></i>
                                             </a>
                                         @else
                                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                                href="{{ route('church.edit', ['id' => $product->id, 'lang' => env('DEFAULT_LANGUAGE')]) }}"
+                                                href="{{ route('church.edit', ['id' => $product->id]) }}"
                                                 title="{{ translate('Edit') }}">
                                                 <i class="las la-edit"></i>
                                             </a>

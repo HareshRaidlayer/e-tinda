@@ -53,15 +53,8 @@
                             <h1 class="mb-3 fs-16 fw-700 text-dark">
                                 {{ $church->name }}
                             </h1>
-                            <h1 class="mb-3 fs-16 fw-700 text-dark">
-                                {{ translate('select church') }}
-                            </h1>
-                            <select class="form-control aiz-selectpicker" name="church_branch" id="church_branch">
-                                <option value="">Select a Church Branch</option>
-                                @foreach ($churchBranches as $branch)
-                                    <option>{{ $branch->name }}</option>
-                                @endforeach
-                            </select>
+
+
 
                             <div class="d-flex justify-content-end">
                                 <button type="button"
@@ -163,10 +156,12 @@
 
 
 @section('script')
+
     <script type="text/javascript">
         function show_number(el) {
             $(el).find('.dummy').addClass('d-none');
             $(el).find('.real').removeClass('d-none').addClass('d-block');
         }
+
     </script>
 @endsection

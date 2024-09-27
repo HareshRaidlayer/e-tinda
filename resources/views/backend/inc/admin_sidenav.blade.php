@@ -1435,14 +1435,19 @@
                     </a>
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
-                            <a href="#" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Donation Church') }}</span>
+                            <a href="{{ route('church.donationList') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Donation List') }}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
+                                <span class="aiz-side-nav-text">{{ translate('Add New Church') }}</span>
                             </a>
                         </li>
 
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('All Donation Church') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('Church list') }}</span>
                             </a>
                         </li>
                     </ul>

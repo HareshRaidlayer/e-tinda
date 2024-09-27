@@ -15,15 +15,7 @@ class CharchBranch extends Model
     // Specify the fields that are mass assignable
     protected $fillable = [
         'name',
-        'bank_account_number',
-        'bank_ifsc',
-        'bank_routing_number',
-        'stripe_account_id',
-        'stripe_bank_account_id',
-        'bank_name',
         'email',
-        'razorpay_contact_id',
-        'razorpay_fund_account_id',
         'phone_number',
         'address',
         'country',

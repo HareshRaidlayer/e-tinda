@@ -26,32 +26,34 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body gry-bg px-3 pt-3" style="overflow-y: inherit;">
-                    <form id="payment-form">
+                    <form action="{{ route('church.donate',['church' => $church->id])}}" method="post">
                         @csrf
                         <input type="hidden" name="church_id" value="{{ $church->id }}">
 
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="payment_option">{{ translate('Payment Method') }} <span
-                                        class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="mb-3">
-                                    <select id="payment_option" class="form-control rounded-0" name="payment_option"
-                                        required>
-                                        <option selected>select payment option</option>
-                                        {{-- <option value="stripe">Stripe</option> --}}
-                                        <option value="razorpay">Razorpay</option>
-                                        {{-- <option value="biller">Biller API</option> --}}
-                                    </select>
-                                </div>
+                        @if (Auth::check() && get_setting('wallet_system') == 1)
+                        <input type="hidden" id="valute_Balanse" value="{{Auth::user()->balance}}">
+                        <div class="py-4 px-4 text-center bg-soft-secondary-base mt-4">
+                            <div class="fs-14 mb-3">
+                                <span class="opacity-80">{{ translate('Or, Your wallet balance :') }}</span>
+                                <span class="fw-700">{{ single_price(Auth::user()->balance) }}</span>
                             </div>
                         </div>
+                        @endif
 
-                        <div class="row mb-3">
+                        <h1 class="mb-3 fs-16 fw-700 text-dark">
+                            {{ translate('Select Church') }}
+                        </h1>
+                        <select class="form-control" name="church_branch">
+                            <option value="">Select a Church Branch</option>
+                            @foreach ($churchBranches as $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+
+                        <div class="row mb-3 mt-3">
                             <div class="col-md-4">
-                                <label for="amount">{{ translate('Amount') }} <span
-                                        class="text-danger">*</span></label>
+                                <input type="hidden" name="payment_option" value="">
+                                <label for="amount">{{ translate('Amount') }} <span class="text-danger">*</span></label>
                             </div>
                             <div class="col-md-8">
                                 <input type="number" id="amount" lang="en" class="form-control mb-3 rounded-0"
@@ -65,8 +67,7 @@
                         <div id="card-errors" role="alert" class="text-danger hidden"></div>
 
                         <div class="form-group text-right">
-                            <button type="submit"
-                                class="btn btn-sm btn-primary rounded-0 transition-3d-hover mr-1">{{ translate('Confirm') }}</button>
+                            <button type="submit" id="submit-btn" class="btn btn-sm btn-primary rounded-0 transition-3d-hover mr-1" disabled>{{ translate('Confirm') }}</button>
                         </div>
                     </form>
                 </div>
@@ -75,139 +76,21 @@
     </div>
 
     <script>
-        const stripe = Stripe(
-            'pk_test_51GwS1SEmGOuJLTMsIeYKFtfAT3o3Fc6IOC7wyFmmxA2FIFQ3ZigJ2z1s4ZOweKQKlhaQr1blTH9y6HR2PMjtq1Rx00vqE8LO0x'
-        );
+        document.addEventListener('DOMContentLoaded', function () {
+            const amountInput = document.getElementById('amount');
+            const submitBtn = document.getElementById('submit-btn');
+            const walletBalance = parseFloat(document.getElementById('valute_Balanse').value);
 
-        let card; // Define card element globally
-
-        document.getElementById('payment_option').addEventListener('change', function(event) {
-            const cardElement = document.getElementById('card-element');
-            const cardErrors = document.getElementById('card-errors');
-
-
-            if (this.value == 'stripe') {
-                // Display card element and errors container
-                cardElement.classList.remove('hidden');
-                cardErrors.classList.remove('hidden');
-
-                if (!card) {
-                    const elements = stripe.elements();
-                    card = elements.create('card');
-                    card.mount('#card-element');
-                }
-            } else if (this.value == 'biller') {
-                console.log(876);
-            } else {
-                // Hide card element and errors container
-                cardElement.classList.add('hidden');
-                cardErrors.classList.add('hidden');
-
-                if (card) {
-                    card.unmount();
-                    card = null;
-                }
-            }
-        });
-
-
-        document.getElementById('payment-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const amount = document.getElementById('amount').value;
-            const paymentOption = document.getElementById('payment_option').value;
-
-            fetch('{{ route('church.donate', $church->id) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                    },
-                    body: JSON.stringify({
-                        payment_option: paymentOption,
-                        amount: amount
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (paymentOption === 'stripe') {
-                        handleStripePayment(data.clientSecret);
-                    } else if (paymentOption === 'razorpay') {
-                        handleRazorpayPayment(data.orderId, amount);
-                    } else if (paymentOption === 'biller') {
-                        handleBillerPayment(data);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-        function handleBillerPayment(data) {
-            if (data.status == 1) {
-                // Assume data.redirectUrl contains the URL to redirect to
-                const redirectUrl = data.redirectUrl; // Adjust this according to your actual response
-                if (redirectUrl) {
-                    window.location.href = redirectUrl; // Redirect to the payment URL
+            amountInput.addEventListener('input', function () {
+                const amount = parseFloat(amountInput.value);
+                if (amount <= walletBalance && !isNaN(amount)) {
+                    submitBtn.disabled = false;
                 } else {
-                    console.error('Redirect URL is missing in the response.');
-                }
-            } else {
-                // Handle errors or failed payment
-                console.error('Biller API Error:', data.error || 'Unknown error');
-                alert('Payment failed. Please try again.');
-            }
-        }
-
-
-        function handleStripePayment(clientSecret) {
-            if (!card) {
-                console.error("Stripe Card Element is not mounted.");
-                return;
-            }
-
-            stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: card
-                }
-            }).then(result => {
-                if (result.error) {
-                    document.getElementById('card-errors').textContent = result.error.message;
-                    document.getElementById('card-errors').classList.remove('hidden');
-                } else {
-                    if (result.paymentIntent.status === 'succeeded') {
-                        window.location.href = '/dashboard'; // Redirect or handle success
-                    }
+                    submitBtn.disabled = true;
                 }
             });
-        }
-
-        function handleRazorpayPayment(orderId, amount) {
-            // Convert amount from rupees to paise
-            var amountInPaise = amount * 100;
-
-            var options = {
-                "key": '{{ env('RAZOR_KEY') }}', // Your Razorpay API key
-                "amount": amountInPaise, // Amount in paise (Razorpay requires paise)
-                "currency": "PHP", // Set the currency to INR
-                "name": "Etinda", // Your company's name
-                "order_id": orderId, // Razorpay order ID
-                "handler": function(response) {
-                    // Handle successful payment
-                    window.location.href = '/dashboard'; // Redirect to dashboard or handle success
-                },
-                "prefill": {
-                    "name": "Your Name", // Prefill customer name
-                    "email": "your_email@example.com" // Prefill customer email
-                }
-            };
-
-            var rzp = new Razorpay(options);
-            rzp.open();
-        }
+        });
     </script>
-
-    <!-- Include Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
 </body>
 

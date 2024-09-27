@@ -24,6 +24,8 @@ use App\Models\Country;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Auth;
 
 
 
@@ -38,8 +40,9 @@ class ChurchController extends Controller
     public function index()
     {
         $type = 'In House';
-        $churches = Church::where('added_by', 'admin')->get();
+        $churches = Church::where('added_by', 'admin')->where('parent_church_id',NULL)->get();
         return view('backend.church.index', compact('churches', 'type'));
+
     }
 
 
@@ -56,142 +59,45 @@ class ChurchController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // dd($request->all());
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'thumbnail_img' => 'required',
-            'description' => 'required|string',
-            'status' => 'required|boolean',
-            'bank_account_number' => 'required|string',
-            'bank_routing_number' => 'required|string',
-            'email' => 'required|email',
-            'bank_ifsc' => 'required',
-            'phone_number' => 'required',
-            'country' => 'required',
+{
 
-            'branch_name.*' => 'nullable|string|max:255',
-            'branch_email.*' => 'nullable|email|max:255',
-            'branch_phone_number.*' => 'nullable|string|max:255',
-            'branch_bank_account_number.*' => 'nullable|string|max:255',
-            'branch_bank_ifsc.*' => 'nullable|string|max:255',
-            'branch_bank_routing_number.*' => 'nullable|string|max:255',
-            'branch_bank_name.*' => 'nullable|string|max:255',
-            'branch_status.*' => 'nullable|boolean',
-            'branch_country.*' => 'nullable|string|max:5',
-            'branch_address.*' => 'nullable|string',
-        ]);
+    // Save the main church
+    $church = new Church();
+    $church->name = $request->name;
+    $church->added_by = $request->added_by;
+    $church->description = $request->description;
+    $church->status = $request->status;
+    $church->thumbnail_img = $request->thumbnail_img;
+    $church->address = $request->address;
+    $church->email = $request->email;
+    $church->phone_number = $request->phone_number;
+    $church->country = $request->country;
 
-        // $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
+    $church->save();
 
-        // Stripe::setApiKey(env('STRIPE_SECRET'));
-        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
+    // Save the branches if available
+    if ($request->has('branch_name') && !empty($request->branch_name)) {
+        $branchNames = $request->branch_name; // Correct variable
+        foreach ($branchNames as $key => $value) {
+            $churchBranch = new Church();
+            $churchBranch->parent_church_id = $church->id;
+            $churchBranch->name = $value;
+            $churchBranch->added_by = 'admin';
+            $churchBranch->status = $request->branch_status[$key] ?? 0; // default to 0 if not provided
+            $churchBranch->address = $request->branch_address[$key] ?? '';
+            $churchBranch->email = $request->branch_email[$key] ?? '';
+            $churchBranch->phone_number = $request->branch_phone_number[$key] ?? '';
+            $churchBranch->country = $request->branch_country[$key] ?? '';
 
-
-        $church = new Church;
-        $church->name = $request->name;
-        $church->added_by = $request->added_by;
-        $church->description = $request->description;
-        $church->status = $request->status;
-        $church->thumbnail_img = $request->thumbnail_img;
-        $church->address = $request->address;
-        $church->email = $request->email;
-        $church->phone_number = $request->phone_number;
-
-        $church->bank_name = $request->bank_name;
-        $church->bank_account_number = $request->bank_account_number;
-        $church->bank_routing_number = $request->bank_routing_number;
-        $church->bank_ifsc = $request->bank_ifsc;
-
-        // $stripe = new StripeClient(env('STRIPE_SECRET'));
-
-
-        try {
-
-            $contactRazer = $api->contact->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'contact' => $request->phone_number,
-                'type' => 'customer',
-            ]);
-            $church->razorpay_contact_id = $contactRazer->id;
-
-            $fundAccount = $api->fundAccount->create([
-                'contact_id' => $contactRazer->id,
-                'account_type' => 'bank_account',
-                'bank_account' => [
-                    'name' => $church->name,
-                    'ifsc' => $request->bank_ifsc,
-                    'account_number' => $request->bank_account_number,
-                ],
-            ]);
-            $church->razorpay_fund_account_id = $fundAccount->id;
-
-
-            // $account = $stripe->accounts->create([
-            //     'type' => 'express',
-            //     'country' => $request->country,
-            //     'email' => $request->email,
-            // ]);
-
-            // $church->stripe_account_id = $account->id;
-
-
-            // $bankAccount = $stripe->accounts->createExternalAccount(
-            //     $church->stripe_account_id,
-            //     [
-            //         'external_account' => [
-            //             'object' => 'bank_account',
-            //             'country' => $request->country,
-            //             'currency' => "$curencyCode",
-            //             'account_holder_name' => $church->name,
-            //             'account_holder_type' => 'company',
-            //             'routing_number' => $request->bank_routing_number,
-            //             'account_number' => $request->bank_account_number,
-            //         ],
-            //     ]
-            // );
-
-            // $church->stripe_bank_account_id = $bankAccount->id;
-
-            $church->save();
-
-            $branches = [];
-            $churchId = $church->id;
-            $brancheName = $request->branch_name;
-            foreach ($brancheName as $key => $value) {
-                $churchBranches = new CharchBranch();
-                $churchBranches->churche_id = $churchId;
-                $churchBranches->name = $brancheName[$key];
-                $churchBranches->added_by = 'admin';
-                $churchBranches->status =  $request->branch_status[$key];
-                $churchBranches->address = $request->branch_address[$key];
-                $churchBranches->email =  $request->branch_email[$key];
-                $churchBranches->phone_number = $request->branch_phone_number[$key];
-                $churchBranches->country = $request->branch_country[$key];
-
-                $churchBranches->bank_name = $request->bank_name;
-                $churchBranches->bank_account_number = $request->branch_bank_account_number[$key];
-                $churchBranches->bank_routing_number = $request->bank_routing_number;
-                $churchBranches->bank_ifsc = $request->branch_bank_ifsc[$key];
-                $churchBranches->save();
-            }
-
-            // $accountLink = $stripe->accountLinks->create([
-            //     'account' => $church->stripe_account_id,
-            //     'refresh_url' => route('church.stripe.refresh', ['churchId' => $church->id]),
-            //     'return_url' => route('church.dashboard', ['churchId' => $church->id]),
-            //     'type' => 'account_onboarding',
-            // ]);
-
-            // return redirect($accountLink->url);
-            flash(translate('Church has been Saved successfully'))->success();
-            return redirect()->back();
-        } catch (\Exception $e) {
-            flash($e->getMessage())->error();
-            return redirect()->back();
+            $churchBranch->save();
         }
     }
+
+    // Flash success message and redirect back
+    flash(translate('Church has been saved successfully'))->success();
+    return redirect()->back();
+}
+
 
     public function updatePublished(Request $request)
     {
@@ -224,63 +130,82 @@ class ChurchController extends Controller
     {
         $church = Church::findOrFail($id);
         $countrys = Country::all();
-        $churchBranch = CharchBranch::findOrFail($id);
+        // print_r($countrys);exit;
+        $churchBranch = Church::where("parent_church_id",$church->id)->get();
+
         return view('backend.church.edit', compact('church', 'countrys', 'churchBranch'));
     }
 
     public function update(Request $request, $id)
-    {
-        // echo 1234;exit;
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'added_by' => 'required|string|max:255',
-            'thumbnail_img' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-        ]);
+{
+    // Validate input
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $church = Church::findOrFail($id);
-        $church->name = $request->name;
-        $church->added_by = 'admin';
-        $church->description = $request->description;
-        $church->status = $request->status;
-        $church->thumbnail_img = $request->thumbnail_img;
-        $church->address = $request->address;
-        $church->email = $request->email;
+    // Update the main church
+    $church = Church::findOrFail($id);
+    $church->name = $request->name;
+    $church->added_by = $request->added_by;
+    $church->description = $request->description;
+    $church->status = $request->status;
+    $church->thumbnail_img = $request->thumbnail_img;
+    $church->address = $request->address;
+    $church->email = $request->email;
+    $church->phone_number = $request->phone_number;
+    $church->save();
 
-        $church->bank_account_number = $request->bank_account_number;
-        $church->bank_routing_number = $request->bank_routing_number;
+    // Update or create branches
+    $branchIds = $request->branch_id;
+    // print_r($branchIds);exit;
+    $branchNames = $request->branch_name;
+
+    if (!empty($branchNames)) {
+        foreach ($branchNames as $key => $name) {
+            if (isset($branchIds[$key]) && !empty($branchIds[$key])) {
+                // Update existing branch
+                $churchBranch = Church::findOrFail($branchIds[$key]);
+                $churchBranch->name = $name;
+                $churchBranch->added_by = 'admin';
+                $churchBranch->status = $request->branch_status[$key] ?? 0; // Default status to 0
+                $churchBranch->address = $request->branch_address[$key] ?? '';
+                $churchBranch->email = $request->branch_email[$key] ?? '';
+                $churchBranch->phone_number = $request->branch_phone_number[$key] ?? '';
+                $churchBranch->country = $request->branch_country[$key] ?? '';
+                $churchBranch->save();
+            } else {
+
+                // Create a new branch
+                $churchBranch = new Church();
+                $churchBranch->parent_church_id = $church->id;
+                $churchBranch->name = $name;
+                $churchBranch->added_by = 'admin';
+                $churchBranch->status = $request->branch_status[$key] ?? 0; // Default status to 0
+                $churchBranch->address = $request->branch_address[$key] ?? '';
+                $churchBranch->email = $request->branch_email[$key] ?? '';
+                $churchBranch->phone_number = $request->branch_phone_number[$key] ?? '';
+                $churchBranch->country = $request->branch_country[$key] ?? '';
+                $churchBranch->save();
+            }
 
 
-        // $account = Account::create([
-        //     'type' => 'custom',
-        //     'country' => 'PH',
-        //     'email' =>  $request->email,
-        //     'business_type' => 'non_profit',
-        //     'external_account' => [
-        //         'object' => 'bank_account',
-        //         'country' => 'PH',
-        //         'currency' => 'PHP',
-        //         'routing_number' => $request->bank_routing_number,
-        //         'account_number' => $request->bank_account_number,
-        //         'account_holder_name' => $request->name,
-        //         'account_holder_type' => 'company',
-        //     ],
-        // ]);
-
-        $church->stripe_account_id = 'acct_1234567890abcdef';
-
-
-        $church->save();
-
-        flash(translate('Church has been updated successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
-
-        return redirect()->route('church.index');
+        }
     }
+
+    // Optionally delete branches that are not present in the update request
+//     $existingBranchIds = Church::where('parent_church_id', $church->id)->pluck('id')->toArray();
+//     $newBranchIds = array_filter($branchIds);
+//     $branchesToDelete = array_diff($existingBranchIds, $newBranchIds);
+// print_r($branchesToDelete);exit;
+    // Church::whereIn('id', $branchesToDelete)->delete();
+
+    // Flash success message
+    flash(translate('Church has been updated successfully'))->success();
+
+    // Clear views and cache
+    Artisan::call('view:clear');
+    Artisan::call('cache:clear');
+
+    return redirect()->route('church.index');
+}
+
 
     public function destroy($id)
     {
@@ -348,321 +273,106 @@ class ChurchController extends Controller
 
     public function home()
     {
-        $churches = Church::where('added_by', 'admin')->get();
+        $churches = Church::where('parent_church_id', NULL)->get();
         return view('frontend.church_list', compact('churches'));
     }
 
     public function single_page(Request $request)
     {
         $church_id = $request->id;
-        $singleChurche = Church::where('id', $church_id)->get();
+        $singleChurche = Church::where('id', $church_id)->where('status' , 1)->get();
         $churches = Church::where('added_by', 'admin')
             ->where('id', '!=', $church_id)
             ->get();
-        $churchBranches = CharchBranch::where('churche_id', $church_id)->get();
+        $churchBranches = Church::where('parent_church_id', $church_id)->where('status' , 1)->get();
         return view('frontend.church_single', compact('singleChurche', 'churches', 'churchBranches'));
     }
 
-    //     public function donationCreate(Request $request, Church $church)
-    // {
-    //     // Validate the donation amount
-    //     $request->validate([
-    //         'amount' => 'required|numeric|min:1',
-    //     ]);
-
-    //     $amount = $request->amount * 100; // Stripe handles amounts in cents
-
-    //     // Initialize the Stripe client
-    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
-
-    //     try {
-    //         // Create a PaymentIntent with transfer_data to the church's Stripe account
-    //         $paymentIntent = $stripe->paymentIntents->create([
-    //             'amount' => $amount,
-    //             'currency' => 'usd',
-    //             'payment_method_types' => ['card'],
-    //             'transfer_data' => [
-    //                 'destination' => $church->stripe_account_id,
-    //             ],
-    //         ]);
-
-    //         // Provide the client_secret to the front-end to complete the payment
-    //         return view('frontend.payment.stripe_donation', [
-    //             'clientSecret' => $paymentIntent->client_secret,
-    //             'amount' => $amount / 100,
-    //             'church' => $church,
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         // Handle errors (e.g., Stripe API errors)
-    //         return back()->withErrors(['error' => 'There was an error processing your donation: ' . $e->getMessage()]);
-    //     }
-
-
-    // }
 
 
     public function donationCreate(Request $request, $churchId)
     {
 
-        $request->validate([
-            'payment_option' => 'required',
-            'amount' => 'required|numeric|min:1',
-        ]);
-
         $church = Church::findOrFail($churchId);
-        $amount = $request->input('amount'); // Convert amount to cents for Stripe
-        $paymentOption = $request->payment_option;
-
-        if ($request->input('payment_option') === 'stripe') {
-            return $this->handleStripePayment($church, $amount, $request);
-        } else if ($request->input('payment_option') === 'razorpay') {
-            return $this->handleRazorpayPayment($church, $amount, $request);
-        } else if ($request->input('payment_option') === 'biller') {
-            return $this->handleBillerPayment($amount, $church, $request);
+        $church_id= $church->id;
+        if(!empty($request->church_branch)){
+            $church_id = $request->church_branch;
         }
+        $amount = $request->amount;
 
+        $sender = Auth::user();
+        // print_r($sender['id']);exit;
 
-        return redirect()->back()->with('error', 'Invalid payment method');
-    }
-
-
-
-    private function handleStripePayment(Church $church, $amount, Request $request)
-    {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $curencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
-        // Create PaymentIntent
-        $paymentIntent = PaymentIntent::create([
-            'amount' => $amount,
-            'currency' => "$curencyCode",
-            'payment_method_types' => ['card'],
-            'transfer_data' => [
-                'destination' => $church->stripe_account_id,
-            ],
-        ]);
-
-        // Save donation details
-        $this->saveDonation($request, 'stripe', $paymentIntent->id);
-
-        return response()->json([
-            'clientSecret' => $paymentIntent->client_secret,
-        ]);
-    }
-
-
-    private function handleBillerPayment($amount, $churchId, $request)
-    {
-        $txnid = uniqid(); // Generate a unique transaction ID
-        $token = "2c1816316e65dbfcb0c34a25f3d6fe5589aef65d"; // Token for the API
-        $data = $amount . $txnid . $token;
-        $digest = sha1($data); // Generate the digest
-        $callbackUrl = "http://ecommerce.conscor.com/"; // Callback URL
+        if ($sender->balance < $amount) {
+            flash(translate('You do not have enough balance to complete this transfer. Your current balance is ₱') . number_format($sender->balance, 2))->error();
+            return redirect()->back()->withInput();
+        }
+        DB::beginTransaction();
 
         try {
-            // Send POST request to the API
-            $response = Http::withHeaders([
-                'X-MultiPay-Token' => $token,
-                'X-MultiPay-Code' => 'MSYS_TEST_BILLER',
-            ])->post('https://pgi-ws-staging.multipay.ph/api/v1/transactions/generate', [
+            $sender->balance -= $amount;
+            $sender->save();
+            Donation::create([
+                'church_id' =>$church_id,
                 'amount' => $amount,
-                'txnid' => $txnid,
-                'callback_url' => $callbackUrl,
-                'digest' => $digest,
-                'church_id' => $churchId,
+                'payment_option' => "Wallet",
+                'user_id' => $sender['id'],
+                'status' => 'paid',
             ]);
-            $data = $response->json();
-            $paymentUrl = $data['data']['url'];
-            $this->saveDonation($request, 'biller', $churchId, $paymentUrl);
-            // return redirect($paymentUrl);
-            return response()->json([
-                'status' => 1,
-                'redirectUrl' => $paymentUrl,
-            ]);
+
+            DB::commit();
+
+            flash(translate('Money transferred successfully to  ') .  $church->name . '. Your new balance is ₱' . number_format($sender->balance, 2))->success();
+            return redirect()->back();
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            DB::rollBack();
+            flash(translate('Failed to transfer money. Please try again.'))->error();
+            return redirect()->back()->withInput();
         }
+
     }
 
-
-
-    public function handleCallback(Request $request)
+    public function donationList(Request $request)
     {
-        // Extract information from the callback request
-        $transactionId = $request->input('txnid');
-        $status = $request->input('status');
-        $amount = $request->input('amount');
-        // Handle the response (e.g., update the transaction status in the database)
-        if ($status === 'S') {
-            // Payment successful
-        } elseif ($status === 'F') {
-            // Payment failed
-        } else {
-            // Handle other statuses
+        $donation_status = 0;
+        $sort_search = null;
+
+        // Start building the query with necessary joins and select
+        $donations = Donation::join('churches', 'donations.church_id', '=', 'churches.id')
+            ->select('donations.*', 'churches.name as church_name');
+
+        // Apply the donation status filter if provided
+        if ($request->has('donation_status') && $request->donation_status != null) {
+            $donations = $donations->where('donations.is_donatated', $request->donation_status);
+            $donation_status = $request->donation_status;
+        }else{
+            $donations = $donations->where('donations.is_donatated',0);
         }
-        // Respond with an acknowledgment
-        return response()->json(['message' => 'Callback received'], 200);
-    }
 
-
-    // private function handleRazorpayPayment(Church $church, $amount, Request $request)
-    // {
-    //     $api = new Api('rzp_test_rvO5evJIDBL6io', 'cWmQnzn1RDZPZYiCOllqKRiJ');
-
-    //     // Create a Razorpay payment request
-    //     $order = $api->order->create([
-    //         'amount' => $amount,
-    //         'currency' => 'INR',
-    //         'payment_capture' => 1,
-    //     ]);
-
-    //     // Save donation details
-    //     $this->saveDonation($request, 'razorpay', $order->id);
-
-    //     return response()->json([
-    //         'orderId' => $order->id,
-    //         'amount' => $amount,
-    //     ]);
-    // }
-
-    private function handleRazorpayPayment(Church $church, $amount, Request $request)
-    {
-        // Initialize Razorpay API client
-        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
-        $currencyCode = Currency::findOrFail(get_setting('system_default_currency'))->code;
-
-        try {
-            // Create a payout to the church's bank account
-            $payout = $api->payout->create([
-                'fund_account_id' => $church->razorpay_fund_account_id,
-                'amount' => $amount * 100, // Amount in paise (Razorpay requires paise)
-                'currency' => $currencyCode,
-                'mode' => 'IMPS',
-                'purpose' => 'payout',
-                'queue_if_low_balance' => true,
-                'reference_id' => 'txn_' . uniqid(),
-                'narration' => 'Donation to Church',
-            ]);
-
-            // Save donation details
-            \Log::info('Payout created: ', ['payoutId' => $payout->id]);
-            $this->saveDonation($request, 'razorpay', $payout->id);
-
-            // Poll for payout status
-            $status = $this->pollPayoutStatus($payout->id);
-
-            return response()->json([
-                'status' => $status == 'processed' ? 'success' : 'pending',
-                'message' => $status == 'processed' ? 'Payout successful' : 'Payout is being processed',
-                'payoutId' => $payout->id,
-                'amount' => $amount,
-                'currency' => $currencyCode,
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error processing payout: ', ['error' => $e->getMessage()]);
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+        // Apply the user ID filter if provided
+        if ($request->has('user_id') && $request->user_id != null) {
+            $donations = $donations->where('donations.user_id', $request->user_id);
         }
-    }
 
-    private function pollPayoutStatus($payoutId)
-    {
-        // Poll the status of the payout after a brief delay
-        sleep(5); // Wait for 5 seconds (adjust as necessary)
-        try {
-            $payoutStatus = $this->api->payout->fetch($payoutId);
-            return $payoutStatus->status;
-        } catch (\Exception $e) {
-            return 'error';
+        // Apply the search filter if provided
+        if ($request->search != null) {
+            $sort_search = $request->search;
+            $donations = $donations->where(function($query) use ($sort_search) {
+                $query->where('churches.name', 'like', '%' . $sort_search . '%')
+                    ->orWhereHas('stocks', function ($q) use ($sort_search) {
+                        $q->where('sku', 'like', '%' . $sort_search . '%');
+                    });
+            });
         }
+
+        // Execute the query to get the results
+        $donations = $donations->get();
+
+        $churches = Church::where('status', 1)->get();
+
+        return view('backend.church.donationList', compact('donations', 'donation_status', 'sort_search', 'churches'));
     }
 
 
 
-    private function saveDonation(Request $request, $paymentOption, $paymentId)
-    {
-        Donation::create([
-            'church_id' => $request->input('church_id'),
-            'amount' => $request->input('amount'),
-            'payment_option' => $paymentOption,
-            'payment_id' => $paymentId,
-            'status' => 'pending', // Set status based on actual payment result
-        ]);
-    }
-
-
-
-
-    // public function handleStripeWebhook(Request $request)
-    // {
-    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
-
-    //     $event = $request->input('type');
-    //     $data = $request->input('data');
-
-    //     if ($event === 'payment_intent.succeeded') {
-    //         $paymentIntentId = $data['object']['id'];
-    //         $churchId = $data['object']['metadata']['church_id'];
-
-    //         $church = Church::find($churchId);
-
-    //         if ($church) {
-    //             try {
-    //                 $this->transferFunds($paymentIntentId, $church);
-    //             } catch (\Exception $e) {
-    //                 return response()->json(['error' => $e->getMessage()], 500);
-    //             }
-    //         }
-    //     }
-
-    //     return response()->json(['status' => 'success']);
-    // }
-
-    // private function transferFunds($paymentIntentId, Church $church)
-    // {
-    //     $stripe = new StripeClient('sk_test_51PqrYGDPvIfzbOLbLTjrdbq8upw8GUKpdUgpEsn2ES5O48SM8E04HRqvCivxW1xxmEFPOWKS5ZcyKJVHwZpWIr5N00DVM63O02');
-
-    //     try {
-    //         $paymentIntent = $stripe->paymentIntents->retrieve($paymentIntentId);
-
-    //         $stripe->transfers->create([
-    //             'amount' => $paymentIntent->amount,
-    //             'currency' => 'usd',
-    //             'destination' => $church->stripe_account_id,
-    //             'transfer_group' => $paymentIntent->id,
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         throw new \Exception('Error creating transfer: ' . $e->getMessage());
-    //     }
-    // }
-
-
-    public function handleRazorpayWebhook(Request $request)
-    {
-        $payload = $request->all();
-
-        Log::info('Razorpay Webhook Received:', $payload);
-
-        // Handle payout processed event
-        if ($payload['event'] == 'payout.processed') {
-            $payoutId = $payload['payload']['payout']['entity']['id'];
-            // Update the donation record in your database
-            Donation::where('payout_id', $payoutId)->update(['status' => 'processed']);
-            return response()->json(['status' => 'success'], 200);
-        }
-
-        // Handle payout failed event
-        if ($payload['event'] == 'payout.failed') {
-            $payoutId = $payload['payload']['payout']['entity']['id'];
-            // Update the donation record in your database
-            Donation::where('payout_id', $payoutId)->update(['status' => 'failed']);
-            return response()->json(['status' => 'success'], 200);
-        }
-
-        // Add more event handling as necessary
-
-        return response()->json(['status' => 'unhandled event'], 200);
-    }
 }
