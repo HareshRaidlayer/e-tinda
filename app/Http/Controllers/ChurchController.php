@@ -318,6 +318,7 @@ class ChurchController extends Controller
                 'payment_option' => "Wallet",
                 'user_id' => $sender['id'],
                 'status' => 'paid',
+                'is_donatated' => 0
             ]);
 
             DB::commit();
