@@ -92,6 +92,26 @@
                         </li>
                     </ul>
                 </li>
+                {{-- property --}}
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Property') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <!--Submenu-->
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.hotels') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.hotels']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Property') }}</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.uploaded-files.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.uploaded-files.index', 'seller.uploads.create']) }}">

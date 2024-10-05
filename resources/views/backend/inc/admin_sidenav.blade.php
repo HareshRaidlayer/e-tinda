@@ -776,6 +776,37 @@
                         </li>
                     @endcanany
                 @endif
+                <!-- Property -->
+                        <li class="aiz-side-nav-item">
+                            <a href="#" class="aiz-side-nav-link">
+                                <div class="aiz-side-nav-icon">
+                                    <svg id="stats_3916778" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 16 16">
+                                    <path id="Path_40739" data-name="Path 40739"
+                                        d="M16,16H2a2,2,0,0,1-2-2V0H1.333V14A.667.667,0,0,0,2,14.667H16Z" fill="#575b6a" />
+                                    <rect id="Rectangle_21340" data-name="Rectangle 21340" width="1.333" height="6"
+                                        transform="translate(9.333 7.333)" fill="#575b6a" />
+                                    <rect id="Rectangle_21341" data-name="Rectangle 21341" width="1.333" height="6"
+                                        transform="translate(4 7.333)" fill="#575b6a" />
+                                    <rect id="Rectangle_21342" data-name="Rectangle 21342" width="1.333" height="9.333"
+                                        transform="translate(12 4)" fill="#575b6a" />
+                                    <rect id="Rectangle_21343" data-name="Rectangle 21343" width="1.333" height="9.333"
+                                        transform="translate(6.667 4)" fill="#575b6a" />
+                                </svg>
+                                </div>
+                                <span class="aiz-side-nav-text">{{ translate('Properties') }}</span>
+                                <span class="aiz-side-nav-arrow"></span>
+                            </a>
+                            <ul class="aiz-side-nav-list level-2">
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('adminHotels') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['admin.adminHotels']) }}">
+                                        <span class="aiz-side-nav-text">{{ translate('All Properties') }}</span>
+                                        @if ($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                 {{-- Uploads Files --}}
                 <li class="aiz-side-nav-item">

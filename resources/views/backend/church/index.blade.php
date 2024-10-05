@@ -25,17 +25,7 @@
                     <h5 class="mb-md-0 h6">{{ translate('All Church') }}</h5>
                 </div>
 
-                @can('product_delete')
-                    <div class="dropdown mb-2 mb-md-0">
-                        <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
-                            {{ translate('Bulk Action') }}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item confirm-alert" href="javascript:void(0)" data-target="#bulk-delete-modal">
-                                {{ translate('Delete selection') }}</a>
-                        </div>
-                    </div>
-                @endcan
+
 
                 @if ($type == 'Seller')
                     <div class="col-md-2 ml-auto">
@@ -90,8 +80,8 @@
                                 <th data-breakpoints="lg">#</th>
                             @endif
                             <th>{{ translate('Name') }}</th>
-                            <th data-breakpoints="lg">{{ translate('Added By') }}</th>
-                            <th data-breakpoints="lg">{{ translate('Published') }}</th>
+                            <th >{{ translate('Added By') }}</th>
+                            <th >{{ translate('Published') }}</th>
                             <th data-breakpoints="sm" class="text-right">{{ translate('Options') }}</th>
                             {{-- <th data-breakpoints="md">{{ translate('Total Stock') }}</th>
                             <th data-breakpoints="lg">{{ translate('Todays Deal') }}</th>
@@ -269,24 +259,6 @@
             $('#sort_products').submit();
         }
 
-        function bulk_delete() {
-            var data = new FormData($('#sort_products')[0]);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('bulk-product-delete') }}",
-                type: 'POST',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response == 1) {
-                        location.reload();
-                    }
-                }
-            });
-        }
+
     </script>
 @endsection

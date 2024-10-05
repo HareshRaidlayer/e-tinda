@@ -1,6 +1,16 @@
 @extends('backend.layouts.app')
 
 @section('content')
+<style>
+    .bd-indigo-200 {
+    color: #fff;
+    background-color: #c29ffa;
+    }
+    .bd-pink-300 {
+        color: #fff;
+        background-color: #e685b5;
+    }
+</style>
 
     <div class="aiz-titlebar text-left mt-2 mb-3">
         <div class="row align-items-center">
@@ -10,8 +20,33 @@
         </div>
     </div>
     <br>
+<?php # print_r($churches);exit;?>
+    <div class="row">
+        @php
+            $count=1;
+        @endphp
+        @foreach ($churches as $church)
+            <div class="col-2">
+                @php
+                  $className = ($count % 2 == 0) ? "bd-indigo-200" : "bd-pink-300";
+                @endphp
+                <div class="card p-2  {{$className}}">
+                    <p>{{$church['name']}}</p>
+                    <p>Total Amount to Donate : <span class="fs-13  fw-700 text-white"> {{$church['total_donations'] ?? 0}} </span></p>
+                    <a class="p-1 text-center but btn-info"> Clear Donation</a>
+                    <p>Click this button to Clear Donation</p>
 
+                </div>
+            </div>
+            @php
+            $count++;
+        @endphp
+        @endforeach
+
+
+    </div>
     <div class="card">
+
         <form class="" id="sort_products" action="" method="GET">
             <div class="card-header row gutters-5">
                 <div class="col">
@@ -104,8 +139,8 @@
                                 </td>
                                 <td class="text-right">
                                     @can('product_delete')
-                                        <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
-                                            data-href="{{ route('church.destroy', $donation->id) }}"
+                                        <a href="" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
+                                            data-href="{{ route('church.donationdelete', $donation->id) }}"
                                             title="{{ translate('Delete') }}">
                                             <i class="las la-trash"></i>
                                         </a>

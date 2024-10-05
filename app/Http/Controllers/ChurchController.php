@@ -157,6 +157,13 @@ class ChurchController extends Controller
     // print_r($branchIds);exit;
     $branchNames = $request->branch_name;
 
+    $existingRoomIds = collect($branchIds)->filter(); // Get IDs of rooms in the form
+
+    // Delete rooms that are not in the request (those removed by the user)
+    Church::where('parent_church_id', $id)
+        ->whereNotIn('id', $existingRoomIds)
+        ->delete();
+
     if (!empty($branchNames)) {
         foreach ($branchNames as $key => $name) {
             if (isset($branchIds[$key]) && !empty($branchIds[$key])) {
@@ -369,9 +376,31 @@ class ChurchController extends Controller
         // Execute the query to get the results
         $donations = $donations->get();
 
-        $churches = Church::where('status', 1)->get();
+        $churches = Church::select('churches.*', DB::raw('SUM(CASE WHEN donations.is_donatated = 0 THEN donations.amount ELSE 0 END) as total_donations'))
+        ->leftJoin('donations', 'churches.id', '=', 'donations.church_id')
+        ->where('churches.status', 1)
+        ->groupBy('churches.id')
+        ->get();
+
+
 
         return view('backend.church.donationList', compact('donations', 'donation_status', 'sort_search', 'churches'));
+    }
+
+    public function donationdelete($id)
+    {
+        // Find the donation by its ID
+        $donation = Donation::findOrFail($id);
+
+        // Delete the donation
+
+    if($donation->delete()){
+        flash(translate('Record delete successfully'))->success();
+    }else{
+        flash(translate('Failed to delete Please try again.'))->error();
+    }
+        // Optionally, return a success message or redirect
+        return redirect()->back();
     }
 
 

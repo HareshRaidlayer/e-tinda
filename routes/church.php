@@ -26,6 +26,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         Route::get('/church/destroy/{id}', 'destroy')->name('church.destroy');
 
         Route::get('/donation/list', 'donationList')->name('church.donationList');
+        Route::get('/donation/delete/{id}', 'donationdelete')->name('church.donationdelete');
     });
 });
 

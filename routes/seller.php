@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AizUploadController;
+use App\Http\Controllers\Seller\HotelController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user', 'prevent-back-history'], 'as' => 'seller.'], function () {
@@ -52,7 +53,18 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::get('/service/{id}/edit', 'edit')->name('service.edit');
         Route::post('/service/update/{product}', 'update')->name('service.update');
         Route::post('/service/seller/featured', 'updateFeatured')->name('service.featured');
-         Route::get('/service/destroy/{id}', 'destroy')->name('service.destroy');
+        Route::get('/service/destroy/{id}', 'destroy')->name('service.destroy');
+    });
+
+    // Hotel
+    Route::controller(HotelController::class)->group(function () {
+        Route::get('/hotels', 'index')->name('hotels');
+        Route::get('/hotels/create', 'create')->name('hotels.create');
+        Route::post('/hotels/create', 'store')->name('hotels.store');
+        Route::get('/hotels/edit/{id}', 'edit')->name('hotels.edit');
+        Route::post('/hotels/update/{id}', 'update')->name('hotels.update');
+        Route::get('/hotels/destroy/{id}', 'destroy')->name('hotels.destroy');
+
     });
 
 
@@ -175,4 +187,19 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     });
 
 });
+
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
+    Route::controller(HotelController::class)->group(function () {
+        Route::get('/hotels/all', 'adminIndex')->name('adminHotels');
+        Route::post('/hotels/published', 'updatePublished')->name('hotels.published');
+        Route::get('/hotels/view/{id}', 'adminHotelsView')->name('adminHotelsView');
+        Route::get('/hotels/destroy/{id}', 'adminHotelsDestroy')->name('adminHotelsDestroy');
+
+    });
+});
+
+
+
+
 
