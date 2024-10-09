@@ -11,7 +11,7 @@ class Booking extends Model
     protected $table = 'hotel_booking';
     protected $fillable = [
         'hotel_id', 'room_id','user_id','owner_id', 'number_of_rooms','total_price', 'number_of_guests',
-        'check_in_date', 'check_out_date', 'full_name', 'email', 'phone'
+        'check_in_date', 'check_out_date', 'full_name', 'email', 'phone','is_booked'
     ];
 
     public function hotel()
