@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Mail\SecondEmailVerifyMailManager;
+use App\Models\Booking;
 use App\Models\Cart;
 use Artisan;
 use DB;
@@ -189,6 +190,24 @@ class HomeController extends Controller
                 flash(translate('You had placed your items in the shopping cart. Try to order before the product quantity runs out.'))->warning();
             }
             return view('frontend.user.customer.dashboard');
+        } elseif (Auth::user()->user_type == 'delivery_boy') {
+            return view('delivery_boys.dashboard');
+        } else {
+            abort(404);
+        }
+    }
+    public function bookingDetails()
+    {
+        if (Auth::user()->user_type == 'seller') {
+            return redirect()->route('seller.dashboard');
+        } elseif (Auth::user()->user_type == 'customer') {
+            // $bookings = Booking::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+            $bookings = Booking::where('hotel_booking.user_id', Auth::user()->id)
+            ->join('orders', 'orders.is_booking', '=', 'hotel_booking.id')
+            ->orderBy('hotel_booking.id', 'desc')
+            ->select('hotel_booking.*', 'orders.code')
+            ->get();
+            return view('frontend.user.customer.bookingDetails',compact('bookings'));
         } elseif (Auth::user()->user_type == 'delivery_boy') {
             return view('delivery_boys.dashboard');
         } else {

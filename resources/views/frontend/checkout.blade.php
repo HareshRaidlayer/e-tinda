@@ -21,7 +21,7 @@
     <section class="my-4 gry-bg">
         <div class="container">
             <div class="row cols-xs-space cols-sm-space cols-md-space">
-                <div class="col-xxl-8 col-xl-10 mx-auto">
+                <div class="col-12 col-md-8 mx-auto">
                     <form class="form-default" data-toggle="validator" action="{{ route('payment.checkout') }}" role="form"
                         method="POST" id="checkout-form">
                         @csrf
@@ -155,7 +155,7 @@
                     </form>
                 </div>
                 <!-- Cart Summary -->
-                <div class="col-lg-4 mt-lg-0 mt-4" id="cart_summary">
+                <div class="col-12 col-md-4 mt-lg-0 mt-4" id="cart_summary">
                     @include('frontend.partials.cart.cart_summary', ['proceed' => 0, 'carts' => $carts])
                 </div>
             </div>

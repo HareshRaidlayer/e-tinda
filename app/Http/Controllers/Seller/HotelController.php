@@ -8,11 +8,25 @@ use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\City;
 use App\Models\State;
+use App\Models\Booking;
 use Auth;
 use Artisan;
 
 class HotelController extends Controller
 {
+  public function propertyList(){
+    $hotels = Hotel::where('is_approved', 1)->orderBy('id', 'desc')->get();
+    return view('frontend.property_list', compact('hotels'));
+
+  }
+
+  public function propertyDetails($id){
+    // $hotels = Hotel::where('is_approved', 1)->where('id',$id)->orderBy('id', 'desc')->first();
+    $hotels = Hotel::with('rooms')->findOrFail($id);
+    return view('frontend.property_details', compact('hotels'));
+
+  }
+
     public function index(Request $request)
     {
 
@@ -25,7 +39,6 @@ class HotelController extends Controller
         $hotels = $hotels->paginate(10);
         return view('backend.hotels.index', compact('hotels','search'));
     }
-
 
     public function create()
     {
@@ -65,6 +78,7 @@ class HotelController extends Controller
                 $room = new Room();
                 $room->hotel_id = $hotel->id;  // Reference the saved hotel's ID
                 $room->room_number = $roomData['room_number'];
+                $room->description = $roomData['description'];
                 $room->capacity = $roomData['capacity'];
                 $room->price = $roomData['price'];
                 $room->images = $roomData['images'];
@@ -76,7 +90,6 @@ class HotelController extends Controller
         flash(translate('Hotel Add successfully'))->success();
         return redirect()->route('seller.hotels');
     }
-
 
     public function edit(Hotel $hotel ,$id)
     {
@@ -135,6 +148,7 @@ class HotelController extends Controller
         }
 
         $room->room_number = $roomData['room_number'];
+        $room->description = $roomData['description'];
         $room->capacity = $roomData['capacity'];
         $room->price = $roomData['price'];
         if (isset($roomData['images'])) {
@@ -210,5 +224,79 @@ class HotelController extends Controller
         flash(translate('Hotel delete successfully'))->success();
         return redirect()->back();
     }
+
+    public function propertyBooking(Request $request){
+        $room = Room::findOrFail($request->room_id);
+
+        // Step 1: Check for existing bookings for this room on the given dates
+        $existingBooking = Booking::where('room_id', $request->room_id)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('check_in_date', [$request->check_in_date, $request->check_out_date])
+                      ->orWhereBetween('check_out_date', [$request->check_in_date, $request->check_out_date])
+                      ->orWhere(function ($query) use ($request) {
+                          $query->where('check_in_date', '<', $request->check_in_date)
+                                ->where('check_out_date', '>', $request->check_out_date);
+                      });
+            })->exists();
+
+        if ($existingBooking) {
+            return redirect()->back()->withErrors(['checkIn' => 'This room is already booked for the selected dates.']);
+        }
+
+        // Step 2: Validate that the number of guests does not exceed room capacity
+        if ($request->noOfGuests > $room->capacity) {
+            return redirect()->back()->withErrors(['noOfGuests' => 'The number of guests exceeds the room capacity.']);
+        }
+
+        // Step 3: Proceed to store the booking
+        $checkInDate = \Carbon\Carbon::parse($request->check_in_date);
+        $checkOutDate = \Carbon\Carbon::parse($request->check_out_date);
+        $numberOfDays = $checkInDate->diffInDays($checkOutDate);
+        $totalPrice = $room->price * $request->noOfRooms * $numberOfDays;
+
+        $booking = Booking::create([
+            'hotel_id' => $request->hotel_id,
+            'room_id' => $request->room_id,
+            'user_id' => Auth::user()->id,
+            'owner_id' => $request->owner_id,
+            'number_of_rooms' => $request->noOfRooms,
+            'number_of_guests' => $request->noOfGuests,
+            'check_in_date' => $request->check_in_date,
+            'check_out_date' => $request->check_out_date,
+            'full_name' => $request->firstName . ' ' . $request->lastName,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'total_price' => $totalPrice,
+            'payment_status' => 'unpaid',
+            'is_deleted' => 0,
+        ]);
+        return redirect()->route('property.checkout');
+
+    }
+
+    public function propertyCheckout(){
+
+        $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked', 0)->first();
+        if($booking){
+            $total = $booking->total_price;
+        }
+        return view('frontend.checkout_hotel', compact('booking','total'));
+
+      }
+      public function hotelBooking(){
+
+        $search = null;
+        $bookings = Booking::where('hotel_booking.owner_id', Auth::user()->id)
+        ->join('orders', 'orders.is_booking', '=', 'hotel_booking.id') // Make sure 'is_booking' correctly references the foreign key
+        ->orderBy('hotel_booking.id', 'desc') // Order by hotel_booking id in descending order
+        ->select('hotel_booking.*', 'orders.*');
+
+    // Paginate the result (10 per page)
+    $bookingDetails = $bookings->paginate(10);
+        // print_r($bookingDetails);exit;
+        return view('backend.hotels.booking', compact('bookingDetails','search'));
+
+      }
+
 
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\AffiliateController;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Models\Booking;
 use App\Models\ServiceCart;
 
 use App\Models\Address;
@@ -460,6 +461,43 @@ class OrderController extends Controller
 
         $combined_order->save();
 
+        $request->session()->put('combined_order_id', $combined_order->id);
+    }
+
+    public function storeBooking(Request $request)
+    {
+        $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked', 0)->first();
+
+        if (empty($booking)) {
+            flash(translate('Your cart is empty'))->warning();
+            return redirect()->route('home');
+        }
+
+        $shippingAddress = [];
+        $tax = 0;
+
+        $combined_order = new CombinedOrder;
+        $combined_order->user_id = Auth::user()->id;
+        $combined_order->is_booking = 1;
+        $combined_order->shipping_address = json_encode($shippingAddress);
+        $combined_order->grand_total =$booking->total_price + $tax;
+        $combined_order->save();
+
+
+        $order = new Order;
+            $order->combined_order_id = $combined_order->id;
+            $order->user_id = Auth::user()->id;
+            $order->shipping_address = $combined_order->shipping_address;
+            $order->additional_info = $request->additional_info;
+            $order->payment_type = $request->payment_option;
+            $order->is_service = '2';
+            $order->delivery_viewed = '0';
+            $order->payment_status_viewed = '0';
+            $order->code = date('Ymd-His') . rand(10, 99);
+            $order->date = strtotime('now');
+            $order->grand_total = $booking->total_price + $tax;
+            $order->seller_id = $booking->owner_id;
+            $order->save();
         $request->session()->put('combined_order_id', $combined_order->id);
     }
 

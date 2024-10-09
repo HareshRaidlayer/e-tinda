@@ -12,7 +12,7 @@
         <div class="bg-dark overflow-hidden">
             <div class="px-3 py-4">
                 <div class="fs-14 fw-400 text-center text-secondary mb-1">{{ translate('Exchange rate') }}</div>
-                <div class="fs-30 fw-700 text-center text-white">{{ $clubPoint->value }} {{ translate(' Points') }} =
+                <div class="fs-30 fw-700 text-center text-white">{{ $clubPoint->value ?? '' }} {{ translate(' Points') }} =
                     {{ single_price(1) }} {{ translate('Wallet Money') }}</div>
             </div>
         </div>

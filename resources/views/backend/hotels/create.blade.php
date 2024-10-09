@@ -149,6 +149,11 @@
                                         </div>
                                         <div class="file-preview box sm"></div>
                                     </div>
+
+                                    <label class="col-lg-2 col-form-label">{{ translate('Description') }}</label>
+                                    <div class="col-lg-10 mb-2">
+                                        <textarea class="form-control" name="rooms[0][description]" placeholder="{{ translate('Description') }}"></textarea>
+                                    </div>
                                 </div>
                                 <!-- Remove Room Button -->
                                 <div class="col-12 text-right mb-2">
@@ -222,6 +227,10 @@
                                 </div>
                                 <div class="file-preview box sm"></div>
                             </div>
+                            <label class="col-lg-2 col-form-label">{{ translate('Description') }}</label>
+                                    <div class="col-lg-10 mb-2">
+                                        <textarea class="form-control" name="rooms[${roomCount}][description]" placeholder="{{ translate('Description') }}"></textarea>
+                                    </div>
                         </div>
                         <!-- Remove Room Button -->
                         <div class="col-12 text-right mb-2">

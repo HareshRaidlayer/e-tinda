@@ -64,6 +64,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::get('/hotels/edit/{id}', 'edit')->name('hotels.edit');
         Route::post('/hotels/update/{id}', 'update')->name('hotels.update');
         Route::get('/hotels/destroy/{id}', 'destroy')->name('hotels.destroy');
+        Route::get('/hotels/booking', 'hotelBooking')->name('hotelBooking');
 
     });
 
@@ -198,6 +199,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
     });
 });
+
+Route::get('/property/list', [HotelController::class, 'propertyList'])->name('propertyList');
+Route::get('/property/{id}/details', [HotelController::class, 'propertyDetails'])->name('propertyDetails');
+Route::post('/property/booking', [HotelController::class, 'propertyBooking'])->name('propertyBooking');
+Route::get('/property/checkout', [HotelController::class, 'propertyCheckout'])->name('property.checkout');
 
 
 

@@ -107,7 +107,12 @@
                                 <span class="aiz-side-nav-text">{{ translate('Property') }}</span>
                             </a>
                         </li>
-
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.hotelBooking') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.hotelBooking']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Property Booking') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

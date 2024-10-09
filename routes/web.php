@@ -48,6 +48,8 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\SizeChartController;
 use App\Http\Controllers\MultipayController;
+use App\Http\Controllers\Seller\HotelController;
+
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -265,6 +267,7 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function () {
         Route::post('/new-user-verification', 'new_verify')->name('user.new.verify');
         Route::post('/new-user-email', 'update_email')->name('user.change.email');
         Route::post('/user/update-profile', 'userProfileUpdate')->name('user.profile.update');
+        Route::get('/booking/details', 'bookingDetails')->name('bookingDetails');
     });
 
     Route::controller(NotificationController::class)->group(function () {
@@ -285,7 +288,9 @@ Route::group(['prefix' => 'checkout'], function () {
         Route::post('/payment-select', 'store_delivery_info')->name('checkout.store_delivery_info');
         Route::post('/payment', 'checkout')->name('payment.checkout');
         Route::post('/service-payment', 'checkoutService')->name('payment.checkoutService');
+        Route::post('/booking-payment', 'checkoutBooking')->name('payment.checkoutBooking');
         Route::get('/order-confirmed', 'order_confirmed')->name('order_confirmed');
+        Route::get('/booking-confirmed', 'booking_confirmed')->name('booking_confirmed');
         Route::post('/apply-coupon-code', 'apply_coupon_code')->name('checkout.apply_coupon_code');
         Route::post('/remove-coupon-code', 'remove_coupon_code')->name('checkout.remove_coupon_code');
         Route::post('/guest-customer-info-check', 'guestCustomerInfoCheck')->name('guest_customer_info_check');
@@ -348,6 +353,7 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function ()
     Route::post('/product-review-modal', [ReviewController::class, 'product_review_modal'])->name('product_review_modal');
 
     Route::post('/order/re-payment', [CheckoutController::class, 'orderRePayment'])->name('order.re_payment');
+
 });
 
 
