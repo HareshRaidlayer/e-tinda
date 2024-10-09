@@ -9,6 +9,7 @@ use App\Models\Room;
 use App\Models\City;
 use App\Models\State;
 use App\Models\Booking;
+use App\Models\Category;
 use Auth;
 use Artisan;
 
@@ -42,7 +43,8 @@ class HotelController extends Controller
 
     public function create()
     {
-        return view('backend.hotels.create');
+        $categories = Category::where('parent_id',15)->get();
+        return view('backend.hotels.create',compact('categories'));
     }
 
     public function store(Request $request)
@@ -50,6 +52,7 @@ class HotelController extends Controller
         // Step 1: Validate the request
         $request->validate([
             'name' => 'required|string|max:255',
+            'category_id' => 'required',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
@@ -62,6 +65,7 @@ class HotelController extends Controller
         $hotel = new Hotel();
         $hotel->user_id = Auth::user()->id;
         $hotel->name = $request->input('name');
+        $hotel->category_id = $request->input('category_id');
         $hotel->description = $request->input('description');
         $hotel->address = $request->input('address');
         $hotel->city = $request->input('city');
@@ -97,8 +101,9 @@ class HotelController extends Controller
         $states = State::where('status', 1)->where('country_id', $hotel->country)->get();
 
         $cities = City::where('status', 1)->where('state_id', $hotel->state)->get();
+        $categories = Category::where('parent_id',15)->get();
 
-        return view('backend.hotels.update', compact('hotel','states','cities'));
+        return view('backend.hotels.update', compact('hotel','states','cities','categories'));
     }
 
     public function update(Request $request, $id)
@@ -106,6 +111,7 @@ class HotelController extends Controller
     // Step 1: Validate the request
     $request->validate([
         'name' => 'required|string|max:255',
+        'category_id' => 'required',
         'address' => 'required|string|max:255',
         'city' => 'required|string|max:255',
         'state' => 'required|string|max:255',
@@ -118,6 +124,7 @@ class HotelController extends Controller
 
     // Step 3: Update Hotel
     $hotel->name = $request->input('name');
+    $hotel->category_id = $request->input('category_id');
     $hotel->description = $request->input('description');
     $hotel->address = $request->input('address');
     $hotel->city = $request->input('city');
@@ -137,26 +144,27 @@ class HotelController extends Controller
         ->delete();
 
     // Update or add rooms
-    foreach ($request->input('rooms') as $roomData) {
-        if (isset($roomData['id'])) {
-            // Update existing room
-            $room = Room::findOrFail($roomData['id']);
-        } else {
-            // Create new room
-            $room = new Room();
-            $room->hotel_id = $hotel->id;
-        }
+    if($request->has('rooms')){
+        foreach ($request->input('rooms') as $roomData) {
+            if (isset($roomData['id'])) {
+                // Update existing room
+                $room = Room::findOrFail($roomData['id']);
+            } else {
+                // Create new room
+                $room = new Room();
+                $room->hotel_id = $hotel->id;
+            }
 
-        $room->room_number = $roomData['room_number'];
-        $room->description = $roomData['description'];
-        $room->capacity = $roomData['capacity'];
-        $room->price = $roomData['price'];
-        if (isset($roomData['images'])) {
-            $room->images = $roomData['images'];
+            $room->room_number = $roomData['room_number'];
+            $room->description = $roomData['description'];
+            $room->capacity = $roomData['capacity'];
+            $room->price = $roomData['price'];
+            if (isset($roomData['images'])) {
+                $room->images = $roomData['images'];
+            }
+            $room->save();
         }
-        $room->save();
     }
-
     // Step 5: Redirect or return a response
     flash(translate('Hotel update successfully'))->success();
     return redirect()->route('seller.hotels');

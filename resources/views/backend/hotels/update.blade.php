@@ -38,6 +38,17 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">{{ translate('Category') }}</label>
+                                <div class="col-lg-9 mb-2">
+                                    <select class="form-control aiz-selectpicker rounded-0" data-live-search="true" data-placeholder="{{ translate('Select your country') }}" name="category_id" required>
+                                        <option value="">{{ translate('Select Category') }}</option>
+                                        @foreach ($categories as $key => $category)
+                                            <option value="{{ $category->id }}" <?php echo ($category->id == $hotel->category_id ? 'selected' : '') ;?>>{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-lg-3 col-form-label">{{ translate('Description') }}</label>
                                 <div class="col-lg-9 mb-2">
                                     <textarea class="form-control" name="description">{{ $hotel->description }}</textarea>
