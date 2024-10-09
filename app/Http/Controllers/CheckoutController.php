@@ -902,8 +902,14 @@ class CheckoutController extends Controller
     {
         $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
         $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked',0)->first();
-        $booking->is_booked = 1;
-        $booking->save();
+        if ($booking) {
+            $booking->is_booked = 1;
+            $booking->save();
+        } else {
+            // Handle the error when no booking is found
+            return redirect()->back()->with('error', 'No pending booking found for this user.');
+        }
+
         Session::forget('club_point');
         Session::forget('combined_order_id');
 
