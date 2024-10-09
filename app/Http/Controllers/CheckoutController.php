@@ -905,9 +905,6 @@ class CheckoutController extends Controller
         if ($booking) {
             $booking->is_booked = 1;
             $booking->save();
-        } else {
-            // Handle the error when no booking is found
-            return redirect()->back()->with('error', 'No pending booking found for this user.');
         }
 
         Session::forget('club_point');

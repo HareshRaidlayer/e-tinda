@@ -268,7 +268,7 @@ class HotelController extends Controller
             'phone' => $request->phone,
             'total_price' => $totalPrice,
             'payment_status' => 'unpaid',
-            'is_deleted' => 0,
+            'is_booked' => 0,
         ]);
         return redirect()->route('property.checkout');
 
