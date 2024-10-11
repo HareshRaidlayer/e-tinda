@@ -1,65 +1,120 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <section class="mb-5 mt-3">
-        <div class="container">
-            <div class="text-left mt-3">
-                <div class="row gutters-5 flex-wrap align-items-center">
-                    <div class="col-lg col-10">
-                        <h1 class="fs-20 fs-md-24 fw-700 text-dark">
-                            {{ translate('All Properties') }}
-                        </h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row gutters-16 mt-4">
-                <!-- Flash Deals Products -->
-                <div class="col-xxl-12 col-lg-12">
-                    <div class="px-3 z-5">
-                        <div
-                            class="row row-cols-xxl-4 row-cols-xl-4 row-cols-md-4 row-cols-sm-2 row-cols-2 gutters-16 border-top border-left">
-                            @foreach ($hotels as $hotel)
-                            @php
-                                $hotel_url = route('propertyDetails', ['id' => $hotel->id]);
-                            @endphp
-                                <div class="col text-center border-right border-bottom has-transition hov-shadow-out z-1">
-                                    <div class="aiz-card-box h-auto bg-white py-3 hov-scale-img">
-                                        <div class="position-relative h-140px h-md-200px img-fit overflow-hidden">
-                                            <!-- Image -->
-                                            <a href="{{ $hotel_url }}" class="d-block h-100">
-                                                <img class="lazyload mx-auto img-fit has-transition"
-                                                    src="{{ uploaded_asset($hotel->image) }}"
-                                                    alt="{{ $hotel->name }}" title="{{ $hotel->name }}">
-                                            </a>
-                                        </div>
+    <section class="mb-4 pt-4">
+        <div class="container sm-px-0 pt-2">
+            <form class="" id="search-form" action="" method="GET">
+                <div class="row">
 
-                                        <div class="p-2 p-md-3 text-left">
-                                            <!-- Product name -->
-                                            <h1 class="fw-400 fs-16 text-truncate-2 lh-1-4 mb-0 h-35px text-start">
-                                                <a href="{{ $hotel_url }}" class="d-block text-reset hov-text-primary"
-                                                    title="{{ $hotel->name }}">{{ $hotel->name }}</a>
-                                            </h1>
-                                            <h3 class="fw-400 fs-14 text-truncate-2 lh-1-4 mb-0 h-70px text-start">
-                                                <a href="{{ $hotel_url }}" class="d-block text-reset hov-text-primary"
-                                                    title="{{ strip_tags(html_entity_decode($hotel->description)) }}">
-                                                    {{ Str::limit(strip_tags(html_entity_decode($hotel->description)), 100, '...') }}
-                                                </a>
-                                            </h3>
-                                            <h3 class="fw-400 fs-14   mb-0 h-70px text-start">
-                                                {{$hotel->address}} , <br>
-                                                {{ get_city_name($hotel->city)}} , <br>
-                                                {{ get_state_name($hotel->state)}} , {{ get_country_name($hotel->country)}}
+                    <!-- Sidebar Filters -->
+                    <div class="col-xl-3">
+                        <div class="aiz-filter-sidebar collapse-sidebar-wrap sidebar-xl sidebar-right z-1035">
+                            <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle" data-target=".aiz-filter-sidebar" data-same=".filter-sidebar-thumb"></div>
+                            <div class="collapse-sidebar c-scrollbar-light text-left">
+                                <div class="d-flex d-xl-none justify-content-between align-items-center pl-3 border-bottom">
+                                    <h3 class="h6 mb-0 fw-600">{{ translate('Filters') }}</h3>
+                                    <button type="button" class="btn btn-sm p-2 filter-sidebar-thumb" data-toggle="class-toggle" data-target=".aiz-filter-sidebar" >
+                                        <i class="las la-times la-2x"></i>
+                                    </button>
+                                </div>
 
-                                            </h3>
-                                            <div> <a href="{{ $hotel_url }}" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0">More Details</a> </div>
-                                        </div>
+                                <!-- Categories -->
+                                <div class="bg-white border mb-3">
+                                    <div class="fs-16 fw-700 p-3">
+                                        <a href="#collapse_1" class="dropdown-toggle filter-section text-dark d-flex align-items-center justify-content-between" data-toggle="collapse">
+                                            {{ translate('Categories')}}
+                                        </a>
+                                    </div>
+                                    <div class="collapse show" id="collapse_1">
+                                        <ul class="p-3 mb-0 list-unstyled">
+                                            @foreach ($categories as $category)
+                                                <li class="mb-3 text-dark">
+                                                    <a class="text-reset fs-14 hov-text-primary" href="{{ url('/property/list?category=' . $category->id) }}">
+                                                        {{ $category->getTranslation('name') }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
-                            @endforeach
+
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Contents -->
+                    <div class="col-xl-9">
+
+                        <!-- Breadcrumb -->
+                        <ul class="breadcrumb bg-transparent py-0 px-1">
+                            <li class="breadcrumb-item has-transition opacity-50 hov-opacity-100">
+                                <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
+                            </li>
+                            @if(!isset($category_id))
+                                <li class="breadcrumb-item fw-700  text-dark">
+                                    "{{ translate('All Categories')}}"
+                                </li>
+                            @else
+                                <li class="breadcrumb-item opacity-50 hov-opacity-100">
+                                    <a class="text-reset" href="{{ route('search') }}">{{ translate('All Categories')}}</a>
+                                </li>
+                            @endif
+
+                        </ul>
+
+                        <!-- Top Filters -->
+                        <div class="text-left">
+                            <div class="row gutters-5 flex-wrap align-items-center">
+                                <div class="col-lg col-10">
+                                    <h1 class="fs-20 fs-md-24 fw-700 text-dark">
+                                        {{ translate('All Properties') }}
+                                    </h1>
+                                    {{-- <input type="hidden" name="keyword" value="{{ $query }}"> --}}
+                                </div>
+                                <div class="col-2 col-lg-auto d-xl-none mb-lg-3 text-right">
+                                    <button type="button" class="btn btn-icon p-0" data-toggle="class-toggle" data-target=".aiz-filter-sidebar">
+                                        <i class="la la-filter la-2x"></i>
+                                    </button>
+                                </div>
+
+                                <div class="col-6 col-lg-auto mb-3 w-lg-200px">
+                                    <select class="form-control form-control-sm aiz-selectpicker rounded-0" name="sort_by" onchange="filter()">
+                                        <option value="">{{ translate('Sort by')}}</option>
+                                        <option value="newest" @isset($sort_by) @if ($sort_by == 'newest') selected @endif @endisset>{{ translate('Newest')}}</option>
+                                        <option value="oldest" @isset($sort_by) @if ($sort_by == 'oldest') selected @endif @endisset>{{ translate('Oldest')}}</option>
+                                        <option value="price-asc" @isset($sort_by) @if ($sort_by == 'price-asc') selected @endif @endisset>{{ translate('Price low to high')}}</option>
+                                        <option value="price-desc" @isset($sort_by) @if ($sort_by == 'price-desc') selected @endif @endisset>{{ translate('Price high to low')}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Products -->
+                        <div class="px-3 category-page">
+                            <div class="row gutters-16 border-top border-left">
+                                @foreach ($hotels as $key => $hotel)
+                                    <div class="col-3 border-right border-bottom has-transition hov-shadow-out z-1">
+                                        @include('frontend.'.get_setting('homepage_select').'.partials.hotel_box_1',['hotel' => $hotel])
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        {{-- <div class="aiz-pagination mt-4">
+                            {{ $products->appends(request()->input())->links() }}
+                        </div> --}}
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </section>
+
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        function filter(){
+            $('#search-form').submit();
+        }
+
+    </script>
 @endsection

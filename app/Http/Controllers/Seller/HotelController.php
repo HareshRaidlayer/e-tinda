@@ -15,11 +15,71 @@ use Artisan;
 
 class HotelController extends Controller
 {
-  public function propertyList(){
-    $hotels = Hotel::where('is_approved', 1)->orderBy('id', 'desc')->get();
-    return view('frontend.property_list', compact('hotels'));
 
-  }
+    public function propertyList(Request $request, $category_id = null)
+    {
+        $min_price = $request->has('min_price') ? intval($request->min_price) : null;
+        $max_price = $request->has('max_price') ? intval($request->max_price) : null;
+        $sort_by = $request->get('sort_by', 'id');
+
+        $categories = Category::where('parent_id', 15)->get();
+
+        // Initialize the query
+        $query = Hotel::with('rooms')->select('hotels.*');
+
+        // Filter by category if passed
+        if ($request->has('category')) {
+            $category = Category::where('id', $request->category)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+
+        // Filter by price range in the Room model
+        if ($min_price !== null && $max_price !== null) {
+            $query->whereHas('rooms', function ($q) use ($min_price, $max_price) {
+                $q->whereBetween('price', [$min_price, $max_price]);
+            });
+        } elseif ($min_price !== null) {
+            $query->whereHas('rooms', function ($q) use ($min_price) {
+                $q->where('price', '>=', $min_price);
+            });
+        } elseif ($max_price !== null) {
+            $query->whereHas('rooms', function ($q) use ($max_price) {
+                $q->where('price', '<=', $max_price);
+            });
+        }
+
+        // Sorting based on Room price or Hotel created date
+        switch ($sort_by) {
+            case 'newest':
+                $query->orderBy('hotels.created_at', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('hotels.created_at', 'asc');
+                break;
+            case 'price-asc':
+                $query->join('rooms', 'hotels.id', '=', 'rooms.hotel_id')
+                      ->orderBy('rooms.price', 'asc');
+                break;
+            case 'price-desc':
+                $query->join('rooms', 'hotels.id', '=', 'rooms.hotel_id')
+                      ->orderBy('rooms.price', 'desc');
+                break;
+            default:
+                $query->orderBy('hotels.id', 'desc');
+                break;
+        }
+
+        // Get the hotels with the applied filters and sorting
+        $hotels = $query->get();
+
+        return view('frontend.property_list', compact('hotels', 'categories'));
+    }
+
+
+
+
 
   public function propertyDetails($id){
     // $hotels = Hotel::where('is_approved', 1)->where('id',$id)->orderBy('id', 'desc')->first();
