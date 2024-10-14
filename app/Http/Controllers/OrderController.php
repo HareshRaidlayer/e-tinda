@@ -497,6 +497,7 @@ class OrderController extends Controller
             $order->date = strtotime('now');
             $order->grand_total = $booking->total_price + $tax;
             $order->seller_id = $booking->owner_id;
+            $order->is_booking = $booking->id;
             $order->save();
         $request->session()->put('combined_order_id', $combined_order->id);
     }

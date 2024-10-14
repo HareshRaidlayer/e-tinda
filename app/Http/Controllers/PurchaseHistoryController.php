@@ -132,7 +132,7 @@ class PurchaseHistoryController extends Controller
 
             if ($product->auction_product == 0) {
 
-                // If product min qty is greater then the ordered qty, then update the order qty 
+                // If product min qty is greater then the ordered qty, then update the order qty
                 $order_qty = $orderDetail->quantity;
                 if ($product->digital == 0 && $order_qty < $product->min_qty) {
                     $order_qty = $product->min_qty;

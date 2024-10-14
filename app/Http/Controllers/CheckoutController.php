@@ -889,7 +889,14 @@ class CheckoutController extends Controller
 
         foreach ($combined_order->orders as $order) {
             if ($order->notified == 0) {
-                NotificationUtility::sendOrderPlacedNotification($order);
+                if($order->is_service == 1){
+                    $service_id =$order->orderDetails[0]['product_id'];
+                    $service =Service::find($service_id);
+                    NotificationUtility::sendServiceBookNotification($order,$service);
+                }else{
+                    NotificationUtility::sendOrderPlacedNotification($order);
+                }
+
                 $order->notified = 1;
                 $order->save();
             }
@@ -901,6 +908,7 @@ class CheckoutController extends Controller
     public function booking_confirmed()
     {
         $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
+        // $combined_order = CombinedOrder::findOrFail(5);
         $booking = Booking::where('user_id', Auth::user()->id)->where('is_booked',0)->first();
         if ($booking) {
             $booking->is_booked = 1;
@@ -909,14 +917,13 @@ class CheckoutController extends Controller
 
         Session::forget('club_point');
         Session::forget('combined_order_id');
+        $order= $combined_order->orders;
 
-        foreach ($combined_order->orders as $order) {
-            if ($order->notified == 0) {
-                NotificationUtility::sendOrderPlacedNotification($order);
-                $order->notified = 1;
-                $order->is_booking = $booking->id;
-                $order->save();
-            }
+        if ($order[0]['notified']) {
+            NotificationUtility::sendBookingNotification($order ,$booking);
+            $order->notified = 1;
+            $order->is_booking = $booking->id;
+            $order->save();
         }
 
         return view('frontend.booking_confirm', compact('combined_order'));

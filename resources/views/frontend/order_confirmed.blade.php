@@ -148,45 +148,85 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @if ($order->is_service == 1)
                                                 @foreach ($order->orderDetails as $key => $orderDetail)
-                                                    <tr>
-                                                        <td class="border-top-0 border-bottom pl-0">{{ $key+1 }}</td>
-                                                        <td class="border-top-0 border-bottom">
-                                                            @if ($orderDetail->product != null)
-                                                                <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank" class="text-reset">
-                                                                    {{ $orderDetail->product->getTranslation('name') }}
-                                                                    @php
-                                                                        if($orderDetail->combo_id != null) {
-                                                                            $combo = \App\ComboProduct::findOrFail($orderDetail->combo_id);
+                                                <tr>
+                                                    <td class="border-top-0 border-bottom pl-0">{{ $key+1 }}</td>
+                                                    <td class="border-top-0 border-bottom">
+                                                        @php
+                                                            $service = \App\Models\Service::find($orderDetail->product_id);
+                                                        @endphp
+                                                        @if ($service != null)
+                                                            <a href="" target="_blank" class="text-reset">
+                                                                {{ $service->name }}
 
-                                                                            echo '('.$combo->combo_title.')';
-                                                                        }
-                                                                    @endphp
-                                                                </a>
-                                                            @else
-                                                                <strong>{{  translate('Product Unavailable') }}</strong>
+                                                            </a>
+                                                        @else
+                                                            <strong>{{  translate('Product Unavailable') }}</strong>
+                                                        @endif
+                                                    </td>
+                                                    <td class="border-top-0 border-bottom">
+                                                        {{ $orderDetail->variation }}
+                                                    </td>
+                                                    <td class="border-top-0 border-bottom">
+                                                        {{ $orderDetail->quantity }}
+                                                    </td>
+                                                    <td class="border-top-0 border-bottom">
+                                                        @if ($order->shipping_type != null && $order->shipping_type == 'home_delivery')
+                                                            {{  translate('Home Delivery') }}
+                                                        @elseif ($order->shipping_type != null && $order->shipping_type == 'carrier')
+                                                            {{  translate('Carrier') }}
+                                                        @elseif ($order->shipping_type == 'pickup_point')
+                                                            @if ($order->pickup_point != null)
+                                                                {{ $order->pickup_point->getTranslation('name') }} ({{ translate('Pickip Point') }})
                                                             @endif
-                                                        </td>
-                                                        <td class="border-top-0 border-bottom">
-                                                            {{ $orderDetail->variation }}
-                                                        </td>
-                                                        <td class="border-top-0 border-bottom">
-                                                            {{ $orderDetail->quantity }}
-                                                        </td>
-                                                        <td class="border-top-0 border-bottom">
-                                                            @if ($order->shipping_type != null && $order->shipping_type == 'home_delivery')
-                                                                {{  translate('Home Delivery') }}
-                                                            @elseif ($order->shipping_type != null && $order->shipping_type == 'carrier')
-                                                                {{  translate('Carrier') }}
-                                                            @elseif ($order->shipping_type == 'pickup_point')
-                                                                @if ($order->pickup_point != null)
-                                                                    {{ $order->pickup_point->getTranslation('name') }} ({{ translate('Pickip Point') }})
+                                                        @endif
+                                                    </td>
+                                                    <td class="border-top-0 border-bottom pr-0 text-right">{{ single_price($orderDetail->price) }}</td>
+                                                </tr>
+                                            @endforeach
+                                                @else
+                                                    @foreach ($order->orderDetails as $key => $orderDetail)
+                                                        <tr>
+                                                            <td class="border-top-0 border-bottom pl-0">{{ $key+1 }}</td>
+                                                            <td class="border-top-0 border-bottom">
+                                                                @if ($orderDetail->product != null)
+                                                                    <a href="{{ route('product', $orderDetail->product->slug) }}" target="_blank" class="text-reset">
+                                                                        {{ $orderDetail->product->getTranslation('name') }}
+                                                                        @php
+                                                                            if($orderDetail->combo_id != null) {
+                                                                                $combo = \App\ComboProduct::findOrFail($orderDetail->combo_id);
+
+                                                                                echo '('.$combo->combo_title.')';
+                                                                            }
+                                                                        @endphp
+                                                                    </a>
+                                                                @else
+                                                                    <strong>{{  translate('Product Unavailable') }}</strong>
                                                                 @endif
-                                                            @endif
-                                                        </td>
-                                                        <td class="border-top-0 border-bottom pr-0 text-right">{{ single_price($orderDetail->price) }}</td>
-                                                    </tr>
-                                                @endforeach
+                                                            </td>
+                                                            <td class="border-top-0 border-bottom">
+                                                                {{ $orderDetail->variation }}
+                                                            </td>
+                                                            <td class="border-top-0 border-bottom">
+                                                                {{ $orderDetail->quantity }}
+                                                            </td>
+                                                            <td class="border-top-0 border-bottom">
+                                                                @if ($order->shipping_type != null && $order->shipping_type == 'home_delivery')
+                                                                    {{  translate('Home Delivery') }}
+                                                                @elseif ($order->shipping_type != null && $order->shipping_type == 'carrier')
+                                                                    {{  translate('Carrier') }}
+                                                                @elseif ($order->shipping_type == 'pickup_point')
+                                                                    @if ($order->pickup_point != null)
+                                                                        {{ $order->pickup_point->getTranslation('name') }} ({{ translate('Pickip Point') }})
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td class="border-top-0 border-bottom pr-0 text-right">{{ single_price($orderDetail->price) }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -264,4 +304,4 @@
     <!-- Facebook Pixel purchase Event -->
     @endif
 @endsection
-        
+

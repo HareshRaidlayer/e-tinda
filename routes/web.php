@@ -367,6 +367,7 @@ Route::controller(AddressController::class)->group(function () {
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('invoice/{order_id}', [InvoiceController::class, 'invoice_download'])->name('invoice.download');
+    Route::get('booking/invoice/{order_id}', [InvoiceController::class, 'booking_invoice_download'])->name('invoice.booking');
 
     // Reviews
     Route::resource('/reviews', ReviewController::class);
