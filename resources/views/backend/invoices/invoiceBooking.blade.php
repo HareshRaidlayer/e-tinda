@@ -121,8 +121,8 @@
                                 <td>
                                     {{ $booking->hotel->name }}
                                 </td>
-                                <td>{{ $booking->hotel->check_in_date }}</td>
-                                <td class="">{{ $booking->hotel->check_in_date }}</td>
+                                <td>{{ $booking->check_in_date }}</td>
+                                <td class="">{{ $booking->number_of_guests }}</td>
                                 <td class="currency">{{ single_price($booking->room->price) }}</td>
                                 <td class="currency">{{ single_price($booking->total_price) }}</td>
                             </tr>
