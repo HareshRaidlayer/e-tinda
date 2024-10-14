@@ -6,6 +6,7 @@ use App\Models\Currency;
 use App\Models\Language;
 use App\Models\Order;
 use App\Models\Booking;
+use App\Models\Service;
 use Session;
 use PDF;
 use Config;
@@ -103,13 +104,27 @@ class InvoiceController extends Controller
         $config = [];
 
         $order = Order::findOrFail($id);
-        return PDF::loadView('backend.invoices.invoice', [
-            'order' => $order,
-            'font_family' => $font_family,
-            'direction' => $direction,
-            'text_align' => $text_align,
-            'not_text_align' => $not_text_align
-        ], [], $config)->download('order-' . $order->code . '.pdf');
+        if($order->is_service == 1){
+            $service = Service::find($order->orderDetails[0]['product_id']);
+            return PDF::loadView('backend.invoices.invoiceService', [
+                'order' => $order,
+                'service' => $service,
+                'font_family' => $font_family,
+                'direction' => $direction,
+                'text_align' => $text_align,
+                'not_text_align' => $not_text_align
+            ], [], $config)->download('order-' . $order->code . '.pdf');
+
+        }else{
+            return PDF::loadView('backend.invoices.invoice', [
+                'order' => $order,
+                'font_family' => $font_family,
+                'direction' => $direction,
+                'text_align' => $text_align,
+                'not_text_align' => $not_text_align
+            ], [], $config)->download('order-' . $order->code . '.pdf');
+        }
+
     }
 
     public function booking_invoice_download($id)
