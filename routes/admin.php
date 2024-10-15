@@ -375,6 +375,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/orders/{id}/show', 'show')->name('all_orders.show');
         Route::get('/inhouse-orders/{id}/show', 'show')->name('inhouse_orders.show');
         Route::get('/seller_orders/{id}/show', 'show')->name('seller_orders.show');
+        Route::get('/seller_booking/{id}/show', 'booking')->name('seller_booking.show');
         Route::get('/orders_by_pickup_point/{id}/show', 'show')->name('pick_up_point.order_show');
 
         Route::post('/bulk-order-status', 'bulk_order_status')->name('bulk-order-status');

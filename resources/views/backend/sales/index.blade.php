@@ -5,7 +5,7 @@
         <form class="" action="" id="sort_orders" method="GET">
             <div class="card-header row gutters-5">
                 <div class="col">
-                    <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
+                    <h5 class="mb-md-0 h6">{{ translate('All Orders and Booking') }}</h5>
                 </div>
 
                 @canany(['delete_order', 'export_order'])
@@ -185,6 +185,18 @@
                                     @endif
                                     @can('view_order_details')
                                         @php
+                                        if($order->is_booking != NULL){
+
+                                            $order_detail_route = route('seller_booking.show', encrypt($order->id));
+                                            if (Route::currentRouteName() == 'seller_orders.index') {
+                                                $order_detail_route = route('seller_booking.show', encrypt($order->id));
+                                            } elseif (Route::currentRouteName() == 'pick_up_point.index') {
+                                                $order_detail_route = route('pick_up_point.order_show', encrypt($order->id));
+                                            }
+                                            if (Route::currentRouteName() == 'inhouse_orders.index') {
+                                                $order_detail_route = route('inhouse_orders.show', encrypt($order->id));
+                                            }
+                                        }else{
                                             $order_detail_route = route('orders.show', encrypt($order->id));
                                             if (Route::currentRouteName() == 'seller_orders.index') {
                                                 $order_detail_route = route('seller_orders.show', encrypt($order->id));
@@ -194,17 +206,29 @@
                                             if (Route::currentRouteName() == 'inhouse_orders.index') {
                                                 $order_detail_route = route('inhouse_orders.show', encrypt($order->id));
                                             }
+                                        }
+
                                         @endphp
+
                                         <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
                                             href="{{ $order_detail_route }}" title="{{ translate('View') }}">
                                             <i class="las la-eye"></i>
                                         </a>
                                     @endcan
+                                    <?php if($order->is_booking != NULL){ ?>
+                                        <a class="btn btn-soft-info btn-icon btn-circle btn-sm"
+                                            href="{{ route('invoice.download', $order->id) }}"
+                                            title="{{ translate('Download Invoice') }}">
+                                            <i class="las la-download"></i>
+                                        </a>
+                                   <?php }else{ ?>
                                     <a class="btn btn-soft-info btn-icon btn-circle btn-sm"
-                                        href="{{ route('invoice.download', $order->id) }}"
+                                        href=""
                                         title="{{ translate('Download Invoice') }}">
                                         <i class="las la-download"></i>
                                     </a>
+                                    <?php };?>
+
                                     @can('delete_order')
                                         <a href="#"
                                             class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
@@ -250,7 +274,7 @@
             }
 
         });
-        
+
         function bulk_delete() {
             var data = new FormData($('#sort_orders')[0]);
             $.ajax({
@@ -270,7 +294,7 @@
                 }
             });
         }
-        
+
         function order_bulk_export (){
             var url = '{{route('order-bulk-export')}}';
             $("#sort_orders").attr("action", url);

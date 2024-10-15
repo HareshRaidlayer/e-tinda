@@ -10,6 +10,7 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\Booking;
 use App\Models\Category;
+use App\Models\Order;
 use Auth;
 use Artisan;
 
@@ -364,6 +365,13 @@ class HotelController extends Controller
         // print_r($bookingDetails);exit;
         return view('backend.hotels.booking', compact('bookingDetails','search'));
 
+      }
+
+      public function hotelBookingDetails($id){
+        $order = Order::findOrFail(decrypt($id));
+        $booking = Booking::where('id',$order->is_booking)->first();
+
+        return view('backend.booking.show', compact('order','booking'));
       }
 
 

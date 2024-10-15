@@ -29,6 +29,7 @@ class OrderController extends Controller
         $orders = DB::table('orders')
             ->orderBy('id', 'desc')
             ->where('seller_id', Auth::user()->id)
+            ->where('is_booking', NULL)
             ->select('orders.id')
             ->distinct();
 

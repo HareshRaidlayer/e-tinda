@@ -121,6 +121,14 @@ class OrderController extends Controller
         $order->save();
         return view('backend.sales.show', compact('order', 'delivery_boys'));
     }
+    public function booking($id)
+    {
+        $order = Order::findOrFail(decrypt($id));
+        $booking = Booking::where('id',$order->is_booking)->first();
+        $order_shipping_address = json_decode($order->shipping_address);
+
+        return view('backend.sales.bookingShow', compact('order','booking'));
+    }
 
     /**
      * Show the form for creating a new resource.

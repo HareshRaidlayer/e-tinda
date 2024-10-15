@@ -85,10 +85,10 @@
                                 </td>
 
                                 <td class="text-right">
-                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm"
-                                        href=""
-                                        title="{{ translate('Edit') }}">
-                                        <i class="las la-edit"></i>
+                                    <a href="{{ route('seller.hotelBookingDetails', encrypt($hotel->id)) }}"
+                                        class="btn btn-soft-info btn-icon btn-circle btn-sm"
+                                        title="{{ translate('Order Details') }}">
+                                        <i class="las la-eye"></i>
                                     </a>
                                     <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
                                         data-href=""

@@ -335,7 +335,7 @@
 @endsection
 
 @section('modal')
-    
+
     <!-- confirm payment Status Modal -->
     <div id="confirm-payment-status" class="modal fade">
         <div class="modal-dialog modal-md modal-dialog-centered" style="max-width: 540px;">
@@ -401,7 +401,7 @@
                 AIZ.plugins.notify('success', '{{ translate('Payment status has been updated') }}');
             });
         }
-        
+
         $('#update_tracking_code').on('change', function() {
             var order_id = {{ $order->id }};
             var tracking_code = $('#update_tracking_code').val();

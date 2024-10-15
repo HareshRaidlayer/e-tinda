@@ -65,6 +65,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/hotels/update/{id}', 'update')->name('hotels.update');
         Route::get('/hotels/destroy/{id}', 'destroy')->name('hotels.destroy');
         Route::get('/hotels/booking', 'hotelBooking')->name('hotelBooking');
+        Route::get('/booking/details/{id}', 'hotelBookingDetails')->name('hotelBookingDetails');
 
     });
 
