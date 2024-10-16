@@ -40,7 +40,7 @@
                         </div>
                         @endif
 
-                        <h1 class="mb-3 fs-16 fw-700 text-dark">
+                        {{-- <h1 class="mb-3 fs-16 fw-700 text-dark">
                             {{ translate('Select Church') }}
                         </h1>
                         <select class="form-control" name="church_branch">
@@ -48,7 +48,20 @@
                             @foreach ($churchBranches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
-                        </select>
+                        </select> --}}
+                        <div class="row mb-3 mt-3">
+                            <div class="col-md-4">
+                                <label for="church_branch">{{ translate('Select a Church Branch') }} <span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" name="church_branch">
+                                    <option value="">Select a Church Branch</option>
+                                    @foreach ($churchBranches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="row mb-3 mt-3">
                             <div class="col-md-4">

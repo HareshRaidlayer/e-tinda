@@ -15,6 +15,7 @@ class Donation extends Model
         'payment_option',
         'user_id',
         'status',
+        'is_donatated'
     ];
 
     public function church()

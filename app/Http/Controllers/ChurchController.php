@@ -378,11 +378,8 @@ class ChurchController extends Controller
 
         $churches = Church::select('churches.*', DB::raw('SUM(CASE WHEN donations.is_donatated = 0 THEN donations.amount ELSE 0 END) as total_donations'))
         ->leftJoin('donations', 'churches.id', '=', 'donations.church_id')
-        ->where('churches.status', 1)
         ->groupBy('churches.id')
         ->get();
-
-
 
         return view('backend.church.donationList', compact('donations', 'donation_status', 'sort_search', 'churches'));
     }
@@ -402,6 +399,26 @@ class ChurchController extends Controller
         // Optionally, return a success message or redirect
         return redirect()->back();
     }
+
+    public function bulk_donation_delete(Request $request)
+    {
+        if ($request->id) {
+            Donation::whereIn('id', $request->id)->delete();
+        }
+
+        return 1;
+    }
+
+    public function donation_clear(Request $request)
+{
+    try {
+        // Update donations to set 'is_donatated' to 1 for the given church_id
+        Donation::where('church_id', $request->data)->update(['is_donatated' => 1]);
+        return 1;
+    } catch (\Exception $e) {
+        return 0;
+    }
+}
 
 
 

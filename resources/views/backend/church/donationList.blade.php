@@ -33,8 +33,8 @@
                 <div class="card p-2  {{$className}}">
                     <p>{{$church['name']}}</p>
                     <p>Total Amount to Donate : <span class="fs-13  fw-700 text-white"> {{$church['total_donations'] ?? 0}} </span></p>
-                    <a class="p-1 text-center but btn-info"> Clear Donation</a>
-                    <p>Click this button to Clear Donation</p>
+                    <p>Click this button to Clear this Church donation</p>
+                    <button class="p-1 text-center but btn-info" onclick ="clear_church_donation( {{$church['id'] }} )"> Clear Donation</button>
 
                 </div>
             </div>
@@ -198,7 +198,7 @@ $(document).ready(function(){
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ route('bulk-product-delete') }}",
+            url: "{{ route('bulk_donation_delete') }}",
             type: 'POST',
             data: data,
             cache: false,
@@ -211,5 +211,28 @@ $(document).ready(function(){
             }
         });
     }
+    function clear_church_donation(id) {
+    console.log(id);
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "{{ route('donation_clear') }}",
+        type: 'POST',
+        data: {
+            data: id  // Send data as an object with key 'data'
+        },
+        success: function(response) {
+            if (response == 1) {
+                location.reload();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('Failed to clear donation. Please try again.');
+        }
+    });
+}
 </script>
 @endsection

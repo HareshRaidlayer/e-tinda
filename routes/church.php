@@ -24,9 +24,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         Route::get('/church/edit/{id}', 'edit')->name('church.edit');
         Route::post('/church/{id}', 'update')->name('church.update');
         Route::get('/church/destroy/{id}', 'destroy')->name('church.destroy');
-
-        Route::get('/donation/list', 'donationList')->name('church.donationList');
         Route::get('/donation/delete/{id}', 'donationdelete')->name('church.donationdelete');
+        Route::get('/donation/list', 'donationList')->name('church.donationList');
+        Route::post('/bulk-donation-delete', 'bulk_donation_delete')->name('bulk_donation_delete');
+        Route::post('/donation-clear', 'donation_clear')->name('donation_clear');
+
     });
 });
 

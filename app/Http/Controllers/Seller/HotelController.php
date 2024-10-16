@@ -27,7 +27,7 @@ class HotelController extends Controller
 
         // Initialize the query
         $query = Hotel::with('rooms')->select('hotels.*');
-
+        $query->where('is_approved', 1);
         // Filter by category if passed
         if ($request->has('category')) {
             $category = Category::where('id', $request->category)->first();
