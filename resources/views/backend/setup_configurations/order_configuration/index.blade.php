@@ -41,6 +41,40 @@
             </form>
         </div>
     </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Ninja Van API Configuration')}}</h5>
+            </div>
+            <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+              <div class="card-body">
+                   @csrf
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="ninjavan_client_id">
+                        <div class="col-md-4">
+                            <label class="control-label">{{translate('Client ID')}}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="ninjavan_client_id" value="{{ get_setting('ninjavan_client_id') }}" placeholder="{{ translate('Ninjavan Client ID') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="ninjavan_client_key">
+                        <div class="col-md-4">
+                            <label class="control-label">{{translate('Client Key')}}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="ninjavan_client_key" value="{{ get_setting('ninjavan_client_key') }}" placeholder="{{ translate('Ninjavan Client Key') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                    </div>
+              </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @endsection
