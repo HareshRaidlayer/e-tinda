@@ -35,7 +35,13 @@ class MultisysController extends Controller
             $token = env('MULTIPAY_TOKEN'); // Token for the API
             $data = $amount . $txnid . $token;
             $digest = sha1($data); // Generate the digest
-            $callbackUrl = route('order_confirmed'); // Callback URL
+
+            if($paymentType == 'cart_payment'){
+                $callbackUrl = route('order_confirmed'); // Callback URL
+            }elseif($paymentType == 'wallet_payment'){
+                $callbackUrl = route('payment.callback'); // Callback URL
+            }
+
 
             try {
                 // Send POST request to the API

@@ -143,4 +143,25 @@ class WalletController extends Controller
         }
         return 0;
     }
+
+    public function handleCallback(Request $request)
+    {
+        $payment_data = Session::get('payment_data');
+        $user = Auth::user();
+            $user->balance = $user->balance + $payment_data['amount'];
+            $user->save();
+
+            $wallet = new Wallet;
+            $wallet->user_id = $user->id;
+            $wallet->amount = $payment_data['amount'];
+            $wallet->payment_method = $payment_data['payment_method'];
+            $wallet->payment_details = 'wallet_payment';
+            $wallet->save();
+
+            Session::forget('payment_data');
+            Session::forget('payment_type');
+
+            flash(translate('Recharge completed'))->success();
+            return redirect()->route('wallet.index');
+    }
 }
