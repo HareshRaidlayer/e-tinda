@@ -3,9 +3,6 @@
 
 
 @section('meta')
-
-
-
 @endsection
 
 @section('content')
@@ -18,18 +15,18 @@
         <div class="container">
             <div class="bg-white py-3">
                 @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="row">
                     <!-- Product Image Gallery -->
                     <div class="col-xl-5 col-lg-6 mb-4">
@@ -84,23 +81,20 @@
 
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">Address</span><br>
-                            <a
-                                class="text-reset hov-text-primary fs-14 fw-700">{{ $hotels->address ?? '' }}</a>
+                            <a class="text-reset hov-text-primary fs-14 fw-700">{{ $hotels->address ?? '' }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-1">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">City</span><br>
-                            <a
-                                class="text-reset hov-text-primary fs-14 fw-700">{{ get_city_name($hotels->city)}}</a>
+                            <a class="text-reset hov-text-primary fs-14 fw-700">{{ get_city_name($hotels->city) }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-3">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">State</span><br>
-                            <a
-                                class="text-reset hov-text-primary fs-14 fw-700">{{ get_state_name($hotels->state)}}</a>
+                            <a class="text-reset hov-text-primary fs-14 fw-700">{{ get_state_name($hotels->state) }}</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center mb-3">
                             <span class="text-secondary fs-14 fw-400 mr-4 ">Country</span><br>
-                            <a
-                                class="text-reset hov-text-primary fs-14 fw-700"> {{ get_country_name($hotels->country)}}</a>
+                            <a class="text-reset hov-text-primary fs-14 fw-700">
+                                {{ get_country_name($hotels->country) }}</a>
                         </div>
                         <hr>
 
@@ -118,25 +112,27 @@
                     <p class="mr-5 pb-2 fs-16 fw-700 text-reset active show">Rooms Details</p>
 
                     <!-- Description -->
-                    @foreach($hotels->rooms as $room)
+                    @foreach ($hotels->rooms as $room)
                         <div class="card">
                             <div class="row">
                                 <div class="col-4">
                                     <img class="img-fluid w-100 lazyload "
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                data-src="{{ uploaded_asset($room->image) }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        data-src="{{ uploaded_asset($room->images) }}"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                 </div>
                                 <div class="col-7">
                                     <div class="py-3">
-                                        <p class="mr-5 pb-2 fs-16 fw-700 text-reset active show">{{$room->room_number}}</p>
+                                        <p class="mr-5 pb-2 fs-16 fw-700 text-reset active show">{{ $room->room_number }}
+                                        </p>
                                         <p>{!! $room->description ?? '' !!}</p>
-                                        <p class="mr-5 pb-2 fs-16 fw-700 text-reset">{{single_price($room->price)}} <span class="fs-14 fw-500">/room /day</span></p>
+                                        <p class="mr-5 pb-2 fs-16 fw-700 text-reset">{{ single_price($room->price) }} <span
+                                                class="fs-14 fw-500">/room /day</span></p>
                                         <div class="mt-3">
                                             <button type="button"
                                                 class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0"
-                                                @if (Auth::check() || get_Setting('guest_checkout_activation') == 1) onclick="bookRooms({{$room->id}})" @else onclick="showLoginModal()" @endif>
-                                                 Book This Room
+                                                @if (Auth::check() || get_Setting('guest_checkout_activation') == 1) onclick="bookRooms({{ $room->id }})" @else onclick="showLoginModal()" @endif>
+                                                Book This Room
                                             </button>
                                         </div>
                                     </div>
@@ -151,7 +147,6 @@
 @endsection
 
 @section('modal')
-
     <!-- Product Review Modal -->
     <div class="modal fade" id="product-review-modal">
         <div class="modal-dialog">
@@ -162,29 +157,35 @@
     </div>
 
     <div class="modal fade" id="bookingModel">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size"
+            role="document">
             <div class="modal-content position-relative">
-                <button type="button" class="close absolute-top-right btn-icon close z-1 btn-circle bg-gray mr-2 mt-2 d-flex justify-content-center align-items-center" data-dismiss="modal" aria-label="Close" style="background: #ededf2; width: calc(2rem + 2px); height: calc(2rem + 2px);">
+                <button type="button"
+                    class="close absolute-top-right btn-icon close z-1 btn-circle bg-gray mr-2 mt-2 d-flex justify-content-center align-items-center"
+                    data-dismiss="modal" aria-label="Close"
+                    style="background: #ededf2; width: calc(2rem + 2px); height: calc(2rem + 2px);">
                     <span aria-hidden="true" class="fs-24 fw-700" style="margin-left: 2px;">&times;</span>
                 </button>
                 <div class="modal-body px-4 py-5 c-scrollbar-light">
-                    <form action="{{route('propertyBooking')}}" method="POST">
+                    <form action="{{ route('propertyBooking') }}" method="POST">
                         @csrf
                         <input type="hidden" name="room_id" id="hotel_room_id" value="">
-                        <input type="hidden" name="hotel_id" value="{{$hotels->id}}">
-                        <input type="hidden" name="price" value="{{$room->price ?? ''}}">
-                        <input type="hidden" name="owner_id" value="{{$hotels->user_id}}">
+                        <input type="hidden" name="hotel_id" value="{{ $hotels->id }}">
+                        <input type="hidden" name="price" value="{{ $room->price ?? '' }}">
+                        <input type="hidden" name="owner_id" value="{{ $hotels->user_id }}">
                         <div class="d-flex">
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('No of Rooms') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="number" class="form-control" name="noOfRooms" placeholder="{{ translate('No of Rooms') }}" required>
+                                    <input type="number" class="form-control" name="noOfRooms"
+                                        placeholder="{{ translate('No of Rooms') }}" required>
                                 </div>
                             </div>
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('No of guests') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="number" class="form-control" name="noOfGuests" placeholder="{{ translate('No of guests') }}" required>
+                                    <input type="number" class="form-control" name="noOfGuests"
+                                        placeholder="{{ translate('No of guests') }}" required>
                                 </div>
                             </div>
                         </div>
@@ -192,13 +193,16 @@
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('Check In') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="date" class="form-control" id="checkIn" name="check_in_date" placeholder="{{ translate('Check In') }}"  value="<?= date('Y-m-d'); ?>" required>
+                                    <input type="date" class="form-control" id="checkIn" name="check_in_date"
+                                        min="{{ date('Y-m-d') }}" placeholder="{{ translate('Check In') }}"
+                                        value="<?= date('Y-m-d') ?>" required>
                                 </div>
                             </div>
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('Check Out') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="date" class="form-control" id="checkOut" name="check_out_date" placeholder="{{ translate('Check Out') }}" required>
+                                    <input type="date" class="form-control" id="checkOut" name="check_out_date"
+                                        min="{{ date('Y-m-d') }}" placeholder="{{ translate('Check Out') }}" required>
                                     <span id="dateError" class="text-danger"></span>
                                 </div>
                             </div>
@@ -207,13 +211,15 @@
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('First Name') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="text" class="form-control" name="firstName" placeholder="{{ translate('First Name') }}" required>
+                                    <input type="text" class="form-control" name="firstName"
+                                        placeholder="{{ translate('First Name') }}" required>
                                 </div>
                             </div>
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('Last Name') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="text" class="form-control" name="lastName" placeholder="{{ translate('Last Name') }}" required>
+                                    <input type="text" class="form-control" name="lastName"
+                                        placeholder="{{ translate('Last Name') }}" required>
                                 </div>
                             </div>
                         </div>
@@ -221,19 +227,22 @@
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('Email') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="email" class="form-control" name="email" placeholder="{{ translate('Email') }}" required>
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="{{ translate('Email') }}" required>
                                 </div>
                             </div>
                             <div class="w-100">
                                 <label class="col-lg-8 col-form-label">{{ translate('Phone') }}</label>
                                 <div class="col-lg-8 mb-2">
-                                    <input type="number" class="form-control" name="phone" placeholder="{{ translate('Phone') }}" required>
+                                    <input type="number" class="form-control" name="phone"
+                                        placeholder="{{ translate('Phone') }}" required>
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex mt-4">
                             <div class="col-lg-10 mb-2 text-right">
-                                <button type="submit" id="submitBtn" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0">
+                                <button type="submit" id="submitBtn"
+                                    class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0">
                                     Book Now
                                 </button>
                             </div>
@@ -349,8 +358,8 @@
     </script>
 
     <script>
-        function bookRooms($id){
-            var model =$('#bookingModel').modal();
+        function bookRooms($id) {
+            var model = $('#bookingModel').modal();
             $('#hotel_room_id').val($id);
             model.show();
         }
