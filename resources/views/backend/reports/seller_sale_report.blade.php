@@ -40,7 +40,7 @@
                         @foreach ($sellers as $key => $seller)
                             @if($seller != null)
                                 <tr>
-                                    <td>{{ $seller->user->name }}</td>
+                                    <td>{{ $seller->user->name ?? ''}}</td>
                                     <td>{{ $seller->shop != null ? $seller->name : '--' }}</td>
                                     <td>
                                         @php
