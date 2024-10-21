@@ -78,7 +78,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label>{{ translate('State')}}</label>
+                                    <label>{{ translate('Region/State')}}</label>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="form-control mb-3 aiz-selectpicker rounded-0" data-live-search="true" name="state" required>
