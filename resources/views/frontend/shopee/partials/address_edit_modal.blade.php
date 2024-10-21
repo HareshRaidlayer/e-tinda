@@ -33,7 +33,7 @@
         <!-- State -->
         <div class="row">
             <div class="col-md-2">
-                <label>{{ translate('State')}}</label>
+                <label>{{ translate('Region/State')}}</label>
             </div>
             <div class="col-md-10">
                 <select class="form-control mb-3 aiz-selectpicker rounded-0" name="state_id" id="edit_state"  data-live-search="true" required>
@@ -61,7 +61,7 @@
                 </select>
             </div>
         </div>
-        
+
         @if (get_setting('google_map') == 1)
             <!-- Google Map -->
             <div class="row mt-3 mb-3">

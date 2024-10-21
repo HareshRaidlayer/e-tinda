@@ -50,7 +50,7 @@
     <!-- State -->
     <div class="row">
         <div class="col-md-2 mt-md-2">
-            <label>{{ translate('State')}} <span class="text-danger">*</span></label>
+            <label>{{ translate('Region/State')}} <span class="text-danger">*</span></label>
         </div>
         <div class="col-md-10">
             <select class="form-control mb-3 aiz-selectpicker rounded-0" data-live-search="true" name="state_id" required>

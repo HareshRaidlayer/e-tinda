@@ -29,7 +29,7 @@
 
         <div class="row">
             <div class="col-md-2">
-                <label>{{ translate('State')}}</label>
+                <label>{{ translate('Region/State')}}</label>
             </div>
             <div class="col-md-10">
                 <select class="form-control mb-3 aiz-selectpicker" name="state_id" id="edit_state"  data-live-search="true" required>
@@ -56,7 +56,7 @@
                 </select>
             </div>
         </div>
-        
+
         @if (get_setting('google_map') == 1)
             <div class="row">
                 <input id="edit_searchInput" class="controls" type="text" placeholder="Enter a location">
@@ -87,7 +87,7 @@
                 </div>
             </div>
         @endif
-        
+
         <div class="row">
             <div class="col-md-2">
                 <label>{{ translate('Postal code')}}</label>

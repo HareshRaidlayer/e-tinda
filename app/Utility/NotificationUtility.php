@@ -129,7 +129,7 @@ class NotificationUtility
     {
         //sends email to customer with the invoice pdf attached
         $array['view'] = 'emails.invoice2';
-        $array['subject'] = translate('A Booking Confirmed') . ' - ' . $order->code;
+        $array['subject'] = translate('A Booking Confirmed') . ' - ' . $order[0]->code;
         $array['from'] = env('MAIL_FROM_ADDRESS');
         $array['order'] = $order;
         $array['booking'] = $booking;
