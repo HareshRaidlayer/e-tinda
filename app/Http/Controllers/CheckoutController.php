@@ -919,12 +919,12 @@ class CheckoutController extends Controller
         Session::forget('combined_order_id');
         $order= $combined_order->orders;
 
-        if ($order[0]['notified']) {
+        // if ($order[0]['notified']) {
             NotificationUtility::sendBookingNotification($order ,$booking);
             $order->notified = 1;
             $order->is_booking = $booking->id;
             $order->save();
-        }
+        // }
 
         return view('frontend.booking_confirm', compact('combined_order'));
     }
