@@ -104,6 +104,7 @@
 	                <tr class="gry-color" style="background: #eceff4;">
 	                    <th width="35%">{{ translate('Hotel Name') }}</th>
 						<th width="15%">{{ translate('Checkin Date') }}</th>
+                        <th width="15%">{{ translate('Check Out Date') }}</th>
 	                    <th width="10%">{{ translate('Number Of Guests') }}</th>
 	                    <th width="15%">{{ translate('Price') }}</th>
 	                    <th width="15%" class="text-right">{{ translate('Total') }}</th>
@@ -112,11 +113,12 @@
 				<tbody class="strong">
                     @if ($booking->hotel != null)
                     <tr class="">
-                        <td>{{ $booking->hotel->name }} </td>
-                        <td>{{$booking->check_in_date}}</td>
-                        <td class="gry-color">{{ $booking->number_of_guests }}</td>
-                        <td class="gry-color currency">{{ single_price($booking->room->price) }}</td>
-                        <td class="gry-color currency">{{ single_price($booking->total_price) }}</td>
+                        <td>{{ $booking->hotel->name ?? '' }} </td>
+                        <td>{{$booking->check_in_date ?? ''}}</td>
+                        <td>{{$booking->check_out_date ?? ''}}</td>
+                        <td class="gry-color">{{ $booking->number_of_guests ?? '' }}</td>
+                        <td class="gry-color currency">{{ single_price($booking->room->price) ?? '' }}</td>
+                        <td class="gry-color currency">{{ single_price($booking->total_price) ?? '' }}</td>
                     </tr>
                 @endif
 	            </tbody>
@@ -128,7 +130,7 @@
 		        <tbody>
 			        <tr>
 			            <th class="gry-color text-left">{{ translate('Sub Total') }}</th>
-			            <td class="currency">{{ single_price($booking->room->price) }}</td>
+			            <td class="currency">{{ single_price($booking->room->price) ?? '' }}</td>
 			        </tr>
 
 			        <tr class="border-bottom">
@@ -138,7 +140,7 @@
 
 			        <tr>
 			            <th class="text-left strong">{{ translate('Grand Total') }}</th>
-			            <td class="currency">{{ single_price($booking->total_price) }}</td>
+			            <td class="currency">{{ single_price($booking->total_price) ?? '' }}</td>
 			        </tr>
 		        </tbody>
 		    </table>

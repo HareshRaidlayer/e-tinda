@@ -28,11 +28,20 @@ class InvoiceEmailManager extends Mailable
      */
      public function build()
      {
-         return $this->view($this->array['view'])
-                     ->from($this->array['from'], env('MAIL_FROM_NAME'))
-                     ->subject($this->array['subject'])
-                     ->with([
-                         'order' => $this->array['order']
-                     ]);
-     }
+        $email = $this->view($this->array['view'])
+        ->from($this->array['from'], env('MAIL_FROM_NAME'))
+        ->subject($this->array['subject'])
+        ->with([
+            'order' => $this->array['order'],
+        ]);
+
+            // Check if 'booking' exists in the array
+            if (isset($this->array['booking'])) {
+            $email->with([
+            'booking' => $this->array['booking'],
+            ]);
+            }
+
+            return $email;
+                }
 }
