@@ -34,7 +34,7 @@
                     </div>
                     <!-- Order Summary -->
                     <div class="mb-4 bg-white p-4 border">
-                        <h5 class="fw-600 mb-3 fs-16 text-soft-dark pb-2 border-bottom">{{ translate('Order Summary')}}</h5>
+                        <h5 class="fw-600 mb-3 fs-16 text-soft-dark pb-2 border-bottom">{{ translate('Booking Summary')}}</h5>
                         <div class="row">
                             <div class="col-md-6">
                                 <table class="table fs-14 text-soft-dark">
