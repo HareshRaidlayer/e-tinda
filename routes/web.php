@@ -61,7 +61,7 @@ use App\Http\Controllers\Seller\HotelController;
   |
  */
 
- Route::get('cache-clear', function () {
+Route::get('cache-clear', function () {
     Artisan::call('optimize:clear');
     request()->session()->flash('success', 'Successfully cache cleared.');
     return redirect()->back();
@@ -92,7 +92,7 @@ Route::controller(AizUploadController::class)->group(function () {
     Route::get('/aiz-uploader/download/{id}', 'attachment_download')->name('download_attachment');
 });
 
-Route::group(['middleware' => ['prevent-back-history','handle-demo-login']], function () {
+Route::group(['middleware' => ['prevent-back-history', 'handle-demo-login']], function () {
     Auth::routes(['verify' => true]);
 });
 
@@ -300,7 +300,6 @@ Route::group(['prefix' => 'checkout'], function () {
         // Route::post('/apply-club-point', 'apply_club_point')->name('checkout.apply_club_point');
         // Route::post('/remove-club-point', 'remove_club_point')->name('checkout.remove_club_point');
         Route::post('/payment/callback', [WalletController::class, 'handleCallback'])->name('payment.callback');
-
     });
 });
 
@@ -355,7 +354,6 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function ()
     Route::post('/product-review-modal', [ReviewController::class, 'product_review_modal'])->name('product_review_modal');
 
     Route::post('/order/re-payment', [CheckoutController::class, 'orderRePayment'])->name('order.re_payment');
-
 });
 
 
@@ -480,7 +478,7 @@ Route::get('/authorizenet/cardtype', [AuthorizenetController::class, 'cardType']
 Route::get('/payku/callback/{id}', [PaykuController::class, 'callback'])->name('payku.result');
 
 // Paymob
-Route::any('/paymob/callback', [PaymobController::class,'callback']);
+Route::any('/paymob/callback', [PaymobController::class, 'callback']);
 
 //Blog Section
 Route::controller(BlogController::class)->group(function () {
@@ -496,6 +494,4 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/{slug}', 'show_custom_page')->name('custom-pages.show_custom_page');
 });
 
-
-
-
+Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribers.store');

@@ -177,8 +177,8 @@
         }
 
         .pac-container { z-index: 100000; }
-        
-       
+
+
      .sub-cat-menu{
         height: auto !important;
         width: 100% !important;
@@ -256,7 +256,7 @@
     </div>
 
 
-    @if (env("DEMO_MODE") == "On")
+    @if (env('DEMO_MODE') == 'On')
         <!-- demo nav -->
         @include('frontend.incShopee.demo_nav')
     @endif
@@ -270,7 +270,7 @@
 
     <div class="aiz-custom-alert {{ get_setting('custom_alert_location') }}">
         @foreach ($custom_alerts as $custom_alert)
-            @if($custom_alert->id == 1)
+            @if ($custom_alert->id == 1)
                 <div class="aiz-cookie-alert mb-3" style="box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.24);">
                     <div class="p-3 px-lg-2rem rounded-0" style="background: {{ $custom_alert->background_color }};">
                         <div class="text-{{ $custom_alert->text_color }} mb-3">
@@ -303,10 +303,14 @@
 
     <!-- website popup -->
     @php
-        $dynamic_popups = App\Models\DynamicPopup::where('status', 1)->orderBy('id', 'asc')->get();
-    @endphp
+    // Retrieve all active dynamic popups
+    $dynamic_popups = App\Models\DynamicPopup::where('status', 1)->orderBy('id', 'asc')->get();
+@endphp
+
+{{-- Check if the user has NOT subscribed --}}
+@if (session('subscribed') !== 'done')
     @foreach ($dynamic_popups as $key => $dynamic_popup)
-        @if($dynamic_popup->id == 1)
+        @if ($dynamic_popup->id == 1)
             <div class="modal website-popup removable-session d-none" data-key="website-popup" data-value="removed">
                 <div class="absolute-full bg-black opacity-60"></div>
                 <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-md mx-4 mx-md-auto">
@@ -362,6 +366,7 @@
             </div>
         @endif
     @endforeach
+@endif
 
     @include('frontend.partials.modal')
 
@@ -717,7 +722,7 @@
                 AIZ.plugins.notify('warning', "{{ translate('Please choose all the options') }}");
             }
         }
-        
+
         function addToCartService(){
             @if (Auth::check() && Auth::user()->user_type != 'customer')
                 AIZ.plugins.notify('warning', "{{ translate('Please Login as a customer to add products to the Cart.') }}");
@@ -752,7 +757,7 @@
                 AIZ.plugins.notify('warning', "{{ translate('Please choose all the options') }}");
             }
         }
-        
+
 
         function buyNow(){
             @if (Auth::check() && Auth::user()->user_type != 'customer')
@@ -922,7 +927,7 @@
         }
     </script>
 
-    @if (env("DEMO_MODE") == "On")
+    @if (env('DEMO_MODE') == 'On')
         <script>
             var demoNav = document.querySelector('.aiz-demo-nav');
             var menuBtn = document.querySelector('.aiz-demo-nav-toggler');
@@ -969,14 +974,12 @@
                     $('header').delay(800).removeClass('z-1').addClass('z-1020');
                 }
             }
-        </script>
-    @endif
+        </script> @endif
 
     @yield('script')
 
     @php
-        echo get_setting('footer_script');
-    @endphp
+echo get_setting('footer_script'); @endphp
 
 </body>
 </html>
