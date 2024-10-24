@@ -43,17 +43,29 @@ class SubscriberController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if the user is already subscribed
         $subscriber = Subscriber::where('email', $request->email)->first();
+
+        // If not, add the user to subscribers
         if ($subscriber == null) {
             $subscriber = new Subscriber;
             $subscriber->email = $request->email;
             $subscriber->save();
+
+            // Set session to indicate user has subscribed
+            session()->put('subscribed', 'done');
+
             flash(translate('You have subscribed successfully'))->success();
         } else {
-            flash(translate('You are  already a subscriber'))->success();
+            flash(translate('You are already a subscriber'))->success();
         }
-        return back();
+
+        // Redirect back to home after setting session
+        return redirect()->route('home');
     }
+
+
+
 
     /**
      * Display the specified resource.
