@@ -232,11 +232,11 @@
                 </div>
             </div>
             @if ($order->payment_status == 'unpaid' && $order->delivery_status == 'pending' && $order->manual_payment == 0)
-                <button 
-                    @if(addon_is_activated('offline_payment')) 
-                        onclick="select_payment_type({{ $order->id }})" 
-                    @else 
-                        onclick="online_payment({{ $order->id }})" 
+                <button
+                    @if(addon_is_activated('offline_payment'))
+                        onclick="select_payment_type({{ $order->id }})"
+                    @else
+                        onclick="online_payment({{ $order->id }})"
                     @endif
                     class="btn btn-block btn-primary">
                     {{ translate('Make Payment') }}
@@ -312,7 +312,7 @@
                                 <select class="form-control selectpicker rounded-0" data-live-search="true" name="payment_option" required>
                                     @include('partials.online_payment_options')
                                     @if (get_setting('wallet_system') == 1 && (auth()->user()->balance >= $order->grand_total))
-                                        <option value="wallet">{{ translate('Wallet') }}</option>
+                                        <option value="wallet">{{ translate('PowerPay eWallet') }}</option>
                                     @endif
                                 </select>
                             </div>

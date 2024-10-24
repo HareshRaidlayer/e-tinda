@@ -586,7 +586,7 @@
                                                     </g>
                                                 </svg>
                                                 <span
-                                                    class="user-top-menu-name has-transition ml-3">{{ translate('My Wallet') }}</span>
+                                                    class="user-top-menu-name has-transition ml-3">{{ translate('My PowerPay eWallet') }}</span>
                                             </a>
                                         </li>
                                     @endif

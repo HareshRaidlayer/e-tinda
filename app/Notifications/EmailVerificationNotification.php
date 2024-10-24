@@ -11,10 +11,7 @@ class EmailVerificationNotification extends Notification
     use Queueable;
 
 
-    public function __construct()
-    {
-        
-    }
+    public function __construct() {}
 
     public function via($notifiable)
     {
@@ -30,13 +27,13 @@ class EmailVerificationNotification extends Notification
         $array['subject'] = translate('Email Verification');
         $array['content'] = translate('Please click the button below to verify your email address.');
         $array['link'] = route('email.verification.confirmation', $notifiable->verification_code);
+        $array['name'] = $notifiable->name;
+        $array['email'] =  $notifiable->email;
 
         return (new MailMessage)
             ->view('emails.verification', ['array' => $array])
             ->subject(translate('Email Verification - ') . env('APP_NAME'));
     }
 
-    public function toArray($notifiable)
-    {
-    }
+    public function toArray($notifiable) {}
 }

@@ -20,7 +20,7 @@
                     data-callback_url="{{ route('api.razorpay.success') }}"
                     data-buttontext=""
                     data-name="{{ env('APP_NAME') }}"
-                    data-description="Wallet Payment"
+                    data-description="PowerPay eWallet Payment"
                     data-image="{{ uploaded_asset(get_setting('header_logo')) }}"
                     data-prefill.name="{{ $user->name}}"
                     data-prefill.email="{{ $user->email}}"

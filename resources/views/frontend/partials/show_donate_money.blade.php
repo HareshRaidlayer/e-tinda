@@ -34,7 +34,7 @@
                         <input type="hidden" id="valute_Balanse" value="{{Auth::user()->balance}}">
                         <div class="py-4 px-4 text-center bg-soft-secondary-base mt-4">
                             <div class="fs-14 mb-3">
-                                <span class="opacity-80">{{ translate('Or, Your wallet balance :') }}</span>
+                                <span class="opacity-80">{{ translate('Or, Your PowerPay eWallet balance :') }}</span>
                                 <span class="fw-700">{{ single_price(Auth::user()->balance) }}</span>
                             </div>
                         </div>

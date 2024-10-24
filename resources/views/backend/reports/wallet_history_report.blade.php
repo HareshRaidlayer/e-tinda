@@ -4,7 +4,7 @@
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class=" align-items-center">
-        <h1 class="h3">{{translate('Wallet Transaction Report')}}</h1>
+        <h1 class="h3">{{translate('PowerPay eWallet Transaction Report')}}</h1>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
             <form action="{{ route('wallet-history.index') }}" method="GET">
                 <div class="card-header row gutters-5">
                     <div class="col text-center text-md-left">
-                        <h5 class="mb-md-0 h6">{{ translate('Wallet Transaction') }}</h5>
+                        <h5 class="mb-md-0 h6">{{ translate('PowerPay eWallet Transaction') }}</h5>
                     </div>
                     @if(Auth::user()->user_type != 'seller')
                     <div class="col-md-3 ml-auto">

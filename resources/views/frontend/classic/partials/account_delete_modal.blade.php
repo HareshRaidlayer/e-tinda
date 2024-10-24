@@ -42,7 +42,7 @@
                         <img src="{{ static_asset('assets/img/warning.png') }}" class="h-20px" alt="{{ translate('warning') }}">
                     </div>
                     <div class="col">
-                        <p class="fw-600 mb-0">{{ translate('After deleting your account, wallet balance will no longer in our system') }}</p>
+                        <p class="fw-600 mb-0">{{ translate('After deleting your account, PowerPay eWallet balance will no longer in our system') }}</p>
                     </div>
                 </div>
             </div>

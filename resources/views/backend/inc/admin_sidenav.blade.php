@@ -431,7 +431,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-shopping-cart aiz-side-nav-icon " width="15.997" height="16"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Services') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('eSerbisyo') }}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <!--Submenu-->
@@ -439,7 +439,7 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('service.admin') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.products', 'seller.products.create', 'seller.products.edit']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Services') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eSerbisyo') }}</span>
                             </a>
                         </li>
 
@@ -777,36 +777,37 @@
                     @endcanany
                 @endif
                 <!-- Property -->
+                <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <div class="aiz-side-nav-icon">
+                            <svg id="stats_3916778" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 16 16">
+                                <path id="Path_40739" data-name="Path 40739"
+                                    d="M16,16H2a2,2,0,0,1-2-2V0H1.333V14A.667.667,0,0,0,2,14.667H16Z" fill="#575b6a" />
+                                <rect id="Rectangle_21340" data-name="Rectangle 21340" width="1.333" height="6"
+                                    transform="translate(9.333 7.333)" fill="#575b6a" />
+                                <rect id="Rectangle_21341" data-name="Rectangle 21341" width="1.333" height="6"
+                                    transform="translate(4 7.333)" fill="#575b6a" />
+                                <rect id="Rectangle_21342" data-name="Rectangle 21342" width="1.333" height="9.333"
+                                    transform="translate(12 4)" fill="#575b6a" />
+                                <rect id="Rectangle_21343" data-name="Rectangle 21343" width="1.333" height="9.333"
+                                    transform="translate(6.667 4)" fill="#575b6a" />
+                            </svg>
+                        </div>
+                        <span class="aiz-side-nav-text">{{ translate('eBakasyon') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+                    <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
-                            <a href="#" class="aiz-side-nav-link">
-                                <div class="aiz-side-nav-icon">
-                                    <svg id="stats_3916778" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    viewBox="0 0 16 16">
-                                    <path id="Path_40739" data-name="Path 40739"
-                                        d="M16,16H2a2,2,0,0,1-2-2V0H1.333V14A.667.667,0,0,0,2,14.667H16Z" fill="#575b6a" />
-                                    <rect id="Rectangle_21340" data-name="Rectangle 21340" width="1.333" height="6"
-                                        transform="translate(9.333 7.333)" fill="#575b6a" />
-                                    <rect id="Rectangle_21341" data-name="Rectangle 21341" width="1.333" height="6"
-                                        transform="translate(4 7.333)" fill="#575b6a" />
-                                    <rect id="Rectangle_21342" data-name="Rectangle 21342" width="1.333" height="9.333"
-                                        transform="translate(12 4)" fill="#575b6a" />
-                                    <rect id="Rectangle_21343" data-name="Rectangle 21343" width="1.333" height="9.333"
-                                        transform="translate(6.667 4)" fill="#575b6a" />
-                                </svg>
-                                </div>
-                                <span class="aiz-side-nav-text">{{ translate('Properties') }}</span>
-                                <span class="aiz-side-nav-arrow"></span>
+                            <a href="{{ route('adminHotels') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['admin.adminHotels']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('All eBakasyon') }}</span>
+                                @if ($sellers > 0)<span
+                                        class="badge badge-info">{{ $sellers }}</span> @endif
                             </a>
-                            <ul class="aiz-side-nav-list level-2">
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('adminHotels') }}"
-                                        class="aiz-side-nav-link {{ areActiveRoutes(['admin.adminHotels']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('All Properties') }}</span>
-                                        @if ($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
+                    </ul>
+                </li>
 
                 {{-- Uploads Files --}}
                 <li class="aiz-side-nav-item">
@@ -908,7 +909,8 @@
                             @can('wallet_transaction_report')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('wallet-history.index') }}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{ translate('Wallet Recharge History') }}</span>
+                                        <span
+                                            class="aiz-side-nav-text">{{ translate('PowerPay eWallet Recharge History') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -1308,7 +1310,8 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('offline_wallet_recharge_request.index') }}"
                                             class="aiz-side-nav-link">
-                                            <span class="aiz-side-nav-text">{{ translate('Offline Wallet Recharge') }}</span>
+                                            <span
+                                                class="aiz-side-nav-text">{{ translate('Offline PowerPay eWallet Recharge') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -1448,12 +1451,14 @@
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <div class="aiz-side-nav-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                                <path d="M8 0.5L6.5 2H5V3.5H3.5V5H5V10H2V14H14V10H11V5H12.5V3.5H11V2H9.5L8 0.5ZM8 4.5V7H10.5V4.5H8ZM3.5 12.5H4.5V11H3.5V12.5ZM5.5 12.5H6.5V11H5.5V12.5ZM7.5 12.5H8.5V11H7.5V12.5ZM9.5 12.5H10.5V11H9.5V12.5Z"
-                                transform="translate(0)" fill="#575b6a"/>
-                              </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M8 0.5L6.5 2H5V3.5H3.5V5H5V10H2V14H14V10H11V5H12.5V3.5H11V2H9.5L8 0.5ZM8 4.5V7H10.5V4.5H8ZM3.5 12.5H4.5V11H3.5V12.5ZM5.5 12.5H6.5V11H5.5V12.5ZM7.5 12.5H8.5V11H7.5V12.5ZM9.5 12.5H10.5V11H9.5V12.5Z"
+                                    transform="translate(0)" fill="#575b6a" />
+                            </svg>
                         </div>
-                        <span class="aiz-side-nav-text">{{ translate('Donation Church') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('eSimbahan') }}</span>
                         @if (env('DEMO_MODE') == 'On')
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.001"
                                 viewBox="0 0 16 14.001" class="mx-2">
@@ -1467,18 +1472,18 @@
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('church.donationList') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Donation List') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eSimbahan') }}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Add New Church') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('Add New eSimbahan') }}</span>
                             </a>
                         </li>
 
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('church.index') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Church list') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eSimbahan list') }}</span>
                             </a>
                         </li>
                     </ul>

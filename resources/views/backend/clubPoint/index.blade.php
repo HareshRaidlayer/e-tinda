@@ -8,7 +8,7 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0 h6">{{ translate('Convert Point To Wallet') }}</h5>
+                            <h5 class="mb-0 h6">{{ translate('Convert Point To PowerPay eWallet') }}</h5>
                         </div>
                         <div class="card-body">
                             <form class="form-horizontal"

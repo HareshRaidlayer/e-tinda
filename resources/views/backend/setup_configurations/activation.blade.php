@@ -88,7 +88,7 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="mb-0 h6 text-center">{{ translate('Wallet System Activation') }}</h3>
+                    <h3 class="mb-0 h6 text-center">{{ translate('PowerPay eWallet System Activation') }}</h3>
                 </div>
                 <div class="card-body text-center">
                     <label class="aiz-switch aiz-switch-success mb-0">

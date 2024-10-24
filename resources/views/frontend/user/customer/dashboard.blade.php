@@ -31,7 +31,7 @@
                 <div class="h-100"
                     style="background-image: url('{{ static_asset('assets/img/wallet-bg.png') }}'); background-size: cover; background-position: center center;">
                     <div class="p-4 h-100 w-100 w-xl-100">
-                        <p class="fs-14 fw-400 text-gray mb-3">{{ translate('Wallet Balance') }}</p>
+                        <p class="fs-14 fw-400 text-gray mb-3">{{ translate('PowerPay eWallet Balance') }}</p>
                         <h1 class="fs-30 fw-700 text-white ">{{ single_price(Auth::user()->balance) }}</h1>
                         <hr class="border border-dashed border-white opacity-40 ml-0 mt-4 mb-4 w-xl-50">
                         @php
@@ -49,7 +49,7 @@
                                     onclick="show_wallet_modal()"
                                     style="border-radius: 30px; background: rgba(255, 255, 255, 0.1);">
                                     <i class="la la-plus fs-18 fw-700 mr-2"></i>
-                                    {{ translate('Recharge Wallet') }}
+                                    {{ translate('Recharge PowerPay eWallet') }}
                                 </button>
                             </div>
                             <div class="col-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6">
@@ -57,7 +57,7 @@
                                     class="btn btn-block border border-soft-light hov-bg-dark text-white mt-3 mt-md-3 mt-lg-3 mt-xl-5 mt-xxl-5 py-3"
                                     onclick="show_transfer_wallet_modal()"
                                     style="border-radius: 30px; background: rgba(255, 255, 255, 0.1);">
-                                    {{ translate('Transfer Wallet Money') }}
+                                    {{ translate('Transfer PowerPay eWallet Money') }}
                                 </button>
                             </div>
                         </div>
