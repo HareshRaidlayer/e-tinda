@@ -202,7 +202,7 @@
                                             @if (Auth::check() && get_setting('wallet_system') == 1)
                                                 <div class="py-4 px-4 text-center bg-soft-secondary-base mt-4">
                                                     <div class="fs-14 mb-3">
-                                                        <span class="opacity-80">{{ translate('Or, Your wallet balance :') }}</span>
+                                                        <span class="opacity-80">{{ translate('Or, Your PowerPay eWallet balance :') }}</span>
                                                         <span class="fw-700">{{ single_price(Auth::user()->balance) }}</span>
                                                     </div>
                                                     @if (Auth::user()->balance < $total)
@@ -212,7 +212,7 @@
                                                     @else
                                                         <button type="button" onclick="use_wallet()"
                                                             class="btn btn-primary fs-14 fw-700 px-5 rounded-0">
-                                                            {{ translate('Pay with wallet') }}
+                                                            {{ translate('Pay with PowerPay eWallet') }}
                                                         </button>
                                                     @endif
                                                 </div>

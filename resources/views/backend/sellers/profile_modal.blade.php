@@ -54,7 +54,7 @@
               <td>{{ single_price($total) }}</td>
           </tr>
           <tr>
-              <td>{{ translate('Wallet Balance') }}</td>
+              <td>{{ translate('PowerPay eWallet Balance') }}</td>
               <td>{{ single_price($shop->user->balance) }}</td>
           </tr>
           </tbody>

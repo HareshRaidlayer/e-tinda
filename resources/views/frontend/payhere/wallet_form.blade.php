@@ -11,7 +11,7 @@
         <input type="text" name="custom_2" value="">
         <br><br>Item Details<br>
         <input type="text" name="order_id" value="{{ $order_id }}">
-        <input type="text" name="items" value="{{ translate("Wallet Payment")  }}"><br>
+        <input type="text" name="items" value="{{ translate("PowerPay eWallet Payment")  }}"><br>
         <input type="text" name="currency" value="{{ env('PAYHERE_CURRENCY') }}">
         <input type="text" name="amount" value="{{ $amount }}">
         <br><br>Customer Details<br>

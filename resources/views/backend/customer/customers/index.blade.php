@@ -51,7 +51,7 @@
                         <th data-breakpoints="lg">{{translate('Email Address')}}</th>
                         <th data-breakpoints="lg">{{translate('Phone')}}</th>
                         <th data-breakpoints="lg">{{translate('Package')}}</th>
-                        <th data-breakpoints="lg">{{translate('Wallet Balance')}}</th>
+                        <th data-breakpoints="lg">{{translate('PowerPay eWallet Balance')}}</th>
                         <th class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>

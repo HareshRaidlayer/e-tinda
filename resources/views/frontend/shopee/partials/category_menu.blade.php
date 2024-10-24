@@ -8,7 +8,7 @@
                     data-src="{{ isset($e_commerce_image['cover_image']) ? uploaded_asset($e_commerce_image['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $e_commerce_image['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">E-commerce</span>
+                <span class="cat-name has-transition">eTindahan</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -63,31 +63,10 @@
                     data-src="{{ isset($PasabuyImg['cover_image']) ? uploaded_asset($PasabuyImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $PasabuyImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">E Pasabuy</span>
+                <span class="cat-name has-transition">ePasaBuy</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
-                <ul class="list-unstyled">
-                    @foreach (get_level_zero_ePasabuy() as $key => $ePasabuy)
-                        @php
-                            $ePasabuy_name = $ePasabuy['name'];
-                            $ePasabuy_url = route('service.EPasabuy');
-                        @endphp
-                        @if ($ePasabuy->status == 1 && strtotime(date('Y-m-d H:i:s')) <= $ePasabuy->end_date)
-                            @foreach ($ePasabuy->flash_deal_products as $key => $flash_deal_product)
-                                @php
-                                    $product = get_single_product($flash_deal_product->product_id);
-                                    $product_url = route('product', $product->slug);
-                                    if ($product->auction_product == 1) {
-                                        $product_url = route('auction-product', $product->slug);
-                                    }
-                                @endphp
-                                <li class="p-2 sub-mrnu-custom"><a
-                                        href="{{ $product_url }}">{{ $product['name'] }}</a>
-                                </li>
-                            @endforeach
-                        @endif
-                    @endforeach
-                </ul>
+
             </div>
         </li>
 
@@ -104,7 +83,7 @@
                     data-src="{{ isset($FarmerImg['cover_image']) ? uploaded_asset($FarmerImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $FarmerImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">Farmer</span>
+                <span class="cat-name has-transition">Farm2Consumer</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -132,7 +111,7 @@
                     data-src="{{ isset($churchImg['cover_image']) ? uploaded_asset($churchImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $churchImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">Donation Church</span>
+                <span class="cat-name has-transition">eSimbahan</span>
             </a>
             {{-- <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -147,5 +126,34 @@
             </div> --}}
         </li>
 
+    </ul>
+</div>
+
+
+<div class="aiz-category-menu bg-white rounded-0 border-top shopee" id="category-sidebar" style="width:270px;">
+    <ul class="list-unstyled categories no-scrollbar mb-0 text-left">
+        <?php $Ebakasyon = get_single_category(15);
+        ?>
+        <li class="category-nav-element border border-top-0 position-relative">
+            <a href="{{ route('propertyList') }}" class="text-truncate text-dark px-4 fs-14 d-block hov-column-gap-1">
+                <img class="cat-image lazyload mr-2 opacity-60" src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                    data-src="{{ isset($Ebakasyon['cover_image']) ? uploaded_asset($Ebakasyon['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
+                    width="16" alt="{{ $Ebakasyon['name'] ?? '' }}"
+                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                <span class="cat-name has-transition">Ebakasyon</span>
+            </a>
+            <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
+                <ul class="list-unstyled">
+                    @foreach (get_level_zero_ebakasyon() as $key => $ebakasyonProduct)
+                        @php
+                            $service_name = $ebakasyonProduct['name'];
+                        @endphp
+                        <li class="p-2 sub-mrnu-custom"><a
+                                href="{{ url('/property/list?category=' . $ebakasyonProduct->id) }}">{{ $service_name }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </li>
     </ul>
 </div>

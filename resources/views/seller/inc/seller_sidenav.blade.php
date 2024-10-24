@@ -73,7 +73,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-shopping-cart aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Services') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('eSerbisyo') }}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <!--Submenu-->
@@ -81,13 +81,13 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.service') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.products', 'seller.products.create', 'seller.products.edit']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Services') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eSerbisyo') }}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.service.orders') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.products', 'seller.products.create', 'seller.products.edit']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Service Orders') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eSerbisyo Orders') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -96,21 +96,21 @@
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-shopping-cart aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Property') }}</span>
+                        <span class="aiz-side-nav-text">{{ translate('eBakasyon') }}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
-                    <!--Submenu-->
+                    
                     <ul class="aiz-side-nav-list level-2">
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.hotels') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.hotels']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Property') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eBakasyon') }}</span>
                             </a>
                         </li>
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.hotelBooking') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.hotelBooking']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Property Booking') }}</span>
+                                <span class="aiz-side-nav-text">{{ translate('eBakasyon Booking') }}</span>
                             </a>
                         </li>
                     </ul>

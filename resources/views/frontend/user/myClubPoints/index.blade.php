@@ -13,7 +13,7 @@
             <div class="px-3 py-4">
                 <div class="fs-14 fw-400 text-center text-secondary mb-1">{{ translate('Exchange rate') }}</div>
                 <div class="fs-30 fw-700 text-center text-white">{{ $clubPoint->value ?? '' }} {{ translate(' Points') }} =
-                    {{ single_price(1) }} {{ translate('Wallet Money') }}</div>
+                    {{ single_price(1) }} {{ translate('PowerPay eWallet Money') }}</div>
             </div>
         </div>
         <br>
@@ -41,7 +41,7 @@
             </div>
 
             <a href="{{ route('convert_into_wallet') }}" class="fs-16 text-white btn btn-dark btn-block fs-14 fw-500 w-xl-50">
-                {{ translate('Convert To Wallet Money') }}
+                {{ translate('Convert To PowerPay eWallet Money') }}
             </a>
         </div>
 

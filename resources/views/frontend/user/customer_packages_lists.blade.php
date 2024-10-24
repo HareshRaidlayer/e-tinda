@@ -126,7 +126,7 @@
                                     <select class="form-control selectpicker rounded-0" data-live-search="true" name="payment_option">
                                         @include('partials.online_payment_options')
                                         @if (get_setting('wallet_system') == 1)
-                                            <option value="wallet">{{ translate('Wallet') }}</option>
+                                            <option value="wallet">{{ translate('PowerPay eWallet') }}</option>
                                         @endif
                                     </select>
                                 </div>
