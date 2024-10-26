@@ -16,7 +16,7 @@
     <meta name="app-url" content="{{ getBaseURL() }}">
     <meta name="file-base-url" content="{{ getFileBaseURL() }}">
 
-    <title>@yield('meta_title', get_setting('website_name') . ' | ' . get_setting('site_motto'))</title>
+    <title>@yield('meta_title', get_setting('website_name') . ' ' . get_setting('site_motto'))</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -714,7 +714,7 @@
                 AIZ.plugins.notify('warning', "{{ translate('Please choose all the options') }}");
             }
         }
-        
+
         function addToCartService(){
             @if (Auth::check() && Auth::user()->user_type != 'customer')
                 AIZ.plugins.notify('warning', "{{ translate('Please Login as a customer to add products to the Cart.') }}");
