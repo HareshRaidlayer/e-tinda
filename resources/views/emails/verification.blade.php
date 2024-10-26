@@ -149,7 +149,7 @@
                             <tr>
                                 <td class="text-footer"
                                     style="padding-top: 30px; color:#1f2125; font-family:'Fira Mono', Arial,sans-serif; font-size:12px; line-height:22px; text-align:center;">
-                                    {{ env('APP_NAME') }} | {{ translate('Support Team') }}
+                                    {{ env('APP_NAME') }}  {{ translate('Support Team') }}
                                 </td>
                             </tr>
                         </table>
