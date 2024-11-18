@@ -38,6 +38,7 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $address = new Address;
         if ($request->has('customer_id')) {
             $address->user_id   = $request->customer_id;

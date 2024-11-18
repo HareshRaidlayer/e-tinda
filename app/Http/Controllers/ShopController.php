@@ -60,6 +60,7 @@ class ShopController extends Controller
      */
     public function store(SellerRegistrationRequest $request)
     {
+        // dd($request->longitude);
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -67,10 +68,14 @@ class ShopController extends Controller
         $user->password = Hash::make($request->password);
 
         if ($user->save()) {
+
             $shop = new Shop;
             $shop->user_id = $user->id;
             $shop->name = $request->shop_name;
             $shop->address = $request->address;
+            $shop->latitude = $request->latitude;
+            $shop->longitude = $request->longitude;
+
             $shop->slug = preg_replace('/\s+/', '-', str_replace("/", " ", $request->shop_name));
             $shop->save();
 

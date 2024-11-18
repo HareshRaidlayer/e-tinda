@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Hash;
+use Auth;
+use App\Models\Address;
 
 class ProfileController extends Controller
 {
@@ -15,7 +17,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('backend.admin_profile.index');
+        $address = Address::where('user_id', Auth::user()->id)->first();
+        return view('backend.admin_profile.index', compact('address'));
     }
 
     /**
@@ -82,6 +85,12 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->new_password);
         }
         $user->avatar_original = $request->avatar;
+        $address = Address::where('user_id', $id)->first();
+
+        $address->address = $request->address;
+        $address->longitude = $request->longitude;
+        $address->latitude = $request->latitude;
+        $address->save();
         if ($user->save()) {
             flash(translate('Your Profile has been updated successfully!'))->success();
             return back();
