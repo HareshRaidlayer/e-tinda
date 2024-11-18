@@ -15,11 +15,14 @@
                         <!-- Address -->
                         <div class="row">
                             <div class="col-md-2">
-                                <label>{{ translate('Address')}}</label>
+                                <label>{{ translate('Address') }}</label>
                             </div>
                             <div class="col-md-10">
-                                <textarea class="form-control mb-3 rounded-0" placeholder="{{ translate('Your Address')}}" rows="2" name="address" required></textarea>
+                                <input type="text" id="autocomplete-address" class="form-control mb-3 rounded-0"
+                                    placeholder="{{ translate('Your Address') }}" name="address" required>
                             </div>
+                            <input type="hidden" id="latitude" name="latitude">
+<input type="hidden" id="longitude" name="longitude">
                         </div>
 
                         <!-- Country -->
@@ -145,6 +148,43 @@
 </div>
 
 @section('script')
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('MAP_API_KEY') }}&libraries=places&callback=initAutocomplete" async defer></script>
+
+<script>
+     function initAutocomplete() {
+            // Get the input element for the address field
+            const input = document.getElementById("autocomplete-address");
+            const autocomplete = new google.maps.places.Autocomplete(input);
+
+            // Restrict the fields returned by the API
+            autocomplete.setFields(["geometry", "formatted_address"]);
+
+            // Add a listener for when the user selects a place
+            autocomplete.addListener("place_changed", function() {
+                const place = autocomplete.getPlace();
+
+                // Check if the place has a geometry location
+                if (place.geometry) {
+                    const lat = place.geometry.location.lat();
+                    const lng = place.geometry.location.lng();
+                    const formattedAddress = place.formatted_address;
+
+                    // Populate the hidden input fields with latitude and longitude
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lng;
+
+                    // Log the details for debugging
+                    console.log("Formatted Address: ", formattedAddress);
+                    console.log("Latitude: ", lat);
+                    console.log("Longitude: ", lng);
+                } else {
+                    alert("No details available for the input: '" + input.value + "'");
+                }
+            });
+        }
+</script>
+
+
     <script type="text/javascript">
         function add_new_address(){
             $('#new-address-modal').modal('show');
