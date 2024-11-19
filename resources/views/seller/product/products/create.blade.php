@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Error Meassages -->
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -28,7 +28,7 @@
 
         <!-- Data type -->
         <input type="hidden" id="data_type" value="physical">
-    
+
         <form class="" action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data" id="choice_form">
             <div class="row gutters-5">
                 <div class="col-lg-8">
@@ -199,7 +199,7 @@
                                     </label>
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <input type="text" class="form-control" value="{{ translate('Attributes') }}"
@@ -222,9 +222,9 @@
                                 </p>
                                 <br>
                             </div>
-    
+
                             <div class="customer_choice_options" id="customer_choice_options">
-    
+
                             </div>
                         </div>
                     </div>
@@ -241,7 +241,7 @@
                                         required>
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <label class="col-md-3 control-label"
                                     for="start_date">{{ translate('Discount Date Range') }} </label>
@@ -251,7 +251,7 @@
                                         data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <label class="col-md-3 col-from-label">{{ translate('Discount') }} <span class="text-danger">*</span></label>
                                 <div class="col-md-6">
@@ -266,7 +266,7 @@
                                     </select>
                                 </div>
                             </div>
-    
+
                             <div id="show-hide-div">
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{ translate('Quantity') }} <span class="text-danger">*</span></label>
@@ -310,7 +310,7 @@
                             </div>
                             <br>
                             <div class="sku_combination" id="sku_combination">
-    
+
                             </div>
                         </div>
                     </div>
@@ -327,7 +327,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('PDF Specification') }}</h5>
@@ -387,14 +387,14 @@
                             </div>
                         </div>
                     </div>
-    
+
                     {{-- Frequently Bought Products --}}
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
                         </div>
                         <div class="w-100">
-                            <div class="d-flex my-3"> 
+                            <div class="d-flex my-3">
                                 <div class="align-items-center d-flex mar-btm ml-4 mr-5 radio">
                                     <input id="fq_bought_select_products" type="radio" name="frequently_bought_selection_type" value="product" onchange="fq_bought_product_selection_type()" checked >
                                     <label for="fq_bought_select_products" class="fs-14 fw-500 mb-0 ml-2">{{translate('Select Product')}}</label>
@@ -404,25 +404,25 @@
                                     <label for="fq_bought_select_category" class="fs-14 fw-500 mb-0 ml-2">{{translate('Select Category')}}</label>
                                 </div>
                             </div>
-    
+
                             <div class="px-3 px-md-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="fq_bought_select_product_div">
-        
+
                                             <div id="selected-fq-bought-products">
-        
+
                                             </div>
-        
-                                            <button 
-                                                type="button" 
+
+                                            <button
+                                                type="button"
                                                 class="btn btn-block border border-dashed hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center"
                                                 onclick="showFqBoughtProductModal()">
                                                 <i class="las la-plus"></i>
                                                 <span class="ml-2">{{ translate('Add More') }}</span>
                                             </button>
                                         </div>
-        
+
                                         {{-- Select Category for Frequently Bought Product --}}
                                         <div class="fq_bought_select_category_div d-none">
                                             <div class="form-group row">
@@ -439,16 +439,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="col-lg-4">
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Product Category') }}</h5>
@@ -473,14 +473,14 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">
                                 {{ translate('Shipping Configuration') }}
                             </h5>
                         </div>
-    
+
                         <div class="card-body">
                             @if (get_setting('shipping_type') == 'product_wise_shipping')
                                 <div class="form-group row">
@@ -492,7 +492,7 @@
                                         </label>
                                     </div>
                                 </div>
-    
+
                                 <div class="form-group row">
                                     <label class="col-md-6 col-from-label">{{ translate('Flat Rate') }}</label>
                                     <div class="col-md-6">
@@ -502,7 +502,7 @@
                                         </label>
                                     </div>
                                 </div>
-    
+
                                 <div class="flat_rate_shipping_div" style="display: none">
                                     <div class="form-group row">
                                         <label class="col-md-6 col-from-label">{{ translate('Shipping cost') }}</label>
@@ -513,7 +513,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="form-group row">
                                     <label class="col-md-6 col-from-label">{{translate('Is Product Quantity Mulitiply')}}</label>
                                     <div class="col-md-6">
@@ -530,7 +530,7 @@
                             @endif
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Low Stock Quantity Warning') }}</h5>
@@ -545,16 +545,16 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">
                                 {{ translate('Stock Visibility State') }}
                             </h5>
                         </div>
-    
+
                         <div class="card-body">
-    
+
                             <div class="form-group row">
                                 <label class="col-md-6 col-from-label">{{ translate('Show Stock Quantity') }}</label>
                                 <div class="col-md-6">
@@ -564,7 +564,7 @@
                                     </label>
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <label class="col-md-6 col-from-label">{{ translate('Show Stock With Text Only') }}</label>
                                 <div class="col-md-6">
@@ -574,7 +574,7 @@
                                     </label>
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <label class="col-md-6 col-from-label">{{ translate('Hide Stock') }}</label>
                                 <div class="col-md-6">
@@ -584,10 +584,10 @@
                                     </label>
                                 </div>
                             </div>
-    
+
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Cash On Delivery') }}</h5>
@@ -610,7 +610,7 @@
                             @endif
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('Estimate Shipping Time') }}</h5>
@@ -628,9 +628,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-lg-12 col-from-label">{{translate('Is one day delivery product!')}}</label>
+                                <div class="col-lg-12">
+                                    <select class="form-control aiz-selectpicker" name="one_day_delivery">
+                                        <option value="0" selected>{{translate('No')}}</option>
+                                        <option value="1">{{translate('Yes')}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-    
+
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0 h6">{{ translate('VAT & Tax') }}</h5>
@@ -641,7 +650,7 @@
                                     {{ $tax->name }}
                                     <input type="hidden" value="{{ $tax->id }}" name="tax_id[]">
                                 </label>
-    
+
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <input type="number" lang="en" min="0" value="0" step="0.01"
@@ -666,7 +675,7 @@
                     </div>
                 </div>
             </div>
-    
+
         </form>
     </div>
 @endsection

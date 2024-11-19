@@ -759,6 +759,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="w-100">
+                                {{-- @php
+                                    dd($product->one_day_delivery);
+                                @endphp --}}
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-from-label">{{translate('Is one day delivery product!')}}</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control aiz-selectpicker" name="one_day_delivery">
+                                            <option value="1" <?php if($product->one_day_delivery == 1) echo "selected";?>>
+                                                {{translate('Yes')}}</option>
+                                            <option value="0"
+                                                <?php if($product->one_day_delivery == 0) echo "selected";?>>
+                                                {{translate('No')}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

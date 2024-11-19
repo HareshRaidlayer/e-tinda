@@ -94,7 +94,7 @@
                                 data-role="tagsinput">
                         </div>
                     </div>
-                    
+
                     @if (addon_is_activated('pos_system'))
                     <div class="form-group row">
                         <label class="col-lg-3 col-from-label">{{translate('Barcode')}}</label>
@@ -435,13 +435,13 @@
                     <h5 class="mb-0 h6">{{ translate('Frequently Bought') }}</h5>
                 </div>
                 <div class="w-100">
-                    <div class="d-flex my-3"> 
+                    <div class="d-flex my-3">
                         <div class="radio mar-btm mr-5 ml-4 d-flex align-items-center">
                             <input
                                 id="fq_bought_select_products"
                                 type="radio"
-                                name="frequently_bought_selection_type" 
-                                value="product" 
+                                name="frequently_bought_selection_type"
+                                value="product"
                                 onchange="fq_bought_product_selection_type()"
                                 @if($product->frequently_bought_selection_type == 'product') checked @endif
                             >
@@ -464,10 +464,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="fq_bought_select_product_div d-none">
-                                    @php 
+                                    @php
                                         $fq_bought_products = $product->frequently_bought_products()->where('category_id', null)->get();
                                     @endphp
-    
+
                                     <div id="selected-fq-bought-products">
                                         @if(count($fq_bought_products) > 0)
                                             <div class="table-responsive mb-4">
@@ -486,7 +486,7 @@
                                                                 <input type="hidden" name="fq_bought_product_ids[]" value="{{ $fQBproduct->frequently_bought_product->id }}">
                                                                 <td class="w-150px pl-0" style="vertical-align: middle;">
                                                                     <p class="d-block size-48px">
-                                                                        <img src="{{ uploaded_asset($fQBproduct->frequently_bought_product->thumbnail_img) }}" alt="{{ translate('Image')}}" 
+                                                                        <img src="{{ uploaded_asset($fQBproduct->frequently_bought_product->thumbnail_img) }}" alt="{{ translate('Image')}}"
                                                                             class="h-100 img-fit lazyload" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                                                     </p>
                                                                 </td>
@@ -508,22 +508,22 @@
                                             </div>
                                         @endif
                                     </div>
-    
-                                    <button 
-                                        type="button" 
+
+                                    <button
+                                        type="button"
                                         class="btn btn-block border border-dashed hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center"
                                         onclick="showFqBoughtProductModal()">
                                         <i class="las la-plus"></i>
                                         <span class="ml-2">{{ translate('Add More') }}</span>
                                     </button>
                                 </div>
-    
+
                                 {{-- Select Category for Frequently Bought Product --}}
                                 <div class="fq_bought_select_category_div d-none">
-                                    @php 
-                                        $fq_bought_product_category_id = $product->frequently_bought_products()->where('category_id','!=', null)->first(); 
+                                    @php
+                                        $fq_bought_product_category_id = $product->frequently_bought_products()->where('category_id','!=', null)->first();
                                         $fqCategory = $fq_bought_product_category_id != null ? $fq_bought_product_category_id->category_id : null;
-                                        
+
                                     @endphp
                                     <div class="form-group row">
                                         <label class="col-md-2 col-from-label">{{translate('Category')}}</label>
@@ -545,7 +545,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -581,7 +581,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0 h6" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_2">
@@ -744,6 +744,18 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-12 col-from-label">{{translate('Is one day delivery product!')}}</label>
+                        <div class="col-lg-12">
+                            <select class="form-control aiz-selectpicker" name="one_day_delivery">
+                                <option value="1" <?php if($product->one_day_delivery == 1) echo "selected";?>>
+                                    {{translate('Yes')}}</option>
+                                <option value="0"
+                                    <?php if($product->one_day_delivery == 0) echo "selected";?>>
+                                    {{translate('No')}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -967,7 +979,7 @@
 
         update_sku();
     });
-    
+
     function fq_bought_product_selection_type(){
         var productSelectionType = $("input[name='frequently_bought_selection_type']:checked").val();
         if(productSelectionType == 'product'){

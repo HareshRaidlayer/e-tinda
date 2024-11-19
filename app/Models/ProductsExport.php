@@ -32,6 +32,7 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings
             'unit',
             'current_stock',
             'est_shipping_days',
+            "one_day_delivery",
             'meta_title',
             'meta_description',
         ];
@@ -59,6 +60,7 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings
             $product->unit,
             $qty,
             $product->est_shipping_days,
+            $product->one_day_delivery,
             $product->meta_title,
             $product->meta_description,
         ];

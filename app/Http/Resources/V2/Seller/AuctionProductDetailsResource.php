@@ -38,6 +38,7 @@ class AuctionProductDetailsResource extends JsonResource
             "shipping_cost"         => $this->shipping_cost,
             "cash_on_delivery"      => $this->cash_on_delivery,
             "est_shipping_days"     => $this->est_shipping_days,
+            "one_day_delivery"     => $this->one_day_delivery,
             "tax"                   => $this->taxes,
             "tax_type"              => $this->tax_type,
             "pdf"                   => new UploadedFileCollection(Upload::whereIn("id", explode(",", $this->pdf))->get()),

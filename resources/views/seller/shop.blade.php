@@ -52,8 +52,10 @@
                 <div class="row">
                     <label class="col-md-2 col-form-label">{{ translate('Shop Address') }} <span class="text-danger text-danger">*</span></label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control mb-3" placeholder="{{ translate('Address')}}" name="address" value="{{ $shop->address }}" required>
+                        <input type="text" id="autocomplete-address" class="form-control mb-3" placeholder="{{ translate('Address')}}" name="address" value="{{ $shop->address }}" required>
                     </div>
+                    <input type="hidden" id="latitude" name="latitude">
+                                                <input type="hidden" id="longitude" name="longitude">
                 </div>
                 @if (get_setting('shipping_type') == 'seller_wise_shipping')
                     <div class="row">
@@ -64,7 +66,7 @@
                             <input type="number" lang="en" min="0" class="form-control mb-3" placeholder="{{ translate('Shipping Cost')}}" name="shipping_cost" value="{{ $shop->shipping_cost }}" required>
                         </div>
                     </div>
-                @endif 
+                @endif
                 <div class="row">
                     <label class="col-md-2 col-form-label">{{ translate('Meta Title') }}<span class="text-danger text-danger">*</span></label>
                     <div class="col-md-10">
@@ -301,132 +303,42 @@
 
 @section('script')
 
-    @if (addon_is_activated('delivery_boy') && get_setting('google_map') == 1)
-            
-    <script>
-        function initialize(id_format = '') {
-            let default_longtitude = '';
-            let default_latitude = '';
-            @if (get_setting('google_map_longtitude') != '' && get_setting('google_map_longtitude') != '')
-                default_longtitude = {{ get_setting('google_map_longtitude') }};
-                default_latitude = {{ get_setting('google_map_latitude') }};
-            @endif
+<script
+src="https://maps.googleapis.com/maps/api/js?key={{ config('maps.map_api_key') }}&libraries=places&callback=initAutocomplete"
+async defer></script>
 
-            var lat = -33.8688;
-            var long = 151.2195;
+<script>
+function initAutocomplete() {
+    // Get the input element for the address field
+    const input = document.getElementById("autocomplete-address");
+    const autocomplete = new google.maps.places.Autocomplete(input);
 
-            if (document.getElementById('latitude').value != '' &&
-                document.getElementById('longitude').value != '') {
-                lat = parseFloat(document.getElementById('latitude').value);
-                long = parseFloat(document.getElementById('longitude').value);
-            } else if (default_longtitude != '' &&
-                default_latitude != '') {
-                lat = default_latitude;
-                long = default_longtitude;
-            }
+    // Restrict the fields returned by the API
+    autocomplete.setFields(["geometry", "formatted_address"]);
 
+    // Add a listener for when the user selects a place
+    autocomplete.addListener("place_changed", function() {
+        const place = autocomplete.getPlace();
 
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {
-                    lat: lat,
-                    lng: long
-                },
-                zoom: 13
-            });
+        // Check if the place has a geometry location
+        if (place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            const formattedAddress = place.formatted_address;
 
-            var myLatlng = new google.maps.LatLng(lat, long);
+            // Populate the hidden input fields with latitude and longitude
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lng;
 
-            var input = document.getElementById(id_format + 'searchInput');
-            // console.log(input);
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-            var autocomplete = new google.maps.places.Autocomplete(input);
-
-            autocomplete.bindTo('bounds', map);
-
-            var infowindow = new google.maps.InfoWindow();
-            var marker = new google.maps.Marker({
-                map: map,
-                position: myLatlng,
-                anchorPoint: new google.maps.Point(0, -29),
-                draggable: true,
-            });
-
-            map.addListener('click', function(event) {
-                marker.setPosition(event.latLng);
-                document.getElementById(id_format + 'latitude').value = event.latLng.lat();
-                document.getElementById(id_format + 'longitude').value = event.latLng.lng();
-                infowindow.setContent('Latitude: ' + event.latLng.lat() + '<br>Longitude: ' + event.latLng.lng());
-                infowindow.open(map, marker);
-            });
-
-            google.maps.event.addListener(marker, 'dragend', function(event) {
-                document.getElementById(id_format + 'latitude').value = event.latLng.lat();
-                document.getElementById(id_format + 'longitude').value = event.latLng.lng();
-                infowindow.setContent('Latitude: ' + event.latLng.lat() + '<br>Longitude: ' + event.latLng.lng());
-                infowindow.open(map, marker);
-            });
-
-            autocomplete.addListener('place_changed', function() {
-                infowindow.close();
-                marker.setVisible(false);
-                var place = autocomplete.getPlace();
-
-                if (!place.geometry) {
-                    window.alert("Autocomplete's returned place contains no geometry");
-                    return;
-                }
-
-                // If the place has a geometry, then present it on a map.
-                if (place.geometry.viewport) {
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);
-                }
-                /*
-                marker.setIcon(({
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(35, 35)
-                }));
-                */
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-
-                var address = '';
-                if (place.address_components) {
-                    address = [
-                        (place.address_components[0] && place.address_components[0].short_name || ''),
-                        (place.address_components[1] && place.address_components[1].short_name || ''),
-                        (place.address_components[2] && place.address_components[2].short_name || '')
-                    ].join(' ');
-                }
-
-                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-                infowindow.open(map, marker);
-
-                //Location details
-                for (var i = 0; i < place.address_components.length; i++) {
-                    if (place.address_components[i].types[0] == 'postal_code') {
-                        document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-                    }
-                    if (place.address_components[i].types[0] == 'country') {
-                        document.getElementById('country').innerHTML = place.address_components[i].long_name;
-                    }
-                }
-                document.getElementById('location').innerHTML = place.formatted_address;
-                document.getElementById(id_format + 'latitude').value = place.geometry.location.lat();
-                document.getElementById(id_format + 'longitude').value = place.geometry.location.lng();
-            });
-
+            // Log the details for debugging
+            console.log("Formatted Address: ", formattedAddress);
+            console.log("Latitude: ", lat);
+            console.log("Longitude: ", lng);
+        } else {
+            alert("No details available for the input: '" + input.value + "'");
         }
-    </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('MAP_API_KEY') }}&libraries=places&language=en&callback=initialize" async defer></script>
-
-    @endif
+    });
+}
+</script>
 
 @endsection

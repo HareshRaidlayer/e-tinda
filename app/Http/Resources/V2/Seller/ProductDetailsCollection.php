@@ -59,6 +59,7 @@ class ProductDetailsCollection extends JsonResource
             "shipping_cost" => $this->shipping_cost,
             "is_quantity_multiplied" => $this->is_quantity_multiplied,
             "est_shipping_days" => $this->est_shipping_days,
+            "one_day_delivery"     => $this->one_day_delivery,
             "num_of_sale" => $this->num_of_sale,
             "meta_title" => $this->meta_title,
             "meta_description" => $this->meta_description,

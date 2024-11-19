@@ -29,6 +29,8 @@ class ShopController extends Controller
 
             $shop->name             = $request->name;
             $shop->address          = $request->address;
+            $shop->latitude          = $request->latitude;
+            $shop->longitude          = $request->longitude;
             $shop->phone            = $request->phone;
             $shop->slug             = preg_replace('/\s+/', '-', $request->name) . '-' . $shop->id;
             $shop->meta_title       = $request->meta_title;
@@ -121,7 +123,7 @@ class ShopController extends Controller
             $data['status'] = 'submitted';
             $data['notification_type_id'] = get_notification_type('shop_verify_request_submitted', 'type')->id;
             Notification::send($users, new ShopVerificationNotification($data));
-            
+
             flash(translate('Your shop verification request has been submitted successfully!'))->success();
             return redirect()->route('seller.dashboard');
         }

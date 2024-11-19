@@ -700,6 +700,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="w-100">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-from-label">{{translate('Is one day delivery product!')}}</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control aiz-selectpicker" name="one_day_delivery">
+                                            <option value="1">
+                                                {{translate('Yes')}}</option>
+                                            <option value="0">
+                                                {{translate('No')}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
