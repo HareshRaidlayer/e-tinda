@@ -111,7 +111,7 @@
                         $status = $order->delivery_status;
                     @endphp
                     <div class="bg-white border rounded-0 mt-4">
-                        
+
                         @if($orderDetail->product != null)
                         <div class="p-3">
                             <table class="table">
