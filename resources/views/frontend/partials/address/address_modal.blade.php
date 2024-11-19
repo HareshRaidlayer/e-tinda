@@ -148,7 +148,7 @@
         </div>
     </div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('MAP_API_KEY') }}&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('maps.map_api_key') }}&libraries=places&callback=initAutocomplete" async defer></script>
 
 <script>
     function initAutocomplete() {
