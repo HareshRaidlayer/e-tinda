@@ -220,8 +220,9 @@ class CheckoutController extends Controller
         }
 
         $user = auth()->user();
-        // dd($user->id);
         $carts = Cart::where('user_id', $user->id)->active()->get();
+        // dd($user->id);
+
 
 
         // Minumum order amount check
@@ -237,8 +238,8 @@ class CheckoutController extends Controller
             }
         }
         // Minumum order amount check end
-
         (new OrderController)->store($request);
+        // (new OrderController)->add_oneday_delevery($carts);
         $file = base_path("/public/assets/myText.txt");
         $dev_mail = get_dev_mail();
         if (!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))) {

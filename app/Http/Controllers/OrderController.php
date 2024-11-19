@@ -8,7 +8,7 @@ use App\Models\Order;
 use App\Models\Cart;
 use App\Models\Booking;
 use App\Models\ServiceCart;
-
+use Illuminate\Support\Facades\Http;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\OrderDetail;
@@ -22,6 +22,7 @@ use Mail;
 use App\Mail\InvoiceEmailManager;
 use App\Models\OrdersExport;
 use App\Models\Service;
+use App\Models\Shop;
 use App\Utility\NotificationUtility;
 use CoreComponentRepository;
 use App\Utility\SmsUtility;
@@ -149,13 +150,15 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $carts = Cart::where('user_id', Auth::user()->id)->active()->get();
-
         if ($carts->isEmpty()) {
             flash(translate('Your cart is empty'))->warning();
             return redirect()->route('home');
         }
 
         $address = Address::where('id', $carts[0]['address_id'])->first();
+        $shipingAddress = $address->address;
+        $shipingLatitude = $address->latitude;
+        $shipingLongitude = $address->longitude;
 
         $shippingAddress = [];
         if ($address != null) {
@@ -199,13 +202,83 @@ class OrderController extends Controller
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His') . rand(10, 99);
             $order->date = strtotime('now');
-            $order->save();
+
 
             $subtotal = 0;
             $tax = 0;
             $shipping = 0;
             $coupon_discount = 0;
 
+            if($product->one_day_delivery == 1){
+                $shop = Shop::where('user_id',$product->user_id)->first();
+                $pickupAddress =$shop->address;
+                $pickupLatitude =$shop->latitude;
+                $pickupLongitude =$shop->longitude;
+                $jobOrderNumber = rand(10000, 99999);
+
+                // delevery api
+                $url = 'https://api.sandbox.deliveree.com/public_api/v1/deliveries';
+                $headers = [
+                    'Authorization' => 'xwT1PoyoARGsW7xGSjKg',
+                    'Accept-Language' => 'en',
+                    'Content-Type' => 'application/json',
+                ];
+                $payload = [
+                    "vehicle_type_id" => 35,
+                    "note" => "Fragile item that needs good care.",
+                    "time_type" => "now",
+                    "quick_choice" => true,
+                    "quick_choice_id" => 437,
+                    "job_order_number" => "$jobOrderNumber",
+                    "locations" => [
+                        [
+                            "address" => $pickupAddress,
+                            "latitude" => $pickupLatitude,
+                            "longitude" => $pickupLongitude,
+                            // "latitude" => 14.5536839,
+                            // "longitude" => 121.0459758,
+                            "recipient_name" => $shop->name,
+                            "recipient_phone" => $shop->phone,
+                            "note" => "Drop-off near the main entrance",
+                            "is_payer" => true,
+                        ],
+                        [
+                            "address" => $shipingAddress,
+                            "latitude" => $shipingLatitude,
+                            "longitude" => $shipingLongitude,
+                            // "latitude" => 14.533288,
+                            // "longitude" => 120.978435,
+                            "recipient_name" => Auth::user()->name,
+                            "recipient_phone" => $address->phone,
+                            "note" => "Pick-up at the parking lot",
+                        ]
+                    ],
+                ];
+
+                // Make the API Request
+                    $response = Http::withHeaders($headers)->post($url, $payload);
+                    // Check response status
+                    if ($response->successful()) {
+                        $resData= $response->json();
+                        $sesSaveArr = [
+                           'order_id' =>  $resData['id'],
+                           'customer_id' =>  $resData['customer_id'],
+                           'customer_name' =>  $resData['customer_name'],
+                           'tracking_url' =>  $resData['tracking_url'],
+                           'distance_fees' =>  $resData['distance_fees']
+                        ];
+                        $resJson = json_encode($sesSaveArr);
+                        $order->shiping_info= $resJson;
+                    } else {
+                        $sesSaveArr = [
+                          'error' =>  $response->json()
+                        ];
+                        $resJson = json_encode($sesSaveArr);
+                        $order->shiping_info= $resJson;
+                    }
+
+            }
+            $order->save();
             //Order Details Storing
             foreach ($seller_product as $cartItem) {
                 $product = Product::find($cartItem['product_id']);
@@ -312,6 +385,87 @@ class OrderController extends Controller
         $combined_order->save();
 
         $request->session()->put('combined_order_id', $combined_order->id);
+    }
+
+    public function add_oneday_delevery($carts){
+        $shipingData = Address::where('id', $carts[0]['address_id'])->first();
+        $shipingAddress = $shipingData->address;
+        $shipingLatitude = $shipingData->latitude;
+        $shipingLongitude = $shipingData->longitude;
+        foreach ($carts as $cartItem) {
+            $product = Product::find($cartItem['product_id']);
+            if($product->one_day_delivery == 1){
+                $shop = Shop::where('user_id',$product->user_id)->first();
+                $pickupAddress =$shop->address;
+                $pickupLatitude =$shop->latitude;
+                $pickupLongitude =$shop->longitude;
+                $jobOrderNumber = rand(10000, 99999);
+                // delevery api
+                $url = 'https://api.sandbox.deliveree.com/public_api/v1/deliveries';
+                $headers = [
+                    'Authorization' => 'xwT1PoyoARGsW7xGSjKg',
+                    'Accept-Language' => 'en',
+                    'Content-Type' => 'application/json',
+                ];
+                $payload = [
+                    "vehicle_type_id" => 35,
+                    "note" => "Fragile item that needs good care.",
+                    "time_type" => "now",
+                    "quick_choice" => true,
+                    "quick_choice_id" => 437,
+                    "job_order_number" => "$jobOrderNumber",
+                    "locations" => [
+                        [
+                            "address" => $pickupAddress,
+                            // "latitude" => $pickupLatitude,
+                            // "longitude" => $pickupLongitude,
+                            "latitude" => 14.5536839,
+                            "longitude" => 121.0459758,
+                            "recipient_name" => $shop->name,
+                            "recipient_phone" => $shop->phone,
+                            "note" => "Drop-off near the main entrance",
+                            "is_payer" => true,
+                        ],
+                        [
+                            "address" => $shipingAddress,
+                            // "latitude" => $shipingLatitude,
+                            // "longitude" => $shipingLongitude,
+                            "latitude" => 14.533288,
+                            "longitude" => 120.978435,
+                            "recipient_name" => Auth::user()->name,
+                            "recipient_phone" => $shipingData->phone,
+                            "note" => "Pick-up at the parking lot",
+                        ]
+                    ],
+                ];
+
+                // Make the API Request
+                try {
+                    $response = Http::withHeaders($headers)->post($url, $payload);
+
+                    // Check response status
+                    if ($response->successful()) {
+                         echo "<pre>";print_r($response->json());exit;
+                        return response()->json([
+                            'data' => $response->json(),
+                        ], 200);
+                    } else {
+                        echo "<pre>";print_r($response->json());exit;
+                        return response()->json([
+                            'error' => $response->json(),
+                        ], $response->status());
+                    }
+                } catch (\Exception $e) {
+                     echo "error catch";exit;
+                    return response()->json([
+                        'message' => 'An error occurred while creating the delivery.',
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
+                // echo "<pre>";print_r($payload);exit;
+            }
+
+        }
     }
     public function storeService(Request $request)
     {
