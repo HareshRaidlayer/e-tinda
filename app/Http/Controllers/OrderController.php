@@ -215,11 +215,15 @@ class OrderController extends Controller
                     $pickupAddress = $shop->address;
                     $pickupLatitude = $shop->latitude;
                     $pickupLongitude = $shop->longitude;
+                    $recipient_name = $shop->name;
+                    $recipient_phone = $shop->phone;
                 } else {
                     $user = User::where('id', $product->user_id)->first();
                     $pickupAddress = $user->address;
                     $pickupLatitude = $user->latitude;
                     $pickupLongitude = $user->longitude;
+                    $recipient_name = $user->name;
+                    $recipient_phone = $user->phone;
                 }
                 $jobOrderNumber = rand(10000, 99999);
 
@@ -244,8 +248,8 @@ class OrderController extends Controller
                             "longitude" => $pickupLongitude,
                             // "latitude" => 14.5536839,
                             // "longitude" => 121.0459758,
-                            "recipient_name" => $shop->name,
-                            "recipient_phone" => $shop->phone,
+                            "recipient_name" => $recipient_name,
+                            "recipient_phone" => $recipient_phone,
                             "note" => "Drop-off near the main entrance",
                             "is_payer" => true,
                         ],
