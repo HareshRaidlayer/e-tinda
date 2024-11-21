@@ -219,9 +219,10 @@ class OrderController extends Controller
                     $recipient_phone = $shop->phone;
                 } else {
                     $user = User::where('id', $product->user_id)->first();
-                    $pickupAddress = $user->address;
-                    $pickupLatitude = $user->latitude;
-                    $pickupLongitude = $user->longitude;
+                    $address = Address::where('user_id', $product->user_id)->first();
+                    $pickupAddress = $address->address;
+                    $pickupLatitude = $address->latitude;
+                    $pickupLongitude = $address->longitude;
                     $recipient_name = $user->name;
                     $recipient_phone = $user->phone;
                 }
@@ -244,8 +245,8 @@ class OrderController extends Controller
                     "locations" => [
                         [
                             "address" => $pickupAddress,
-                            "latitude" => $pickupLatitude,
-                            "longitude" => $pickupLongitude,
+                            "latitude" => (float) $pickupLatitude,
+                            "longitude" => (float) $pickupLongitude,
                             // "latitude" => 14.5536839,
                             // "longitude" => 121.0459758,
                             "recipient_name" => $recipient_name,
@@ -255,8 +256,8 @@ class OrderController extends Controller
                         ],
                         [
                             "address" => $shipingAddress,
-                            "latitude" => $shipingLatitude,
-                            "longitude" => $shipingLongitude,
+                            "latitude" => (float) $shipingLatitude,
+                            "longitude" => (float) $shipingLongitude,
                             // "latitude" => 14.533288,
                             // "longitude" => 120.978435,
                             "recipient_name" => Auth::user()->name,
@@ -266,8 +267,8 @@ class OrderController extends Controller
                     ],
                 ];
 
-                // Make the API Request
                 $response = Http::withHeaders($headers)->post($url, $payload);
+
                 // Check response status
                 if ($response->successful()) {
                     $resData = $response->json();

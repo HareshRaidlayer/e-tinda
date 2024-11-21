@@ -58,7 +58,7 @@
                                     <td>
                                         <p>
                                         @php
-                                            print_r($track_url);
+                                            print_r($track_url->error->message);
                                         @endphp
                                         </p>
                                     </td>
