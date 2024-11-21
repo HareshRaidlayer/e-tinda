@@ -56,7 +56,11 @@
                                 @else
                                     <td class="w-50 fw-600">{{ translate('Tracking Details') }}:</td>
                                     <td>
-                                        <p>{{ $track_url }}</p>
+                                        <p>
+                                        @php
+                                            print_($track_url);
+                                        @endphp
+                                        </p>
                                     </td>
                                 @endif
                             </tr>
