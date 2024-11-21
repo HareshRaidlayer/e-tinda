@@ -125,10 +125,10 @@ class OrderController extends Controller
     public function booking($id)
     {
         $order = Order::findOrFail(decrypt($id));
-        $booking = Booking::where('id',$order->is_booking)->first();
+        $booking = Booking::where('id', $order->is_booking)->first();
         $order_shipping_address = json_decode($order->shipping_address);
 
-        return view('backend.sales.bookingShow', compact('order','booking'));
+        return view('backend.sales.bookingShow', compact('order', 'booking'));
     }
 
     /**
@@ -209,11 +209,18 @@ class OrderController extends Controller
             $shipping = 0;
             $coupon_discount = 0;
 
-            if($product->one_day_delivery == 1){
-                $shop = Shop::where('user_id',$product->user_id)->first();
-                $pickupAddress =$shop->address;
-                $pickupLatitude =$shop->latitude;
-                $pickupLongitude =$shop->longitude;
+            if ($product->one_day_delivery == 1) {
+                if ($product->added_by == "seller") {
+                    $shop = Shop::where('user_id', $product->user_id)->first();
+                    $pickupAddress = $shop->address;
+                    $pickupLatitude = $shop->latitude;
+                    $pickupLongitude = $shop->longitude;
+                } else {
+                    $user = User::where('user_id', $product->user_id)->first();
+                    $pickupAddress = $user->address;
+                    $pickupLatitude = $user->latitude;
+                    $pickupLongitude = $user->longitude;
+                }
                 $jobOrderNumber = rand(10000, 99999);
 
                 // delevery api
@@ -256,27 +263,26 @@ class OrderController extends Controller
                 ];
 
                 // Make the API Request
-                    $response = Http::withHeaders($headers)->post($url, $payload);
-                    // Check response status
-                    if ($response->successful()) {
-                        $resData= $response->json();
-                        $sesSaveArr = [
-                           'order_id' =>  $resData['id'],
-                           'customer_id' =>  $resData['customer_id'],
-                           'customer_name' =>  $resData['customer_name'],
-                           'tracking_url' =>  $resData['tracking_url'],
-                           'distance_fees' =>  $resData['distance_fees']
-                        ];
-                        $resJson = json_encode($sesSaveArr);
-                        $order->shiping_info= $resJson;
-                    } else {
-                        $sesSaveArr = [
-                          'error' =>  $response->json()
-                        ];
-                        $resJson = json_encode($sesSaveArr);
-                        $order->shiping_info= $resJson;
-                    }
-
+                $response = Http::withHeaders($headers)->post($url, $payload);
+                // Check response status
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    $sesSaveArr = [
+                        'order_id' =>  $resData['id'],
+                        'customer_id' =>  $resData['customer_id'],
+                        'customer_name' =>  $resData['customer_name'],
+                        'tracking_url' =>  $resData['tracking_url'],
+                        'distance_fees' =>  $resData['distance_fees']
+                    ];
+                    $resJson = json_encode($sesSaveArr);
+                    $order->shiping_info = $resJson;
+                } else {
+                    $sesSaveArr = [
+                        'error' =>  $response->json()
+                    ];
+                    $resJson = json_encode($sesSaveArr);
+                    $order->shiping_info = $resJson;
+                }
             }
             $order->save();
             //Order Details Storing
@@ -387,18 +393,19 @@ class OrderController extends Controller
         $request->session()->put('combined_order_id', $combined_order->id);
     }
 
-    public function add_oneday_delevery($carts){
+    public function add_oneday_delevery($carts)
+    {
         $shipingData = Address::where('id', $carts[0]['address_id'])->first();
         $shipingAddress = $shipingData->address;
         $shipingLatitude = $shipingData->latitude;
         $shipingLongitude = $shipingData->longitude;
         foreach ($carts as $cartItem) {
             $product = Product::find($cartItem['product_id']);
-            if($product->one_day_delivery == 1){
-                $shop = Shop::where('user_id',$product->user_id)->first();
-                $pickupAddress =$shop->address;
-                $pickupLatitude =$shop->latitude;
-                $pickupLongitude =$shop->longitude;
+            if ($product->one_day_delivery == 1) {
+                $shop = Shop::where('user_id', $product->user_id)->first();
+                $pickupAddress = $shop->address;
+                $pickupLatitude = $shop->latitude;
+                $pickupLongitude = $shop->longitude;
                 $jobOrderNumber = rand(10000, 99999);
                 // delevery api
                 $url = 'https://api.sandbox.deliveree.com/public_api/v1/deliveries';
@@ -445,18 +452,23 @@ class OrderController extends Controller
 
                     // Check response status
                     if ($response->successful()) {
-                         echo "<pre>";print_r($response->json());exit;
+                        echo "<pre>";
+                        print_r($response->json());
+                        exit;
                         return response()->json([
                             'data' => $response->json(),
                         ], 200);
                     } else {
-                        echo "<pre>";print_r($response->json());exit;
+                        echo "<pre>";
+                        print_r($response->json());
+                        exit;
                         return response()->json([
                             'error' => $response->json(),
                         ], $response->status());
                     }
                 } catch (\Exception $e) {
-                     echo "error catch";exit;
+                    echo "error catch";
+                    exit;
                     return response()->json([
                         'message' => 'An error occurred while creating the delivery.',
                         'error' => $e->getMessage(),
@@ -464,7 +476,6 @@ class OrderController extends Controller
                 }
                 // echo "<pre>";print_r($payload);exit;
             }
-
         }
     }
     public function storeService(Request $request)
@@ -642,25 +653,25 @@ class OrderController extends Controller
         $combined_order->user_id = Auth::user()->id;
         $combined_order->is_booking = 1;
         $combined_order->shipping_address = json_encode($shippingAddress);
-        $combined_order->grand_total =$booking->total_price + $tax;
+        $combined_order->grand_total = $booking->total_price + $tax;
         $combined_order->save();
 
 
         $order = new Order;
-            $order->combined_order_id = $combined_order->id;
-            $order->user_id = Auth::user()->id;
-            $order->shipping_address = $combined_order->shipping_address;
-            $order->additional_info = $request->additional_info;
-            $order->payment_type = $request->payment_option;
-            $order->is_service = '2';
-            $order->delivery_viewed = '0';
-            $order->payment_status_viewed = '0';
-            $order->code = date('Ymd-His') . rand(10, 99);
-            $order->date = strtotime('now');
-            $order->grand_total = $booking->total_price + $tax;
-            $order->seller_id = $booking->owner_id;
-            $order->is_booking = $booking->id;
-            $order->save();
+        $order->combined_order_id = $combined_order->id;
+        $order->user_id = Auth::user()->id;
+        $order->shipping_address = $combined_order->shipping_address;
+        $order->additional_info = $request->additional_info;
+        $order->payment_type = $request->payment_option;
+        $order->is_service = '2';
+        $order->delivery_viewed = '0';
+        $order->payment_status_viewed = '0';
+        $order->code = date('Ymd-His') . rand(10, 99);
+        $order->date = strtotime('now');
+        $order->grand_total = $booking->total_price + $tax;
+        $order->seller_id = $booking->owner_id;
+        $order->is_booking = $booking->id;
+        $order->save();
         $request->session()->put('combined_order_id', $combined_order->id);
     }
 
