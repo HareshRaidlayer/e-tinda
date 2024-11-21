@@ -216,7 +216,7 @@ class OrderController extends Controller
                     $pickupLatitude = $shop->latitude;
                     $pickupLongitude = $shop->longitude;
                 } else {
-                    $user = User::where('user_id', $product->user_id)->first();
+                    $user = User::where('id', $product->user_id)->first();
                     $pickupAddress = $user->address;
                     $pickupLatitude = $user->latitude;
                     $pickupLongitude = $user->longitude;
