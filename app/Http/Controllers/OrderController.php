@@ -217,9 +217,9 @@ class OrderController extends Controller
                 $jobOrderNumber = rand(10000, 99999);
 
                 // delevery api
-                $url = 'https://api.sandbox.deliveree.com/public_api/v1/deliveries';
+                $url = get_setting('api_url');
                 $headers = [
-                    'Authorization' => 'xwT1PoyoARGsW7xGSjKg',
+                    'Authorization' => get_setting('api_key'),
                     'Accept-Language' => 'en',
                     'Content-Type' => 'application/json',
                 ];
