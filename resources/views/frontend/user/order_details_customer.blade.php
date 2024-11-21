@@ -58,7 +58,7 @@
                                     <td>
                                         <p>
                                         @php
-                                            print_($track_url);
+                                            print_r($track_url);
                                         @endphp
                                         </p>
                                     </td>
