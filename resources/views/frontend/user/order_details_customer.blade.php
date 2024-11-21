@@ -48,8 +48,14 @@
                         $track_url = json_decode($order->shiping_info);
                         @endphp
                         <tr>
+                            @if ($track_url->tracking_url)
                             <td class="w-50 fw-600">{{ translate('Tracking URL')}}:</td>
                             <td > <a href="{{ $track_url->tracking_url }}" target="_blank" >Tracking Order</a></td>
+                            @else
+                                <td class="w-50 fw-600">{{ translate('Tracking Details')}}:</td>
+                                <td > <p>{{$track_url}}</p></td>
+                            @endif
+
                         </tr>
 
                     @endif
