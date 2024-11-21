@@ -391,6 +391,7 @@ class BusinessSettingsController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request);
         foreach ($request->types as $key => $type) {
             if ($type == 'site_name') {
                 $this->overWriteEnvFile('APP_NAME', $request[$type]);
@@ -441,6 +442,7 @@ class BusinessSettingsController extends Controller
 
     public function updateActivationSettings(Request $request)
     {
+
         $env_changes = ['FORCE_HTTPS', 'FILESYSTEM_DRIVER'];
         if (in_array($request->type, $env_changes)) {
 

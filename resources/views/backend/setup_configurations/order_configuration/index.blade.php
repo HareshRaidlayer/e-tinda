@@ -45,27 +45,36 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0 h6">{{translate('Ninja Van API Configuration')}}</h5>
+                <h5 class="mb-0 h6">{{translate('Deliveree API Configuration')}}</h5>
             </div>
             <form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
               <div class="card-body">
                    @csrf
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="ninjavan_client_id">
+                        <input type="hidden" name="types[]" value="api_url">
                         <div class="col-md-4">
-                            <label class="control-label">{{translate('Client ID')}}</label>
+                            <label class="control-label">{{translate('API Url')}}</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="ninjavan_client_id" value="{{ get_setting('ninjavan_client_id') }}" placeholder="{{ translate('Ninjavan Client ID') }}" required>
+                            <input type="text" class="form-control" name="api_url" value="{{ get_setting('api_url') }}" placeholder="{{ translate('API Url') }}" required>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <input type="hidden" name="types[]" value="ninjavan_client_key">
+                        <input type="hidden" name="types[]" value="api_key">
                         <div class="col-md-4">
-                            <label class="control-label">{{translate('Client Key')}}</label>
+                            <label class="control-label">{{translate('API Key')}}</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="ninjavan_client_key" value="{{ get_setting('ninjavan_client_key') }}" placeholder="{{ translate('Ninjavan Client Key') }}" required>
+                            <input type="text" class="form-control" name="api_key" value="{{ get_setting('api_key') }}" placeholder="{{ translate('API Key') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="types[]" value="customer_service_id">
+                        <div class="col-md-4">
+                            <label class="control-label">{{translate('Customer Service Id')}}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="customer_service_id" value="{{ get_setting('customer_service_id') }}" placeholder="{{ translate('Customer Service Id') }}" required>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">

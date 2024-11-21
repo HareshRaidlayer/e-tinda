@@ -168,7 +168,7 @@
                                                     </div>
                                                     @endif
                                                     <!-- Local Pickup -->
-                                                    @if ($pickup_point_list)
+                                                    {{-- @if ($pickup_point_list)
                                                     <div class="col-6">
                                                         <label class="aiz-megabox d-block bg-white mb-0">
                                                             <input
@@ -184,7 +184,7 @@
                                                             </span>
                                                         </label>
                                                     </div>
-                                                    @endif
+                                                    @endif --}}
                                                 </div>
 
                                                 <!-- Pickup Point List -->
@@ -329,7 +329,7 @@
                                                             </div>
                                                             @endif
                                                             <!-- Local Pickup -->
-                                                            @if ($pickup_point_list)
+                                                            {{-- @if ($pickup_point_list)
                                                                 <div class="col-6">
                                                                     <label class="aiz-megabox d-block bg-white mb-0">
                                                                         <input
@@ -345,7 +345,7 @@
                                                                         </span>
                                                                     </label>
                                                                 </div>
-                                                            @endif
+                                                            @endif --}}
                                                         </div>
 
                                                         <!-- Pickup Point List -->

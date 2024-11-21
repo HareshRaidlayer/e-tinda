@@ -238,6 +238,7 @@ class CheckoutController extends Controller
             }
         }
         // Minumum order amount check end
+        // dd(get_setting('api_url'));
         (new OrderController)->store($request);
         // (new OrderController)->add_oneday_delevery($carts);
         $file = base_path("/public/assets/myText.txt");
