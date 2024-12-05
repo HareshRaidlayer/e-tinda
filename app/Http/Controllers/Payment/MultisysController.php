@@ -27,20 +27,19 @@ class MultisysController extends Controller
             $paymentType = Session::get('payment_type');
             $paymentData = Session::get('payment_data');
 
-            $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
-            $amount = round($combined_order->grand_total);
+            if ($paymentType == 'wallet_payment') {
+                $amount = intval($paymentData['amount']);
+                $callbackUrl = route('payment.callback'); // Callback URL
+            } else {
+                $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
+                $amount = round($combined_order->grand_total);
+                $callbackUrl = route('order_confirmed'); // Callback URL
 
-
+            }
             $txnid = uniqid(); // Generate a unique transaction ID
             $token = env('MULTIPAY_TOKEN'); // Token for the API
             $data = $amount . $txnid . $token;
             $digest = sha1($data); // Generate the digest
-
-            if($paymentType == 'cart_payment'){
-                $callbackUrl = route('order_confirmed'); // Callback URL
-            }elseif($paymentType == 'wallet_payment'){
-                $callbackUrl = route('payment.callback'); // Callback URL
-            }
 
 
             try {
@@ -61,8 +60,6 @@ class MultisysController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-
         }
     }
-
 }
