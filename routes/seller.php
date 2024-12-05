@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\Seller\HotelController;
-use App\Http\Controllers\Seller\ProductController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user', 'prevent-back-history'], 'as' => 'seller.'], function () {
@@ -24,7 +23,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     Route::controller(ProductController::class)->group(function () {
         Route::get('/products', 'index')->name('products');
         Route::get('/product/create', 'create')->name('products.create');
-        // Route::post('/products/store/', 'store')->name('products.store');
+        Route::post('/products/store/', 'store')->name('products.store');
         Route::get('/product/{id}/edit', 'edit')->name('products.edit');
         Route::post('/products/update/{product}', 'update')->name('products.update');
         Route::get('/products/duplicate/{id}', 'duplicate')->name('products.duplicate');
@@ -49,7 +48,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::get('/service/orders', 'serviceOrders')->name('service.orders');
 
         Route::get('/service/create', 'create')->name('service.create');
-        Route::post('/service/store/', 'store')->name('products.store');
+        Route::post('/service/store/', 'store')->name('service.store');
 
         Route::get('/service/{id}/edit', 'edit')->name('service.edit');
         Route::post('/service/update/{product}', 'update')->name('service.update');
@@ -209,5 +208,5 @@ Route::get('/property/checkout', [HotelController::class, 'propertyCheckout'])->
 
 
 
-Route::post('/seller/poduct/store', [ProductController::class, 'store'])->name('seller.products.store');
+
 
