@@ -74,7 +74,7 @@
                             <label class="control-label">{{translate('Customer Service Id')}}</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="customer_service_id" value="{{ get_setting('customer_service_id') }}" placeholder="{{ translate('Customer Service Id') }}" required>
+                            <input type="text" class="form-control" name="customer_service_id" value="{{ get_setting('customer_service_id') }}" placeholder="{{ translate('Customer Service Id') }}">
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
