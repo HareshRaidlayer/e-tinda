@@ -31,6 +31,16 @@
                                 <!-- Register form -->
                                 <div class="pt-3 pt-lg-4">
                                     <div class="">
+                                        @if (session()->has('error'))
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach (session('error') as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                            {{ session()->forget('error') }}
+                                        @endif
                                         <form id="reg-form" class="form-default" role="form"
                                             action="{{ route('shops.store') }}" method="POST">
                                             @csrf

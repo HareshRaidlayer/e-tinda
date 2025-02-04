@@ -11,6 +11,7 @@ use Auth;
 use Hash;
 use App\Notifications\EmailVerificationNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
@@ -58,9 +59,22 @@ class ShopController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SellerRegistrationRequest $request)
+    // public function store(SellerRegistrationRequest $request)
+    public function store(Request $request)
     {
         // dd($request->longitude);
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users|max:255',
+            'password'      => 'required|string|min:6|confirmed',
+            'shop_name'     => 'required|max:255',
+            'address'       => 'required',
+        ]);
+        if ($validator->fails()) {
+            session()->put('error', $validator->errors()->all());
+            return back();
+        }
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -89,7 +103,8 @@ class ShopController extends Controller
                 } catch (\Throwable $th) {
                     $shop->delete();
                     $user->delete();
-                    flash(translate('Seller registration failed. Please try again later.'))->error();
+                    // flash(translate('Seller registration failed. Please try again later.'))->error();
+                    session()->put('error', [translate("Seller registration failed. Please try again later.")]);
                     return back();
                 }
             }
@@ -113,7 +128,8 @@ class ShopController extends Controller
             }
         }
 
-        flash(translate('Sorry! Something went wrong.'))->error();
+        // flash(translate('Sorry! Something went wrong.'))->error();
+        session()->put('error', [translate("Sorry! Something went wrong.")]);
         return back();
     }
 

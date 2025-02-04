@@ -27,6 +27,16 @@
                                 <!-- Register form -->
                                 <div class="pt-3">
                                     <div class="">
+                                        @if (session()->has('error'))
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach (session('error') as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                            {{ session()->forget('error') }}
+                                        @endif
                                         <form id="reg-form" class="form-default" role="form" action="{{ route('register') }}" method="POST">
                                             @csrf
                                             <!-- Name -->
@@ -126,7 +136,7 @@
                                                 <button type="submit" class="btn btn-primary btn-block fw-600 rounded-0">{{  translate('Create Account') }}</button>
                                             </div>
                                         </form>
-                                        
+
                                         <!-- Social Login -->
                                         @if(get_setting('google_login') == 1 || get_setting('facebook_login') == 1 || get_setting('twitter_login') == 1 || get_setting('apple_login') == 1)
                                             <div class="text-center mb-3">

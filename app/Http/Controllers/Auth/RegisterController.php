@@ -101,7 +101,7 @@ class RegisterController extends Controller
                 $otpController->send_code($user);
             }
         }
-        
+
         if(session('temp_user_id') != null){
             if(auth()->user()->user_type == 'customer'){
                 Cart::where('temp_user_id', session('temp_user_id'))
@@ -132,10 +132,14 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             if(User::where('email', $request->email)->first() != null){
-                flash(translate('Email or Phone already exists.'));
+                session()->put('error', [translate("Email or Phone already exists.")]);
+
+                // flash(translate('Email or Phone already exists.'));
                 return back();
+
             }
         }
         elseif (User::where('phone', '+'.$request->country_code.$request->phone)->first() != null) {
@@ -143,7 +147,14 @@ class RegisterController extends Controller
             return back();
         }
 
-        $this->validator($request->all())->validate();
+        // $this->validator($request->all())->validate();
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+                session()->put('error', $validator->errors()->all()); // Convert to an array
+            // session()->put('error', $validator->errors());
+            return back();
+        }
+
 
         $user = $this->create($request->all());
 

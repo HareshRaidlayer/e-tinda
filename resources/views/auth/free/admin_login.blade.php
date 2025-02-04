@@ -26,6 +26,12 @@
                             <!-- Login form -->
                             <div class="pt-3 pt-lg-4 bg-white">
                                 <div class="">
+                                    @if (session()->has('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                    {{ session()->forget('error') }}  {{-- Remove after showing --}}
+                                @endif
                                     <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                         @csrf
 

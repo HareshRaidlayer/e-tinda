@@ -29,9 +29,15 @@
                                 <!-- Login form -->
                                 <div class="pt-3">
                                     <div class="">
+                                        @if (session()->has('error'))
+                                            <div class="alert alert-danger">
+                                                {{ session('error') }}
+                                            </div>
+                                            {{ session()->forget('error') }}  {{-- Remove after showing --}}
+                                        @endif
                                         <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                             @csrf
-                                            
+
                                             <!-- Email or Phone -->
                                             @if (addon_is_activated('otp_system'))
                                                 <div class="form-group phone-form-group mb-1">
@@ -40,7 +46,7 @@
                                                 </div>
 
                                                 <input type="hidden" name="country_code" value="">
-                                                
+
                                                 <div class="form-group email-form-group mb-1 d-none">
                                                     <label for="email" class="fs-12 fw-700 text-soft-dark">{{  translate('Email') }}</label>
                                                     <input type="email" class="form-control rounded-0 {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('johndoe@example.com') }}" name="email" id="email" autocomplete="off">
@@ -50,7 +56,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                
+
                                                 <div class="form-group text-right">
                                                     <button class="btn btn-link p-0 text-primary fs-12 fw-400" type="button" onclick="toggleEmailPhone(this)"><i>*{{ translate('Use Email Instead') }}</i></button>
                                                 </div>
@@ -65,7 +71,7 @@
                                                     @endif
                                                 </div>
                                             @endif
-                                                
+
                                             <!-- password -->
                                             <div class="form-group">
                                                 <label for="password" class="fs-12 fw-700 text-soft-dark">{{  translate('Password') }}</label>
