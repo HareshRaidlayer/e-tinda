@@ -81,7 +81,7 @@
                     <!-- Category Name -->
                     <div class="text-dark p-4 d-flex align-items-center">
                         <div class="size-60px overflow-hidden p-1 border mr-3">
-                            <img src="{{ asset('assets/img/cuyrch-img.jpg') }}" alt="" class="img-fit h-100">
+                            <img src="{{ static_asset('assets/img/cuyrch-img.jpg') }}" alt="" class="img-fit h-100">
                         </div>
                         <a href="{{ json_decode(get_setting('header_menu_links'), true)[$key] }}"
                             class="text-reset fs-16 fs-md-20 fw-700 hov-text-primary">
