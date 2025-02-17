@@ -674,7 +674,7 @@
                                             <a href="{{ json_decode(get_setting('header_menu_links'), true)[$key] }}"
                                                 class="fs-13 px-2 py-3 d-inline-block fw-700 {{ $nav_txt_color }} header_menu_links hov-bg-black-10
                                             @if (url()->current() == json_decode(get_setting('header_menu_links'), true)[$key]) active @endif">
-                                                {{ $value }}
+                                                {{ translate($value) }}
                                             </a>
                                         </li>
                                     @endforeach
