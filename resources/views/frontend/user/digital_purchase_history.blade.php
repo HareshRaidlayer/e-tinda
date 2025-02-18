@@ -1,7 +1,8 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="card shadow-none rounded-0 border">
+<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <div class="card shadow-none rounded-0 border mt-3">
         <div class="card-header border-bottom-0">
             <h5 class="mb-0 fs-20 fw-700 text-dark">{{ translate('Download Your Products') }}</h5>
         </div>

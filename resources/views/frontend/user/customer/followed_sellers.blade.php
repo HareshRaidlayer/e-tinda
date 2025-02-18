@@ -1,7 +1,8 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="aiz-titlebar mb-4">
+<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <div class="aiz-titlebar mb-4 mt-2">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <h1 class="fs-20 fw-700 text-dark">{{ translate('Followed Sellers') }}</h1>

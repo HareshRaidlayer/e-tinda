@@ -1,7 +1,8 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="aiz-titlebar mb-4">
+<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <div class="aiz-titlebar mb-4 mt-3">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <b class="fs-20 fw-700 text-dark">{{ translate('Wishlist')}}</b>
@@ -26,7 +27,7 @@
                             </a>
                         </div>
                         <!-- add to cart -->
-                        <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex justify-content-center align-items-center" 
+                        <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex justify-content-center align-items-center"
                             href="javascript:void(0)" onclick="showAddToCartModal({{ $wishlist->product->id }})">{{ translate('Add to Cart') }}</a>
                     </div>
                     <!-- Product Name -->

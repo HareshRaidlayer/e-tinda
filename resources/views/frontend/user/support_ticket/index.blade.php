@@ -1,14 +1,15 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="aiz-titlebar mb-4">
+<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <div class="aiz-titlebar mb-4 mt-2">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <h1 class="fs-20 fw-700 text-dark">{{ translate('Support Ticket') }}</h1>
             </div>
         </div>
     </div>
-    
+
     <!-- Create a Ticket -->
     <div class="p-4 mb-3 c-pointer text-center bg-light has-transition border h-100 hov-bg-soft-light" data-toggle="modal" data-target="#ticket_modal">
         <i class="las la-plus la-3x mb-2"></i>

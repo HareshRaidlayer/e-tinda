@@ -1,7 +1,8 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="aiz-titlebar mb-4">
+<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <div class="aiz-titlebar mb-4 mt-2">
       <div class="row align-items-center">
           <div class="col-md-6">
               <h5 class="fs-20 fw-700 text-dark">{{ translate('Conversations')}}</h5>
@@ -25,12 +26,12 @@
                                             @if (Auth::user()->id == $conversation->sender_id)
                                                 @if ($conversation->receiver->shop != null)
                                                     <a href="{{ route('shop.visit', $conversation->receiver->shop->slug) }}" class="">
-                                                        <img src="{{ uploaded_asset($conversation->receiver->shop->logo) }}" 
+                                                        <img src="{{ uploaded_asset($conversation->receiver->shop->logo) }}"
                                                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                                                     </a>
                                                 @else
-                                                    <img @if ($conversation->receiver->avatar_original == null) src="{{ static_asset('assets/img/avatar-place.png') }}" 
-                                                        @else src="{{ uploaded_asset($conversation->receiver->avatar_original) }}" @endif 
+                                                    <img @if ($conversation->receiver->avatar_original == null) src="{{ static_asset('assets/img/avatar-place.png') }}"
+                                                        @else src="{{ uploaded_asset($conversation->receiver->avatar_original) }}" @endif
                                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                                                 @endif
                                             @else

@@ -1,8 +1,10 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
+
     <div class="row gutters-16">
         <div class="col-xl-12 col-md-6 mb-4">
+            <a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
             @foreach ($bookings as $booking)
                 <div class="card mt-3 p-3">
                     <table class="w-full">
