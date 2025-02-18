@@ -30,6 +30,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use App\Mail\SecondEmailVerifyMailManager;
 use App\Models\Booking;
 use App\Models\Cart;
+use App\Models\Wishlist;
 use Artisan;
 use DB;
 use Illuminate\Support\Facades\Redirect;
@@ -284,7 +285,12 @@ class HomeController extends Controller
         }
 
         $detailedProduct  = Product::with('reviews', 'brand', 'stocks', 'user', 'user.shop')->where('auction_product', 0)->where('slug', $slug)->where('approved', 1)->first();
+        $wishlist = Wishlist::where('product_id',$detailedProduct->id)->first();
+        $wishlist_p_id =null;
 
+        if($wishlist){
+            $wishlist_p_id = $wishlist->product_id;
+        }
         if ($detailedProduct != null && $detailedProduct->published) {
             if ((get_setting('vendor_system_activation') != 1) && $detailedProduct->added_by == 'seller') {
                 abort(404);
@@ -354,7 +360,7 @@ class HomeController extends Controller
                 lastViewedProducts($detailedProduct->id, auth()->user()->id);
             }
 
-            return view('frontend.product_details', compact('detailedProduct', 'product_queries', 'total_query', 'reviews', 'review_status'));
+            return view('frontend.product_details', compact('detailedProduct','wishlist_p_id', 'product_queries', 'total_query', 'reviews', 'review_status'));
         }
         abort(404);
     }

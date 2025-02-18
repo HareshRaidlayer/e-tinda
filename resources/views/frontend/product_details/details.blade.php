@@ -63,9 +63,15 @@
             @if ($detailedProduct->auction_product != 1)
                 <div class="d-flex">
                     <!-- Add to wishlist button -->
+
                     <a href="javascript:void(0)" onclick="addToWishList({{ $detailedProduct->id }})"
                         class="mr-3 fs-14 text-dark opacity-60 has-transitiuon hov-opacity-100">
+                        @if ( $wishlist_p_id != null)
+                        <i class="la la-heart mr-1" style="color: red" ></i>
+                        @else
                         <i class="la la-heart-o mr-1"></i>
+                        @endif
+
                         {{ translate('Add to Wishlist') }}
                     </a>
                     <!-- Add to compare button -->

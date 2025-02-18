@@ -596,6 +596,13 @@
                     if(data != 0){
                         $('#wishlist').html(data);
                         AIZ.plugins.notify('success', "{{ translate('Item has been added to wishlist') }}");
+
+                        const heartIcon = document.querySelector(`a[onclick="addToWishList(${id})"] i`);
+                        if (heartIcon) {
+                            heartIcon.classList.remove('la-heart-o');
+                            heartIcon.classList.add('la-heart');
+                            heartIcon.style.color = 'red';
+                        }
                     }
                     else{
                         AIZ.plugins.notify('warning', "{{ translate('Please login first') }}");
