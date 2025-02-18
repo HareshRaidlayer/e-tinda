@@ -21,6 +21,7 @@
                                 <input type="text" id="autocomplete-address" class="form-control mb-3 rounded-0"
                                     placeholder="{{ translate('Your Address') }}" name="address" required>
                             </div>
+                            <input type="hidden" name="set_default_Address">
                             <input type="hidden" id="latitude" name="latitude">
 <input type="hidden" id="longitude" name="longitude">
                         </div>
@@ -59,7 +60,7 @@
                             <div class="col-md-2">
                                 <label>{{ translate('City')}}</label>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 ">
                                 <select class="form-control mb-3 aiz-selectpicker rounded-0" data-live-search="true" name="city_id" required>
 
                                 </select>
@@ -114,7 +115,7 @@
                             <div class="col-md-2">
                                 <label>{{ translate('Phone')}}</label>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 erer">
                                 <input type="tel" id="phone-code" class="form-control rounded-0" placeholder="" name="phone" autocomplete="off" required>
                                 <input type="hidden" name="country_code" value="">
                             </div>

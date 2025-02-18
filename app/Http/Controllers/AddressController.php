@@ -38,7 +38,7 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        Auth::user()->addresses()->update(['set_default' => 0]);
         $address = new Address;
         if ($request->has('customer_id')) {
             $address->user_id   = $request->customer_id;
@@ -52,6 +52,7 @@ class AddressController extends Controller
         $address->longitude     = $request->longitude;
         $address->latitude      = $request->latitude;
         $address->postal_code   = $request->postal_code;
+        $address->set_default = 1;
         $address->phone         = '+'.$request->country_code.$request->phone;
         $address->save();
 
