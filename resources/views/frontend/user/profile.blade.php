@@ -15,6 +15,16 @@
             <h5 class="mb-0 fs-18 fw-700 text-dark">{{ translate('Basic Info')}}</h5>
         </div>
         <div class="card-body">
+            @if (session()->has('error'))
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (session('error') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                {{ session()->forget('error') }}
+            @endif
             <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Name-->
@@ -57,7 +67,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label fs-14">{{ translate('Confirm Password') }}</label>
                     <div class="col-md-10">
-                        <input type="password" class="form-control rounded-0" placeholder="{{ translate('Confirm Password') }}" name="confirm_password">
+                        <input type="password" class="form-control rounded-0" placeholder="{{ translate('Confirm Password') }}" name="new_password_confirmation">
                     </div>
                 </div>
                 <!-- Submit Button-->

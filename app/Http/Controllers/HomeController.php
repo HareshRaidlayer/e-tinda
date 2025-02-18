@@ -31,6 +31,7 @@ use App\Mail\SecondEmailVerifyMailManager;
 use App\Models\Booking;
 use App\Models\Cart;
 use App\Models\Wishlist;
+use Illuminate\Support\Facades\Validator;
 use Artisan;
 use DB;
 use Illuminate\Support\Facades\Redirect;
@@ -233,7 +234,16 @@ class HomeController extends Controller
             flash(translate('Sorry! the action is not permitted in demo '))->error();
             return back();
         }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|regex:/^\+?[0-9]{7,15}$/',
+            'new_password' => 'nullable|string|min:5|confirmed',
+        ]);
 
+        if ($validator->fails()) {
+            session()->put('error', $validator->errors()->all());
+            return back();
+        }
         $user = Auth::user();
         $user->name = $request->name;
         $user->address = $request->address;
