@@ -474,6 +474,7 @@
 
         <!-- Seller -->
         @if (get_setting('vendor_system_activation') == 1)
+        @if (!Auth::check())
         <div class="aiz-accordion-wrap bg-black">
             <div class="aiz-accordion-heading container bg-black">
                 <button class="aiz-accordion fs-14 text-white bg-transparent">{{ translate('Seller Zone') }}</button>
@@ -505,6 +506,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @endif
 
         <!-- Delivery Boy -->
