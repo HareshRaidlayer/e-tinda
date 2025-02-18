@@ -9,7 +9,7 @@
             <table class="table aiz-table mb-0">
                 <thead class="text-gray fs-12">
                     <tr>
-                        <th class="pl-0">{{ translate('Code')}}</th>
+                        <th class="pl-0">{{ translate('Item Purchased')}}</th>
                         <th data-breakpoints="md">{{ translate('Date')}}</th>
                         <th>{{ translate('Amount')}}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status')}}</th>
@@ -19,11 +19,12 @@
                 </thead>
                 <tbody class="fs-14">
                     @foreach ($orders as $key => $order)
+                    @foreach ($order->orderDetails as $orderDetail)
                         @if (count($order->orderDetails) > 0)
                             <tr>
                                 <!-- Code -->
                                 <td class="pl-0">
-                                    <a href="{{route('purchase_history.details', encrypt($order->id))}}">{{ $order->code }}</a>
+                                    <a class="product-name-text" href="{{route('purchase_history.details', encrypt($order->id))}}">{{ $orderDetail->product->name }}</a>
                                 </td>
                                 <!-- Date -->
                                 <td class="text-secondary">{{ date('d-m-Y', $order->date) }}</td>
@@ -86,6 +87,7 @@
                                 </td>
                             </tr>
                         @endif
+                        @endforeach
                     @endforeach
                 </tbody>
             </table>
