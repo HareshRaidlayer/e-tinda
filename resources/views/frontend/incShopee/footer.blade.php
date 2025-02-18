@@ -312,6 +312,7 @@
 
                     <!-- Seller -->
                     @if (get_setting('vendor_system_activation') == 1)
+                        @if (!Auth::check())
                         <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">{{ translate('Seller Zone') }}</h4>
                         <ul class="list-unstyled">
                             <li class="mb-2">
@@ -335,6 +336,8 @@
                                 </li>
                             @endif
                         </ul>
+                        @endif
+
                     @endif
 
                     <!-- Delivery Boy -->

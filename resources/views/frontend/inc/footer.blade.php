@@ -312,29 +312,31 @@
 
                     <!-- Seller -->
                     @if (get_setting('vendor_system_activation') == 1)
-                        <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">{{ translate('Seller Zone') }}</h4>
-                        <ul class="list-unstyled">
+                    @if (!Auth::check())
+                    <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">{{ translate('Seller Zone') }}</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <p class="fs-13 text-secondary mb-0">
+                                {{ translate('Become A Seller') }}
+                                <a href="{{ route('shops.create') }}" class="fs-13 fw-700 text-secondary-base ml-2">{{ translate('Apply Now') }}</a>
+                            </p>
+                        </li>
+                        @guest
                             <li class="mb-2">
-                                <p class="fs-13 text-secondary mb-0">
-                                    {{ translate('Become A Seller') }}
-                                    <a href="{{ route('shops.create') }}" class="fs-13 fw-700 text-secondary-base ml-2">{{ translate('Apply Now') }}</a>
-                                </p>
+                                <a class="fs-13 text-secondary animate-underline-white" href="{{ route('seller.login') }}">
+                                    {{ translate('Login to Seller Panel') }}
+                                </a>
                             </li>
-                            @guest
-                                <li class="mb-2">
-                                    <a class="fs-13 text-secondary animate-underline-white" href="{{ route('seller.login') }}">
-                                        {{ translate('Login to Seller Panel') }}
-                                    </a>
-                                </li>
-                            @endguest
-                            @if(get_setting('seller_app_link'))
-                                <li class="mb-2">
-                                    <a class="fs-13 text-secondary animate-underline-white" target="_blank" href="{{ get_setting('seller_app_link')}}">
-                                        {{ translate('Download Seller App') }}
-                                    </a>
-                                </li>
-                            @endif
-                        </ul>
+                        @endguest
+                        @if(get_setting('seller_app_link'))
+                            <li class="mb-2">
+                                <a class="fs-13 text-secondary animate-underline-white" target="_blank" href="{{ get_setting('seller_app_link')}}">
+                                    {{ translate('Download Seller App') }}
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                    @endif
                     @endif
 
                     <!-- Delivery Boy -->
