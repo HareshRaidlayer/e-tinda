@@ -77,7 +77,7 @@
                                                     <tr>
                                                         <td class="h2 center pb10"
                                                             style="color:#000000; font-family:'Ubuntu', Arial,sans-serif; font-size:50px; line-height:60px; text-align:center; padding-bottom:10px;">
-                                                            {{ translate('Dear') }} {{ $array['name'] }}
+                                                            {{ translate('Dear') }} {{ $array['name'] ?? '' }}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -103,9 +103,9 @@
                                                     <tr>
                                                         <td class="h5 center blue pb30"
                                                             style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:center; color:#2e57ae; padding-bottom:30px;">
-                                                            <a href="{{ $array['link'] }}"
-                                                                style="background: #007bff; padding: 0.9rem 2rem; font-size: 0.875rem; color:#fff; border-radius: .2rem;"
-                                                                target="_blank">{{ translate('Activate my account') }}</a>
+                                                                {{ $array['content'] }}
+
+
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -118,8 +118,8 @@
                                                         <td class="h5 center pb30"
                                                             style="font-family:'Ubuntu', Arial,sans-serif; font-size:16px; line-height:26px; text-align:center; padding-bottom:30px;">
                                                             {{ translate("If the activation link above doesn't work, please paste the following link in your web browser:") }}<br>
-                                                            <a href="{{ $array['link'] }}"
-                                                                target="_blank">{{ $array['link'] }}</a>
+                                                            <a href="{{ $array['link'] ?? '' }}"
+                                                                target="_blank">{{ $array['link'] ?? '' }}</a>
                                                         </td>
                                                     </tr>
                                                     <tr>
