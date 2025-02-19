@@ -77,7 +77,7 @@
                                                     <tr>
                                                         <td class="h2 center pb10"
                                                             style="color:#000000; font-family:'Ubuntu', Arial,sans-serif; font-size:50px; line-height:60px; text-align:center; padding-bottom:10px;">
-                                                            {{ translate('Dear') }} {{ $array['name'] }}
+                                                            {{ translate('Dear') }} {{ $array['name'] ?? '' }}
                                                         </td>
                                                     </tr>
                                                     <tr>

@@ -45,7 +45,7 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request)
     {
-        
+
         $phone = "+{$request['country_code']}{$request['phone']}";
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             $user = User::where('email', $request->email)->first();
@@ -56,6 +56,7 @@ class ForgotPasswordController extends Controller
                 $array['view'] = 'emails.verification';
                 $array['from'] = env('MAIL_FROM_ADDRESS');
                 $array['subject'] = translate('Password Reset');
+                $array['email'] = $request->email;
                 $array['content'] = translate('Verification Code is').': '. $user->verification_code;
 
                 Mail::to($user->email)->queue(new SecondEmailVerifyMailManager($array));
