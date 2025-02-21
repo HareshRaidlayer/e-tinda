@@ -303,11 +303,14 @@
         $dynamic_popups = App\Models\DynamicPopup::where('status', 1)->orderBy('id', 'asc')->get();
     @endphp
     @php
+    if(Auth::check()){
         $subscriber = App\Models\Subscriber::where('email', Auth::user()->email)->first();
+    }
+
     @endphp
     @foreach ($dynamic_popups as $key => $dynamic_popup)
         @if($dynamic_popup->id == 1)
-            @if (!$subscriber)
+            @if (is_null($subscriber))
             <div class="modal website-popup removable-session d-none" data-key="website-popup" data-value="removed">
                 <div class="absolute-full bg-black opacity-60"></div>
                 <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-md mx-4 mx-md-auto">
