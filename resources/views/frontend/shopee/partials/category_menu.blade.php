@@ -8,7 +8,7 @@
                     data-src="{{ isset($e_commerce_image['cover_image']) ? uploaded_asset($e_commerce_image['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $e_commerce_image['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">eTindahan</span>
+                <span class="cat-name has-transition">{{translate('eTindahan')}}</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -35,7 +35,7 @@
                     data-src="{{ isset($eSerbisyoimg['cover_image']) ? uploaded_asset($eSerbisyoimg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $eSerbisyoimg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">eSerbisyo</span>
+                <span class="cat-name has-transition"> {{translate('eSerbisyo')}}</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -63,7 +63,7 @@
                     data-src="{{ isset($PasabuyImg['cover_image']) ? uploaded_asset($PasabuyImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $PasabuyImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">ePasaBuy</span>
+                <span class="cat-name has-transition">{{translate('ePasaBuy')}}</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
 
@@ -83,7 +83,7 @@
                     data-src="{{ isset($FarmerImg['cover_image']) ? uploaded_asset($FarmerImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $FarmerImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">Farm2Consumer</span>
+                <span class="cat-name has-transition">{{translate('Farm2Consumer')}} </span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -111,7 +111,7 @@
                     data-src="{{ isset($churchImg['cover_image']) ? uploaded_asset($churchImg['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $churchImg['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">eSimbahan</span>
+                <span class="cat-name has-transition">{{translate('eSimbahan')}} </span>
             </a>
             {{-- <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
@@ -140,7 +140,7 @@
                     data-src="{{ isset($Ebakasyon['cover_image']) ? uploaded_asset($Ebakasyon['cover_image']) : static_asset('assets/img/placeholder.jpg') }}"
                     width="16" alt="{{ $Ebakasyon['name'] ?? '' }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                <span class="cat-name has-transition">Ebakasyon</span>
+                <span class="cat-name has-transition">{{translate('Ebakasyon')}}</span>
             </a>
             <div class="sub-cat-menu c-scrollbar-light border p-2 shadow-none bg-white">
                 <ul class="list-unstyled">
