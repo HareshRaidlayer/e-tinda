@@ -48,7 +48,7 @@
                         <label class="col-lg-3 col-from-label">{{translate('Service Name')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
                         <div class="col-lg-8">
                             <input type="text" class="form-control" name="name"
-                                placeholder="{{translate('Service Name')}}" value="{{$product['name']}}"
+                                placeholder="{{translate('Service Name')}}" value=" {{$product->getTranslation('name', $lang)}}"
                                 required>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                         <label class="col-lg-3 col-from-label">{{translate('Description')}} <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
                         <div class="col-lg-9">
                             <textarea class="aiz-text-editor"
-                                name="description"> {{$product['description'] }}
+                                name="description"> {{ $product->getTranslation('description', $lang) }}
                             </textarea>
                         </div>
                     </div>
