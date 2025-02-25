@@ -147,7 +147,7 @@
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </a>
                                     </div>
-                                    <div class="text-center h-35px text-truncate-2" style="margin-top: 12px;">
+                                    <div class="text-center h-35px text-truncate-2" style="margin-top: 15px;">
                                         <a class="fs-13 fw-500 text-center text-reset hov-text-primary"
                                             href="{{ route('products.category', $category->slug) }}"
                                             style="width: max-content;">
@@ -180,7 +180,7 @@
                             data-dots="false" data-autoplay="false" data-infinite="true" data-center="false">
                             @foreach ($services as $key => $service)
                                 @php
-                                    $service_name = $service->name;
+                                    $service_name = $service->getTranslation('name');
                                     $service_url = route('service', $service->slug);
                                     $service_img = $service->thumbnail_img;
                                     // print_r($service->name);exit;
@@ -196,7 +196,7 @@
                                         </a>
                                     </div>
 
-                                    <div class="text-center h-35px text-truncate-2" style="margin-top: 12px;">
+                                    <div class="text-center h-35px text-truncate-2" style="margin-top: 15px;">
                                         <a class="fs-13 fw-500 text-center text-reset hov-text-primary"
                                             href="{{$service_url}}"
                                             style="width: max-content;">

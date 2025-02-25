@@ -229,7 +229,7 @@
                             data-dots="false" data-autoplay="false" data-infinite="true" data-center="false">
                             @foreach ($services as $key => $service)
                                 @php
-                                    $service_name = $service->name;
+                                    $service_name = $service->getTranslation('name');
                                     $service_url = route('service', $service->slug);
                                     $service_img = $service->thumbnail_img;
                                     // print_r($service->name);exit;
