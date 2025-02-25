@@ -765,11 +765,13 @@ class HomeController extends Controller
         $email = $request->email;
         if (isUnique($email)) {
             $this->send_email_change_verification_mail($request, $email);
+            session()->put('success', ['A verification mail has been sent to the mail you provided us with.']);
             flash(translate('A verification mail has been sent to the mail you provided us with.'))->success();
             return back();
         }
 
-        flash(translate('Email already exists!'))->warning();
+        // flash(translate('Email already exists!'))->warning();
+        session()->put('error', ['Email already exists!']);
         return back();
     }
 
@@ -782,6 +784,7 @@ class HomeController extends Controller
 
         $array['subject'] = translate('Email Verification');
         $array['from'] = env('MAIL_FROM_ADDRESS');
+        $array['email'] = $email;
         $array['content'] = translate('Verify your account');
         $array['link'] = route('email_change.callback') . '?new_email_verificiation_code=' . $verification_code . '&email=' . $email;
         $array['sender'] = Auth::user()->name;

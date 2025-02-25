@@ -146,6 +146,16 @@
 
 
     <!-- Change Email -->
+    @if (session()->has('error'))
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (session('error') as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        {{ session()->forget('error') }}
+    @endif
     <form action="{{ route('user.change.email') }}" method="POST">
         @csrf
         <div class="card rounded-0 shadow-none border">
@@ -190,6 +200,8 @@
 
     <script type="text/javascript">
         $('.new-email-verification').on('click', function() {
+            console.log(33333);
+
             $(this).find('.loading').removeClass('d-none');
             $(this).find('.default').addClass('d-none');
             var email = $("input[name=email]").val();
@@ -198,6 +210,8 @@
                 data = JSON.parse(data);
                 $('.default').removeClass('d-none');
                 $('.loading').addClass('d-none');
+                console.log(data.message);
+
                 if(data.status == 2)
                     AIZ.plugins.notify('warning', data.message);
                 else if(data.status == 1)

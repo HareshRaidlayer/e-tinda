@@ -91,7 +91,7 @@
                                                         <td class="h5 center pb30"
                                                             style="font-family:'Ubuntu', Arial,sans-serif; font-size:18px; line-height:26px; text-align:center; padding-bottom:20px;">
                                                             {{ translate('Your username is the following:') }}<br>
-                                                            <strong>{{ $array['email'] }}</strong>
+                                                            <strong>{{ $array['email'] ?? '' }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -111,7 +111,7 @@
                                                     <tr>
                                                         <td class="h5 center pb30"
                                                             style="font-family:'Ubuntu', Arial,sans-serif; font-size:18px; line-height:26px; text-align:center; padding-bottom:20px;">
-                                                            {{ translate('Once you have created your password, you will be able to access your online user profile and track the status of your ' . $array['email'] . ' at any time.') }}
+                                                            {{ translate('Once you have created your password, you will be able to access your online user profile and track the status of your ' . $array['email'] ?? '' . ' at any time.') }}
                                                         </td>
                                                     </tr>
                                                     <tr>
