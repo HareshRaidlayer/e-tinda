@@ -31,7 +31,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="phone">{{ translate('Your Phone') }}</label>
                     <div class="col-md-10">
-                        <input type="text" name="phone" value="{{ $user->phone }}" id="phone" class="form-control"
+                        <input type="number" name="phone" value="{{ $user->phone }}" id="phone" class="form-control"
                             placeholder="{{ translate('Your Phone') }}">
                         @error('phone')
                             <small class="form-text text-danger">{{ $message }}</small>

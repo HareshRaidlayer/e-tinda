@@ -39,7 +39,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label fs-14">{{ translate('Your Phone') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}" name="phone" value="{{ Auth::user()->phone }}">
+                        <input type="number" class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}" name="phone" value="{{ Auth::user()->phone }}">
                     </div>
                 </div>
                 <!-- Photo-->

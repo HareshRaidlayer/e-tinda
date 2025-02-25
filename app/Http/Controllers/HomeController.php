@@ -236,8 +236,11 @@ class HomeController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|regex:/^\+?[0-9]{7,15}$/',
+            'phone' => 'nullable|string|regex:/^\+?[0-9]{7,12}$/',
             'new_password' => 'nullable|string|min:5|confirmed',
+        ],
+        [
+            'phone.regex' => 'Phone number must be between 7 to 12 digits and can include an optional + at the beginning.',
         ]);
 
         if ($validator->fails()) {
