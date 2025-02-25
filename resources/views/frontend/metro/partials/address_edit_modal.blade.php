@@ -21,7 +21,7 @@
                     <select class="form-control aiz-selectpicker rounded-0" data-live-search="true" data-placeholder="{{ translate('Select your country')}}" name="country_id" id="edit_country" required>
                         <option value="">{{ translate('Select your country') }}</option>
                         @foreach (get_active_countries() as $key => $country)
-                        <option value="{{ $country->id }}" @if($address_data->country_id == $country->id) selected @endif>
+                        <option value="{{ $country->id }}" data-iso2="{{ strtolower($country->code) }}" @if($address_data->country_id == $country->id) selected @endif>
                             {{ $country->name }}
                         </option>
                         @endforeach

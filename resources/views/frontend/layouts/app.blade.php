@@ -856,9 +856,47 @@
             });
         }
     </script>
+<script>
+    $(document).ready(function() {
+        // Initialize intlTelInput
+        var input = document.querySelector("#phone-code");
+        var iti = window.intlTelInput(input, {
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            onlyCountries: @php echo json_encode(get_active_countries()->pluck('code')->toArray()); @endphp,
+            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+                if (selectedCountryData.iso2 === 'bd') {
+                    return "01xxxxxxxxx"; // Custom placeholder for Bangladesh
+                }
+                return selectedCountryPlaceholder;
+            }
+        });
 
+        // Set initial country code value
+        var country = iti.getSelectedCountryData();
+        $('input[name=country_code]').val(country.dialCode);
 
-    <script type="text/javascript">
+        // Update country code on country selection in intlTelInput
+        input.addEventListener("countrychange", function() {
+            var country = iti.getSelectedCountryData();
+            $('input[name=country_code]').val(country.dialCode);
+        });
+
+        // Update phone input flag when country dropdown changes
+        $(document).on('change', '[name=country_id]', function() {
+            var selectedCountryId = $(this).val(); // Get selected country ID
+            var selectedCountryCode = $(this).find(':selected').data('iso2'); // Fetch ISO2 code
+
+            if (selectedCountryCode) {
+                iti.setCountry(selectedCountryCode); // Update intlTelInput country
+                var country = iti.getSelectedCountryData();
+                $('input[name=country_code]').val(country.dialCode); // Update hidden input
+            }
+        });
+    });
+    </script>
+
+    {{-- <script type="text/javascript">
         if ($('input[name=country_code]').length > 0){
             // Country Code
             var isPhoneShown = true,
@@ -910,7 +948,7 @@
                 }
             }
         }
-    </script>
+    </script> --}}
 
     <script>
         var acc = document.getElementsByClassName("aiz-accordion-heading");

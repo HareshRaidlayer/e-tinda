@@ -36,11 +36,17 @@
         </div>
         <div class="col-md-10">
             <div class="mb-3">
-                <select class="form-control aiz-selectpicker rounded-0" @if (get_setting('shipping_type') == 'carrier_wise_shipping') onchange="updateDeliveryAddress(this.value)" @endif
+                {{-- <select class="form-control aiz-selectpicker rounded-0" @if (get_setting('shipping_type') == 'carrier_wise_shipping') onchange="updateDeliveryAddress(this.value)" @endif
                     data-live-search="true" data-placeholder="{{ translate('Select your country') }}" name="country_id" required>
                     <option value="">{{ translate('Select your country') }}</option>
                     @foreach (get_active_countries() as $key => $country)
                         <option value="{{ $country->id }}">{{ $country->name }}</option>
+                    @endforeach
+                </select> --}}
+                <select class="form-control aiz-selectpicker rounded-0" data-live-search="true" name="country_id" required>
+                    <option value="">{{ translate('Select your country') }}</option>
+                    @foreach (get_active_countries() as $key => $country)
+                        <option value="{{ $country->id }}" data-iso2="{{ strtolower($country->code) }}">{{ $country->name }}</option>
                     @endforeach
                 </select>
             </div>
