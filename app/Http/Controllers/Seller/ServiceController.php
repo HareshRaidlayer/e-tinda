@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\AttributeValue;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\ServiceTranslation;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -147,8 +148,12 @@ class ServiceController extends Controller
             'description' => 'required',
             'price' => 'required|numeric|min:0',
         ]);
+
         $service = Service::find($request->id);
-        $service->name = $request->name;
+        if($request->lang == env("DEFAULT_LANGUAGE")){
+            $service->name = $request->name;
+        }
+
         $service->added_by = $request->added_by;
         $service->category_id = $request->category;
         $service->video = $request->video_link;
@@ -178,7 +183,16 @@ class ServiceController extends Controller
         $service->slug = $slug;
 
         $service->warranty = $request->warranty;
+        $request->merge(['service_id' => $service->id]);
         $service->save();
+        ServiceTranslation::updateOrCreate(
+            $request->only([
+                'lang', 'service_id'
+            ]),
+            $request->only([
+                'name','description'
+            ])
+        );
         return redirect()->route('seller.service');
     }
 
