@@ -98,20 +98,28 @@
                                                 </div>
                                             </div>
                                             <!-- Product Image & name -->
-                                            <div class="col-md-5 col-10 d-flex align-items-center mb-2 mb-md-0">
-                                                <span class="mr-2 ml-0">
-                                                    <img src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                        class="img-fit size-64px"
-                                                        alt="{{ $product->getTranslation('name')  }}"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                </span>
-                                                <span>
-                                                    <span class="fs-14 fw-400 text-dark text-truncate-2 mb-2">{{ $product->getTranslation('name') }}</span>
-                                                    @if ($admin_product_variation[$key] != '')
-                                                        <span class="fs-12 text-secondary">{{ translate('Variation') }}: {{ $admin_product_variation[$key] }}</span>
-                                                    @endif
-                                                </span>
-                                            </div>
+                                            @php
+                                                $product_url = route('product', $product->slug);
+                                                if ($product->auction_product == 1) {
+                                                    $product_url = route('auction-product', $product->slug);
+                                                }
+                                            @endphp
+                                            <a href="{{$product_url}}">
+                                                <div class="col-md-5 col-10 d-flex align-items-center mb-2 mb-md-0">
+                                                    <span class="mr-2 ml-0">
+                                                        <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                                            class="img-fit size-64px"
+                                                            alt="{{ $product->getTranslation('name')  }}"
+                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                                    </span>
+                                                    <span>
+                                                        <span class="fs-14 fw-400 text-dark text-truncate-2 mb-2">{{ $product->getTranslation('name') }}</span>
+                                                        @if ($admin_product_variation[$key] != '')
+                                                            <span class="fs-12 text-secondary">{{ translate('Variation') }}: {{ $admin_product_variation[$key] }}</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </a>
                                             <!-- Price & Tax -->
                                             <div class="col-md col-4 ml-4 ml-sm-0 my-3 my-md-0 d-flex flex-column ml-sm-5 ml-md-0">
                                                 <span class="fs-12 text-secondary">{{ translate('Price')}}</span>

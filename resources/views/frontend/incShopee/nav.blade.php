@@ -712,17 +712,19 @@
             @auth
                 <span class="d-flex align-items-center nav-user-info pl-4">
                     <!-- Image -->
-                    <span class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
-                        @if ($user->avatar_original != null)
-                            <img src="{{ $user_avatar }}" class="img-fit h-100" alt="{{ translate('avatar') }}"
-                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
-                        @else
-                            <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image" alt="{{ translate('avatar') }}"
-                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
-                        @endif
-                    </span>
-                    <!-- Name -->
-                    <h4 class="h5 fs-14 fw-700 text-dark ml-2 mb-0">{{ $user->name }}</h4>
+                    <a href="{{ route('profile')}}" class="d-flex align-items-center">
+                        <span class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
+                            @if ($user->avatar_original != null)
+                                <img src="{{ $user_avatar }}" class="img-fit h-100" alt="{{ translate('avatar') }}"
+                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                            @else
+                                <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image" alt="{{ translate('avatar') }}"
+                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                            @endif
+                        </span>
+                        <!-- Name -->
+                        <h4 class="h5 fs-14 fw-700 text-dark ml-2 mb-0">{{ $user->name }}</h4>
+                    </a>
                 </span>
             @else
                 <!--Login & Registration -->
