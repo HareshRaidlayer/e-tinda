@@ -32,6 +32,7 @@ class WalletController extends Controller
         $request->session()->put('payment_data', $data);
 
         $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
+
         if (class_exists($decorator)) {
             return (new $decorator)->pay($request);
         }
@@ -164,4 +165,31 @@ class WalletController extends Controller
             flash(translate('Recharge completed'))->success();
             return redirect()->route('wallet.index');
     }
+    public function handleCallbackValute(Request $request)
+    {
+
+        if($request->status != 'S'){
+            flash(translate('Payment failed'))->error();
+            return redirect()->route('home');
+        }else{
+            $payment_data = Session::get('payment_data');
+            $user = Auth::user();
+            $user->balance = $user->balance + $payment_data['amount'];
+            $user->save();
+            $wallet = new Wallet;
+            $wallet->user_id = $user->id;
+            $wallet->amount = $payment_data['amount'];
+            $wallet->payment_method = $payment_data['payment_method'];
+            $wallet->payment_details = 'wallet_payment';
+            $wallet->save();
+
+            Session::forget('payment_data');
+            Session::forget('payment_type');
+
+            flash(translate('Recharge completed'))->success();
+            return redirect()->route('wallet.index');
+        }
+
+    }
+
 }

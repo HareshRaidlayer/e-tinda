@@ -28,7 +28,7 @@ class MultisysController extends Controller
 
             if ($paymentType == 'wallet_payment') {
                 $amount = intval($paymentData['amount']);
-                $callbackUrl = route('payment.callback'); // Callback URL
+                $callbackUrl = route('payment.callbackValue'); // Callback URL
             } else {
                 $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
                 $amount = round($combined_order->grand_total);
