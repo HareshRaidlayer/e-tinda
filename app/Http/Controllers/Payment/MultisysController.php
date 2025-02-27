@@ -50,6 +50,7 @@ class MultisysController extends Controller
                     'amount' => $amount,
                     'txnid' => $txnid,
                     'callback_url' => $callbackUrl,
+                    'redirect_url' => $callbackUrl,
                     'digest' => $digest,
                 ]);
                 $data1 = $response->json();
