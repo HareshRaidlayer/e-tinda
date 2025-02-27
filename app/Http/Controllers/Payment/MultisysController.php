@@ -37,16 +37,16 @@ class MultisysController extends Controller
 
             }
             $txnid = uniqid(); // Generate a unique transaction ID
-            $token = env('MULTIPAY_TOKEN'); // Token for the API
+            $token = config('payment.multipay_token'); // Token for the API
             $data = $amount . $txnid . $token;
             $digest = sha1($data); // Generate the digest
-
+dd($token);
 
             try {
                 // Send POST request to the API
                 $response = Http::withHeaders([
                     'X-MultiPay-Token' => $token,
-                    'X-MultiPay-Code' => env('MULTIPAY_CODE'),
+                    'X-MultiPay-Code' => config('payment.multipay_code'),
                 ])->post('https://pgi-ws-staging.multipay.ph/api/v1/transactions/generate', [
                     'amount' => $amount,
                     'txnid' => $txnid,
@@ -54,8 +54,8 @@ class MultisysController extends Controller
                     'digest' => $digest,
                 ]);
                 $data1 = $response->json();
+                dd($data1);
                 $paymentUrl = $data1['data']['url'];
-
                 return redirect($paymentUrl);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
