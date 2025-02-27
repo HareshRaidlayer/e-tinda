@@ -40,7 +40,6 @@ class MultisysController extends Controller
             $token = config('payment.multipay_token'); // Token for the API
             $data = $amount . $txnid . $token;
             $digest = sha1($data); // Generate the digest
-dd($token);
 
             try {
                 // Send POST request to the API
@@ -54,7 +53,6 @@ dd($token);
                     'digest' => $digest,
                 ]);
                 $data1 = $response->json();
-                dd($data1);
                 $paymentUrl = $data1['data']['url'];
                 return redirect($paymentUrl);
             } catch (\Exception $e) {
