@@ -22,7 +22,6 @@ class MultisysController extends Controller
 {
     public function pay(Request $request)
     {
-
         if (Session::has('payment_type')) {
             $paymentType = Session::get('payment_type');
             $paymentData = Session::get('payment_data');
@@ -33,7 +32,7 @@ class MultisysController extends Controller
             } else {
                 $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
                 $amount = round($combined_order->grand_total);
-                $callbackUrl = route('order_confirmed'); // Callback URL
+                $callbackUrl = route('multisysPayment'); // Callback URL
 
             }
             $txnid = uniqid(); // Generate a unique transaction ID
@@ -60,5 +59,56 @@ class MultisysController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
+    }
+    public function success(Request $request)
+    {
+        $response = $request->all();
+        if ($request->session()->has('payment_type')) {
+            $paymentType = $request->session()->get('payment_type');
+            $paymentData = $request->session()->get('payment_data');
+            if ($paymentType == 'cart_payment') {
+                if($request->status != 'S'){
+                    flash(translate('Payment failed'))->error();
+                    return redirect()->route('home');
+                }else{
+                    return (new CheckoutController)->checkout_done($request->session()->get('combined_order_id'), json_encode($response));
+                }
+            } elseif ($paymentType == 'order_re_payment') {
+                    return (new WalletController)->wallet_payment_done($paymentData, json_encode($response));
+                    if($request->status != 'S'){
+                        flash(translate('Payment failed'))->error();
+                        return redirect()->route('home');
+                    }else{
+                        return (new CheckoutController)->orderRePaymentDone($paymentData, json_encode($response));
+                    }
+            } elseif ($paymentType == 'wallet_payment') {
+                if($request->status != 'S'){
+                    flash(translate('Payment failed'))->error();
+                    return redirect()->route('home');
+                }else{
+                    return (new WalletController)->wallet_payment_done($paymentData, json_encode($response));
+                }
+
+            }
+
+        }else{
+            flash(translate('Payment failed'))->error();
+            return redirect()->route('home');
+        }
+
+
+
+
+
+
+
+
+        // if($request->status != 'S'){
+        //     flash(translate('Payment failed'))->error();
+        //     return redirect()->route('home');
+        // } else {
+        //         return route('order_confirmed');
+        // }
+
     }
 }

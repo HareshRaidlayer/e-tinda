@@ -37,6 +37,7 @@ use App\Http\Controllers\Payment\RazorpayController;
 use App\Http\Controllers\Payment\SslcommerzController;
 use App\Http\Controllers\Payment\StripeController;
 use App\Http\Controllers\Payment\VoguepayController;
+use App\Http\Controllers\Payment\MultisysController;
 use App\Http\Controllers\ProductQueryController;
 use App\Http\Controllers\PurchaseHistoryController;
 use App\Http\Controllers\ReviewController;
@@ -333,6 +334,7 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function ()
         Route::post('/recharge', 'recharge')->name('wallet.recharge');
         Route::post('/transfer/wallet', 'transfer_wallet')->name('wallet.transfer');
     });
+    Route::get('multisys/patment', [MultisysController::class, 'success'])->name('multisysPayment');
 
     // Support Ticket
     Route::resource('support_ticket', SupportTicketController::class);
