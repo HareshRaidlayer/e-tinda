@@ -299,7 +299,7 @@ Route::group(['prefix' => 'checkout'], function () {
         //Club point
         // Route::post('/apply-club-point', 'apply_club_point')->name('checkout.apply_club_point');
         // Route::post('/remove-club-point', 'remove_club_point')->name('checkout.remove_club_point');
-        Route::post('/payment/callback', [WalletController::class, 'handleCallback'])->name('payment.callback');
+        Route::get('/payment/callback', [WalletController::class, 'handleCallback'])->name('payment.callback');
     });
 });
 
