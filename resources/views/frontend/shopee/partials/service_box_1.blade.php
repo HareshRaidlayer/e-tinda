@@ -52,7 +52,7 @@
             <a href="{{ $product_url }}" class="d-block text-reset hov-text-primary"
                 title="{{ $product->name }}">{{ $product->name }}</a>
         </h3>
-        <div class="fs-14 d-flex justify-content-center mt-3">
+        <div class="fs-14 d-flex flex-column align-items-center justify-content-center mt-3">
             @if ($product->auction_product == 0)
                 <!-- Previous price -->
                     <div class="disc-amount has-transition">
