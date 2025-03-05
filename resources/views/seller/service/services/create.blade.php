@@ -226,7 +226,7 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0 h6">{{ translate('Servoce Category') }}</h5>
+                    <h5 class="mb-0 h6">{{ translate('Service Category') }}</h5>
                 </div>
                 <div class="card-body ">
                     <div class="h-300px overflow-auto c-scrollbar-light">

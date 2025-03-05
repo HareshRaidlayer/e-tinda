@@ -181,6 +181,7 @@
                             @if (!empty($seller_products))
                                 @foreach ($seller_products as $key => $seller_product)
                                     @php
+
                                         $all_seller_products = true;
                                         if(count($seller_product) != count($carts->toQuery()->active()->whereIn('product_id', $seller_product)->get())){
                                             $all_seller_products = false;
@@ -203,6 +204,7 @@
                                             $cartItem = $carts->toQuery()->where('product_id', $product_id)->first();
                                             $product_stock = $product->stocks->where('variant', $cartItem->variation)->first();
                                             $total = $total + cart_product_price($cartItem, $product, false) * $cartItem->quantity;
+                                            $product_url = route('product', $product->slug);
                                         @endphp
                                         <li class="list-group-item px-0 border-md-0">
                                             <div class="row gutters-5 align-items-center">
@@ -216,20 +218,22 @@
                                                     </div>
                                                 </div>
                                                 <!-- Product Image & name -->
-                                                <div class="col-md-5 col-10 d-flex align-items-center mb-2 mb-md-0">
-                                                    <span class="mr-2 ml-0">
-                                                        <img src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                                            class="img-fit size-64px"
-                                                            alt="{{ $product->getTranslation('name')  }}"
-                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                    </span>
-                                                    <span>
-                                                        <span class="fs-14 fw-400 text-dark text-truncate-2 mb-2">{{ $product->getTranslation('name') }}</span>
-                                                        @if ($seller_product_variation[$key2] != '')
-                                                            <span class="fs-12 text-secondary">{{ translate('Variation') }}: {{ $seller_product_variation[$key2] }}</span>
-                                                        @endif
-                                                    </span>
-                                                </div>
+                                                <a href="{{$product_url}}">
+                                                    <div class="col-md-5 col-10 d-flex align-items-center mb-2 mb-md-0">
+                                                        <span class="mr-2 ml-0">
+                                                            <img src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                                                class="img-fit size-64px"
+                                                                alt="{{ $product->getTranslation('name')  }}"
+                                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                                        </span>
+                                                        <span>
+                                                            <span class="fs-14 fw-400 text-dark text-truncate-2 mb-2">{{ $product->getTranslation('name') }}</span>
+                                                            @if ($seller_product_variation[$key2] != '')
+                                                                <span class="fs-12 text-secondary">{{ translate('Variation') }}: {{ $seller_product_variation[$key2] }}</span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </a>
                                                 <!-- Price & Tax -->
                                                 <div class="col-md col-4 ml-4 ml-sm-0 my-3 my-md-0 d-flex flex-column ml-sm-5 ml-md-0">
                                                     <span class="fs-12 text-secondary">{{ translate('Price')}}</span>
