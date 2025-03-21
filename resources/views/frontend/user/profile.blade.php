@@ -1,13 +1,13 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-<a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
+    <a class="back-button" href="{{route('dashboard')}}"><i class="las la-angle-left fs-14"></i> Back</a>
     <div class="aiz-titlebar mb-4 mt-2">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-            <h1 class="fs-20 fw-700 text-dark">{{ translate('Manage Profile') }}</h1>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="fs-20 fw-700 text-dark">{{ translate('Manage Profile') }}</h1>
+            </div>
         </div>
-      </div>
     </div>
 
     <!-- Basic Info-->
@@ -32,14 +32,18 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label fs-14 fs-14">{{ translate('Your Name') }}</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Name') }}" name="name" value="{{ Auth::user()->name }}">
+                        <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Name') }}"
+                            name="name" value="{{ Auth::user()->name }}">
                     </div>
                 </div>
                 <!-- Phone-->
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label fs-14">{{ translate('Your Phone') }}</label>
                     <div class="col-md-10">
-                        <input type="number" class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}" name="phone" value="{{ Auth::user()->phone }}">
+                        <input type="number" class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}"
+                            name="phone" value="{{ Auth::user()->phone }}" minlength="7" maxlength="12">
+                        <div style="font-size: 14px; color: red;">
+                            {{ translate('Note: Phone number must be between 7 to 12 digits.')}}</div>
                     </div>
                 </div>
                 <!-- Photo-->
@@ -48,32 +52,41 @@
                     <div class="col-md-10">
                         <div class="input-group" data-toggle="aizuploader" data-type="image">
                             <div class="input-group-prepend">
-                                <div class="input-group-text bg-soft-secondary font-weight-medium rounded-0">{{ translate('Browse')}}</div>
+                                <div class="input-group-text bg-soft-secondary font-weight-medium rounded-0">
+                                    {{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="hidden" name="photo" value="{{ Auth::user()->avatar_original }}" class="selected-files">
+                            <input type="hidden" name="photo" value="{{ Auth::user()->avatar_original }}"
+                                class="selected-files">
                         </div>
                         <div class="file-preview box sm">
                         </div>
                     </div>
                 </div>
-                <!-- Password-->
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label fs-14">{{ translate('Your Password') }}</label>
-                    <div class="col-md-10">
-                        <input type="password" class="form-control rounded-0" placeholder="{{ translate('New Password') }}" name="new_password">
-                    </div>
-                </div>
-                <!-- Confirm Password-->
-                <div class="form-group row">
-                    <label class="col-md-2 col-form-label fs-14">{{ translate('Confirm Password') }}</label>
-                    <div class="col-md-10">
-                        <input type="password" class="form-control rounded-0" placeholder="{{ translate('Confirm Password') }}" name="new_password_confirmation">
-                    </div>
-                </div>
+    <label class="col-md-2 col-form-label fs-14">{{ translate('Your Password') }}</label>
+    <div class="col-md-10 position-relative">
+        <input type="password" class="form-control rounded-0" placeholder="{{ translate('New Password') }}" name="new_password" id="new_password">
+        <span class="toggle-password" toggle="#new_password">
+            <i class="fa fa-eye"></i>
+        </span>
+    </div>
+</div>
+
+<!-- Confirm Password -->
+<div class="form-group row">
+    <label class="col-md-2 col-form-label fs-14">{{ translate('Confirm Password') }}</label>
+    <div class="col-md-10 position-relative">
+        <input type="password" class="form-control rounded-0" placeholder="{{ translate('Confirm Password') }}" name="new_password_confirmation" id="new_password_confirmation">
+        <span class="toggle-password" toggle="#new_password_confirmation">
+            <i class="fa fa-eye"></i>
+        </span>
+    </div>
+</div>
                 <!-- Submit Button-->
                 <div class="form-group mb-0 text-right">
-                    <button type="submit" class="btn btn-primary rounded-0 w-150px mt-3">{{translate('Update Profile')}}</button>
+                    <button type="submit"
+                        class="btn btn-primary rounded-0 w-150px mt-3">{{translate('Update Profile')}}</button>
                 </div>
             </form>
         </div>
@@ -114,7 +127,8 @@
                         </div>
                         @if ($address->set_default)
                             <div class="absolute-md-top-right pt-2 pt-md-4 pr-md-5">
-                                <span class="badge badge-inline badge-secondary-base text-white p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">{{ translate('Default') }}</span>
+                                <span class="badge badge-inline badge-secondary-base text-white p-3 fs-12"
+                                    style="border-radius: 25px; min-width: 80px !important;">{{ translate('Default') }}</span>
                             </div>
                         @endif
                         <div class="dropdown position-absolute right-0 top-0 pt-4 mr-1">
@@ -126,9 +140,11 @@
                                     {{ translate('Edit') }}
                                 </a>
                                 @if (!$address->set_default)
-                                    <a class="dropdown-item" href="{{ route('addresses.set_default', $address->id) }}">{{ translate('Make This Default') }}</a>
+                                    <a class="dropdown-item"
+                                        href="{{ route('addresses.set_default', $address->id) }}">{{ translate('Make This Default') }}</a>
                                 @endif
-                                <a class="dropdown-item" href="{{ route('addresses.destroy', $address->id) }}">{{ translate('Delete') }}</a>
+                                <a class="dropdown-item"
+                                    href="{{ route('addresses.destroy', $address->id) }}">{{ translate('Delete') }}</a>
                             </div>
                         </div>
                     </div>
@@ -159,32 +175,35 @@
     <form action="{{ route('user.change.email') }}" method="POST">
         @csrf
         <div class="card rounded-0 shadow-none border">
-          <div class="card-header pt-4 border-bottom-0">
-              <h5 class="mb-0 fs-18 fw-700 text-dark">{{ translate('Change your email')}}</h5>
-          </div>
-          <div class="card-body">
-              <div class="row">
-                  <div class="col-md-2">
-                      <label class="fs-14">{{ translate('Your Email') }}</label>
-                  </div>
-                  <div class="col-md-10">
-                      <div class="input-group mb-3">
-                        <input type="email" class="form-control rounded-0" placeholder="{{ translate('Your Email')}}" name="email" value="{{ Auth::user()->email }}" />
-                        <div class="input-group-append">
-                           <button type="button" class="btn btn-outline-secondary new-email-verification">
-                               <span class="d-none loading">
-                                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>{{ translate('Sending Email...') }}
-                               </span>
-                               <span class="default">{{ translate('Verify') }}</span>
-                           </button>
+            <div class="card-header pt-4 border-bottom-0">
+                <h5 class="mb-0 fs-18 fw-700 text-dark">{{ translate('Change your email')}}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="fs-14">{{ translate('Your Email') }}</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control rounded-0" placeholder="{{ translate('Your Email')}}"
+                                name="email" value="{{ Auth::user()->email }}" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary new-email-verification">
+                                    <span class="d-none loading">
+                                        <span class="spinner-border spinner-border-sm" role="status"
+                                            aria-hidden="true"></span>{{ translate('Sending Email...') }}
+                                    </span>
+                                    <span class="default">{{ translate('Verify') }}</span>
+                                </button>
+                            </div>
                         </div>
-                      </div>
-                      <div class="form-group mb-0 text-right">
-                          <button type="submit" class="btn btn-primary rounded-0 w-150px mt-3">{{translate('Update Email')}}</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit"
+                                class="btn btn-primary rounded-0 w-150px mt-3">{{translate('Update Email')}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 
@@ -194,27 +213,56 @@
     <!-- Address modal -->
     @include('frontend.partials.address.address_modal')
 @endsection
+<style>
+    .position-relative {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 @section('script')
     @include('frontend.partials.address.address_js')
+    <script>
+    $(document).ready(function () {
+        $(".toggle-password").click(function () {
+            var input = $($(this).attr("toggle"));
+            var icon = $(this).find("i");
+
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+                icon.removeClass("fa-eye").addClass("fa-eye-slash");
+            } else {
+                input.attr("type", "password");
+                icon.removeClass("fa-eye-slash").addClass("fa-eye");
+            }
+        });
+    });
+</script>
 
     <script type="text/javascript">
-        $('.new-email-verification').on('click', function() {
+        $('.new-email-verification').on('click', function () {
             console.log(33333);
 
             $(this).find('.loading').removeClass('d-none');
             $(this).find('.default').addClass('d-none');
             var email = $("input[name=email]").val();
 
-            $.post('{{ route('user.new.verify') }}', {_token:'{{ csrf_token() }}', email: email}, function(data){
+            $.post('{{ route('user.new.verify') }}', { _token: '{{ csrf_token() }}', email: email }, function (data) {
                 data = JSON.parse(data);
                 $('.default').removeClass('d-none');
                 $('.loading').addClass('d-none');
                 console.log(data.message);
 
-                if(data.status == 2)
+                if (data.status == 2)
                     AIZ.plugins.notify('warning', data.message);
-                else if(data.status == 1)
+                else if (data.status == 1)
                     AIZ.plugins.notify('success', data.message);
                 else
                     AIZ.plugins.notify('danger', data.message);
