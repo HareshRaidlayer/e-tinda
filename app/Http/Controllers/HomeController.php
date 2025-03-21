@@ -240,7 +240,7 @@ class HomeController extends Controller
             'new_password' => 'nullable|string|min:5|confirmed',
         ],
         [
-            'phone.regex' => 'Phone number must be between 7 to 12 digits and can include an optional + at the beginning.',
+            'phone.regex' => 'Phone number must be between 7 to 12 digits.',
         ]);
 
         if ($validator->fails()) {
