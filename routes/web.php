@@ -242,7 +242,7 @@ Route::controller(SslcommerzController::class)->group(function () {
 //Stipe Start
 Route::controller(StripeController::class)->group(function () {
     Route::get('stripe', 'stripe');
-    Route::post('/stripe/create-checkout-session', 'create_checkout_session')->name('stripe.get_token');
+    Route::any('/stripe/create-checkout-session', 'create_checkout_session')->name('stripe.get_token');
     Route::any('/stripe/payment/callback', 'callback')->name('stripe.callback');
     Route::get('/stripe/success', 'success')->name('stripe.success');
     Route::get('/stripe/cancel', 'cancel')->name('stripe.cancel');
