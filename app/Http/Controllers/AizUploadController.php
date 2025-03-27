@@ -68,170 +68,256 @@ class AizUploadController extends Controller
     {
         return view('uploader.aiz-uploader');
     }
-    public function upload(Request $request)
-    {
-        $type = array(
-            "jpg" => "image",
-            "jpeg" => "image",
-            "png" => "image",
-            "svg" => "image",
-            "webp" => "image",
-            "gif" => "image",
-            "mp4" => "video",
-            "mpg" => "video",
-            "mpeg" => "video",
-            "webm" => "video",
-            "ogg" => "video",
-            "avi" => "video",
-            "mov" => "video",
-            "flv" => "video",
-            "swf" => "video",
-            "mkv" => "video",
-            "wmv" => "video",
-            "wma" => "audio",
-            "aac" => "audio",
-            "wav" => "audio",
-            "mp3" => "audio",
-            "zip" => "archive",
-            "rar" => "archive",
-            "7z" => "archive",
-            "doc" => "document",
-            "txt" => "document",
-            "docx" => "document",
-            "pdf" => "document",
-            "csv" => "document",
-            "xml" => "document",
-            "ods" => "document",
-            "xlr" => "document",
-            "xls" => "document",
-            "xlsx" => "document"
-        );
+        // public function upload(Request $request)
+    // {
+    //     $type = array(
+    //         "jpg" => "image",
+    //         "jpeg" => "image",
+    //         "png" => "image",
+    //         "svg" => "image",
+    //         "webp" => "image",
+    //         "gif" => "image",
+    //         "mp4" => "video",
+    //         "mpg" => "video",
+    //         "mpeg" => "video",
+    //         "webm" => "video",
+    //         "ogg" => "video",
+    //         "avi" => "video",
+    //         "mov" => "video",
+    //         "flv" => "video",
+    //         "swf" => "video",
+    //         "mkv" => "video",
+    //         "wmv" => "video",
+    //         "wma" => "audio",
+    //         "aac" => "audio",
+    //         "wav" => "audio",
+    //         "mp3" => "audio",
+    //         "zip" => "archive",
+    //         "rar" => "archive",
+    //         "7z" => "archive",
+    //         "doc" => "document",
+    //         "txt" => "document",
+    //         "docx" => "document",
+    //         "pdf" => "document",
+    //         "csv" => "document",
+    //         "xml" => "document",
+    //         "ods" => "document",
+    //         "xlr" => "document",
+    //         "xls" => "document",
+    //         "xlsx" => "document"
+    //     );
 
-        if ($request->hasFile('aiz_file')) {
-            $upload = new Upload;
-            $extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
+    //     if ($request->hasFile('aiz_file')) {
+    //         $upload = new Upload;
+    //         $extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
 
-            if (
-                env('DEMO_MODE') == 'On' &&
-                isset($type[$extension]) &&
-                $type[$extension] == 'archive'
-            ) {
-                return '{}';
-            }
+    //         if (
+    //             env('DEMO_MODE') == 'On' &&
+    //             isset($type[$extension]) &&
+    //             $type[$extension] == 'archive'
+    //         ) {
+    //             return '{}';
+    //         }
 
-            if (isset($type[$extension])) {
-                $upload->file_original_name = null;
-                $arr = explode('.', $request->file('aiz_file')->getClientOriginalName());
-                for ($i = 0; $i < count($arr) - 1; $i++) {
-                    if ($i == 0) {
-                        $upload->file_original_name .= $arr[$i];
-                    } else {
-                        $upload->file_original_name .= "." . $arr[$i];
-                    }
-                }
+    //         if (isset($type[$extension])) {
+    //             $upload->file_original_name = null;
+    //             $arr = explode('.', $request->file('aiz_file')->getClientOriginalName());
+    //             for ($i = 0; $i < count($arr) - 1; $i++) {
+    //                 if ($i == 0) {
+    //                     $upload->file_original_name .= $arr[$i];
+    //                 } else {
+    //                     $upload->file_original_name .= "." . $arr[$i];
+    //                 }
+    //             }
 
-                if ($extension == 'svg') {
-                    $sanitizer = new Sanitizer();
-                    // Load the dirty svg
-                    $dirtySVG = file_get_contents($request->file('aiz_file'));
+    //             if ($extension == 'svg') {
+    //                 $sanitizer = new Sanitizer();
+    //                 // Load the dirty svg
+    //                 $dirtySVG = file_get_contents($request->file('aiz_file'));
 
-                    // Pass it to the sanitizer and get it back clean
-                    $cleanSVG = $sanitizer->sanitize($dirtySVG);
+    //                 // Pass it to the sanitizer and get it back clean
+    //                 $cleanSVG = $sanitizer->sanitize($dirtySVG);
 
-                    // Load the clean svg
-                    file_put_contents($request->file('aiz_file'), $cleanSVG);
-                }
+    //                 // Load the clean svg
+    //                 file_put_contents($request->file('aiz_file'), $cleanSVG);
+    //             }
 
-                $path = $request->file('aiz_file')->store('uploads/all', 'local');
-                $size = $request->file('aiz_file')->getSize();
+    //             $path = $request->file('aiz_file')->store('uploads/all', 'local');
+    //             $size = $request->file('aiz_file')->getSize();
 
-                // Return MIME type ala mimetype extension
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    //             // Return MIME type ala mimetype extension
+    //             $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
-                // Get the MIME type of the file
-                $file_mime = finfo_file($finfo, base_path('public/') . $path);
+    //             // Get the MIME type of the file
+    //             $file_mime = finfo_file($finfo, base_path('public/') . $path);
                 
-                if ($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1) {
-                    try {
-                        $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
-                        $height = $img->height();
-                        $width = $img->width();
-                        if ($width > $height && $width > 1500) {
-                            $img->resize(1500, null, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-                        } elseif ($height > 1500) {
-                            $img->resize(null, 800, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-                        }
-                        $img->save(base_path('public/') . $path);
-                        clearstatcache();
-                        $size = $img->filesize();
-                    } catch (\Exception $e) {
-                        //dd($e);
-                    }
-                } 
-                // elseif ($type[$extension] == 'image' && get_setting('disable_image_optimization') == 1) {
-                //     try {
-                //         $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
-                //         $height = $img->height();
-                //         $width = $img->width();
+    //             if ($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1) {
+    //                 try {
+    //                     $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
+    //                     $height = $img->height();
+    //                     $width = $img->width();
+    //                     if ($width > $height && $width > 1500) {
+    //                         $img->resize(1500, null, function ($constraint) {
+    //                             $constraint->aspectRatio();
+    //                         });
+    //                     } elseif ($height > 1500) {
+    //                         $img->resize(null, 800, function ($constraint) {
+    //                             $constraint->aspectRatio();
+    //                         });
+    //                     }
+    //                     $img->save(base_path('public/') . $path);
+    //                     clearstatcache();
+    //                     $size = $img->filesize();
+    //                 } catch (\Exception $e) {
+    //                     //dd($e);
+    //                 }
+    //             } 
+    //             // elseif ($type[$extension] == 'image' && get_setting('disable_image_optimization') == 1) {
+    //             //     try {
+    //             //         $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
+    //             //         $height = $img->height();
+    //             //         $width = $img->width();
 
-                //         if ($width > 1999) {
-                //             $watermark = 'watermark-2x.png';
-                //         } else {
-                //             $watermark = 'watermark-1x.png';
-                //         }
+    //             //         if ($width > 1999) {
+    //             //             $watermark = 'watermark-2x.png';
+    //             //         } else {
+    //             //             $watermark = 'watermark-1x.png';
+    //             //         }
 
-                //         // watermark Img
-                //         $watermarkImg = Image::make('public/assets/img/'.$watermark);
-                //         $wmarkWidth=$watermarkImg->width();
-                //         $wmarkHeight=$watermarkImg->height();
-                //         $x=10;
-                //         $y=10;
-                //         while($y<=$height){
-                //             $img->insert($watermarkImg,'top-left',$x,$y);
-                //             $x+=$wmarkWidth+40;
-                //             if($x>=$width){
-                //                 $x=0;
-                //                 $y+=$wmarkHeight+30;
-                //             }
-                //         }
+    //             //         // watermark Img
+    //             //         $watermarkImg = Image::make('public/assets/img/'.$watermark);
+    //             //         $wmarkWidth=$watermarkImg->width();
+    //             //         $wmarkHeight=$watermarkImg->height();
+    //             //         $x=10;
+    //             //         $y=10;
+    //             //         while($y<=$height){
+    //             //             $img->insert($watermarkImg,'top-left',$x,$y);
+    //             //             $x+=$wmarkWidth+40;
+    //             //             if($x>=$width){
+    //             //                 $x=0;
+    //             //                 $y+=$wmarkHeight+30;
+    //             //             }
+    //             //         }
 
-                //         $img->save(base_path('public/') . $path);
-                //         clearstatcache();
-                //     } catch (\Exception $e) {
-                //         //dd($e);
-                //     }
-                // }
+    //             //         $img->save(base_path('public/') . $path);
+    //             //         clearstatcache();
+    //             //     } catch (\Exception $e) {
+    //             //         //dd($e);
+    //             //     }
+    //             // }
 
-                if (env('FILESYSTEM_DRIVER') != 'local') {
+    //             if (env('FILESYSTEM_DRIVER') != 'local') {
 
-                    Storage::disk(env('FILESYSTEM_DRIVER'))->put(
-                        $path,
-                        file_get_contents(base_path('public/') . $path),
-                        [
-                            'visibility' => 'public',
-                            'ContentType' =>  $extension == 'svg' ? 'image/svg+xml' : $file_mime
-                        ]
-                    );
-                    // dd($storage);
-                    if ($arr[0] != 'updates') {
-                        unlink(base_path('public/') . $path);
-                    }
-                }
+    //                 Storage::disk(env('FILESYSTEM_DRIVER'))->put(
+    //                     $path,
+    //                     file_get_contents(base_path('public/') . $path),
+    //                     [
+    //                         'visibility' => 'public',
+    //                         'ContentType' =>  $extension == 'svg' ? 'image/svg+xml' : $file_mime
+    //                     ]
+    //                 );
+    //                 // dd($storage);
+    //                 if ($arr[0] != 'updates') {
+    //                     unlink(base_path('public/') . $path);
+    //                 }
+    //             }
 
-                $upload->extension = $extension;
-                $upload->file_name = $path;
-                $upload->user_id = Auth::user()->id;
-                $upload->type = $type[$upload->extension];
-                $upload->file_size = $size;
-                $upload->save();
+    //             $upload->extension = $extension;
+    //             $upload->file_name = $path;
+    //             $upload->user_id = Auth::user()->id;
+    //             $upload->type = $type[$upload->extension];
+    //             $upload->file_size = $size;
+    //             $upload->save();
+    //         }
+    //         return '{}';
+    //     }
+    // }
+    public function upload(Request $request)
+{
+    $type = [
+        "jpg" => "image", "jpeg" => "image", "png" => "image", "svg" => "image",
+        "webp" => "image", "gif" => "image", "mp4" => "video", "mpg" => "video",
+        "mpeg" => "video", "webm" => "video", "ogg" => "video", "avi" => "video",
+        "mov" => "video", "flv" => "video", "swf" => "video", "mkv" => "video",
+        "wmv" => "video", "wma" => "audio", "aac" => "audio", "wav" => "audio",
+        "mp3" => "audio", "zip" => "archive", "rar" => "archive", "7z" => "archive",
+        "doc" => "document", "txt" => "document", "docx" => "document", "pdf" => "document",
+        "csv" => "document", "xml" => "document", "ods" => "document", "xlr" => "document",
+        "xls" => "document", "xlsx" => "document"
+    ];
+
+    if ($request->hasFile('aiz_file')) {
+        $upload = new Upload;
+        $file = $request->file('aiz_file');
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (env('DEMO_MODE') == 'On' && isset($type[$extension]) && $type[$extension] == 'archive') {
+            return response()->json(['error' => 'Archive files are not allowed in demo mode'], 403);
+        }
+
+        if (isset($type[$extension])) {
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $originalName) . '.' . $extension;
+            $destinationPath = public_path('uploads/all');
+
+            // Ensure the folder exists
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
             }
-            return '{}';
+
+            // If SVG, sanitize it before saving
+            if ($extension == 'svg') {
+                $sanitizer = new Sanitizer();
+                $dirtySVG = file_get_contents($file);
+                $cleanSVG = $sanitizer->sanitize($dirtySVG);
+                file_put_contents($destinationPath . '/' . $filename, $cleanSVG);
+            } else {
+                $file->move($destinationPath, $filename);
+            }
+
+            $size = filesize($destinationPath . '/' . $filename);
+            $filePath = 'uploads/all/' . $filename;
+
+            // If image optimization is enabled
+            if ($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1) {
+                try {
+                    $img = Image::make($destinationPath . '/' . $filename)->encode();
+                    $height = $img->height();
+                    $width = $img->width();
+
+                    if ($width > $height && $width > 1500) {
+                        $img->resize(1500, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                    } elseif ($height > 1500) {
+                        $img->resize(null, 800, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                    }
+
+                    $img->save($destinationPath . '/' . $filename);
+                    clearstatcache();
+                    $size = filesize($destinationPath . '/' . $filename);
+                } catch (\Exception $e) {
+                    \Log::error('Image optimization failed: ' . $e->getMessage());
+                }
+            }
+
+            // Save to database
+            $upload->file_original_name = $originalName;
+            $upload->extension = $extension;
+            $upload->file_name = $filePath;
+            $upload->user_id = Auth::id();
+            $upload->type = $type[$extension];
+            $upload->file_size = $size;
+            $upload->save();
+
+            return response()->json(['success' => true, 'file_path' => asset($filePath)]);
         }
     }
+
+    return response()->json(['error' => 'No valid file uploaded'], 400);
+}
 
     public function get_uploaded_files(Request $request)
     {
